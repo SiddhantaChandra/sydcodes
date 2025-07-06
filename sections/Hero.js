@@ -4,7 +4,9 @@ import { motion } from 'framer-motion';
 import { ChevronDown, Download, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import BackgroundEffects from '@/components/HeroComponents/BackgroundEffects';
-import Character3D from '@/components/HeroComponents/Scene3D'
+import Character3D from '@/components/HeroComponents/Scene3D';
+import HeroText from '@/components/HeroComponents/HeroText';
+
 const textVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: (i) => ({
@@ -40,7 +42,8 @@ export default function Hero() {
         'bg-gradient-to-br from-background via-background to-primary/5'
       )}
     >
-      
+      {/* Hero Text */}
+      <HeroText />
       {/* Background Effects */}
       <BackgroundEffects />
       {/* 3D Character Model */}

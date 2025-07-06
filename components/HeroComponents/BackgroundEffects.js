@@ -3,7 +3,7 @@ import MeshGradient from './MeshGradient';
 export default function BackgroundEffects() {
   return (
     <>
-      <div className="absolute inset-0" />
+      <div className="absolute inset-0 noise-overlay" />
       <MeshGradient />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 animate-gradient-x" />
       <div className="absolute top-20 left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-float" />
