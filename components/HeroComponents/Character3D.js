@@ -1,4 +1,4 @@
-import FloatingElements3D from './FloatingElements3D';
+import FloatingElements3D from './FloatingElements3D.js--1';
 
 export default function Character3D() {
   return (
