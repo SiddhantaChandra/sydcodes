@@ -228,14 +228,14 @@ function StreetLight({
   withSpotlight = false, // Enable/disable spotlight and cone
   // Spotlight parameters
   spotColor = '#ffb347', // Color of the spotlight
-  spotIntensity = 8, // Intensity of the spotlight
+  spotIntensity = 9, // Intensity of the spotlight
   spotAngle = 2, // Angle (radians) of the spotlight cone
   spotPenumbra = 0.9, // Penumbra (softness) of the spotlight
   spotDistance = 30, // How far the spotlight reaches
   spotDecay = 2, // How quickly the light dims
   // Cone (visual beam) parameters
   coneColor = '#ffb347', // Color of the visible cone
-  coneOpacity = 0.4, // Opacity of the cone
+  coneOpacity = 1, // Opacity of the cone
   coneEmissive = '#ffb347', // Emissive color for glow
   coneEmissiveIntensity = 0.5, // Emissive intensity for glow
   coneRadius = 1.6, // Base radius of the cone
@@ -326,19 +326,19 @@ export default function Scene3D() {
         {/* Static lighting (dark mode styling) */}
         {isDark ? (
           <>
-            <hemisphereLight intensity={0.25} groundColor="#181a22" skyColor="#1a1a2a" />
-            <ambientLight intensity={0.08} />
+            <hemisphereLight intensity={0.38} groundColor="#1a1c26" skyColor="#2a3040" />
+            <ambientLight intensity={0.18} />
             <directionalLight
               position={[0, 8, 8]}
-              intensity={1.2}
+              intensity={1.6}
             />
-            <pointLight position={[0, 2, 2]} intensity={0.3} color="#aaccff" />
+            <pointLight position={[0, 2, 2]} intensity={0.55} color="#c7e2ff" />
           </>
         ) : null}
         <Suspense fallback={null}>
           {/* StreetLights with spotlights in dark mode */}
-          <StreetLight position={[10, -4.8, -1.3]} rotation={[0, Math.PI / 4, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.215, -2.6, 0.0]} />
-          <StreetLight position={[-6, -4.3, 2]} rotation={[0, Math.PI / 0.13, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.19, -2.6, 0.0]} coneTopRadius={0.15} />
+          <StreetLight position={[10, -4.8, -1.3]} rotation={[0, Math.PI / 4, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.2} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.215, -2.6, 0.0]} />
+          <StreetLight position={[-6, -4.3, 2]} rotation={[0, Math.PI / 0.13, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.5} coneRadius={1.5} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.19, -2.6, 0.0]} coneTopRadius={0.15} />
           <Suspense fallback={<LoadingFallback />}>
             <AnimatedCharacter path="/assets-3d/Animated_Me.glb" scale={0.8} speed={2} walkRange={walkRange} jumpTrigger={jumpTrigger} />
           </Suspense>

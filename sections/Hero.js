@@ -11,11 +11,11 @@ export default function Hero() {
       id="home"
       className={cn(
         'min-h-screen flex items-center justify-center relative overflow-hidden',
-        'bg-gradient-to-br from-background via-background to-primary/5'
+        'bg-gradient-to-br from-background via-white/5 to-primary/10'
       )}
     >
       {/* Hero Text */}
-      <HeroText />
+      <HeroText  />
       {/* Background Effects */}
       <BackgroundEffects />
       {/* 3D Character Model */}
