@@ -1,5 +1,4 @@
 import { Inter, Space_Grotesk, Space_Mono } from 'next/font/google';
-import { ThemeProvider } from 'next-themes';
 import './globals.css';
 
 const inter = Inter({
@@ -59,18 +58,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <body 
         className={`${inter.variable} ${spaceGrotesk.variable} ${spaceMono.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange={false}
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

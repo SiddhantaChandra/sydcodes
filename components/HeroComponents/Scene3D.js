@@ -5,7 +5,6 @@ import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useAnimations } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import * as THREE from 'three';
-import { useTheme } from 'next-themes';
 
 // Debug utility: Traverse house.glb and log all object names/types
 function DebugHouseGLB() {
@@ -28,32 +27,48 @@ function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, jumpT
   const group = useRef();
   const gltf = useLoader(GLTFLoader, path);
   const { actions } = useAnimations(gltf.animations, group);
-  const [direction, setDirection] = useState(1); // 1 for right, -1 for left
-  const [targetRotation, setTargetRotation] = useState(Math.PI / 2); // Facing left initially
+  const walkActionRef = useRef(null);
+  const jumpActionRef = useRef(null);
+  const finishedHandlerRef = useRef(null);
+  const [direction, setDirection] = useState(1);
+  const [targetRotation, setTargetRotation] = useState(Math.PI / 2);
   const initialized = useRef(false);
   const jumping = useRef(false);
   const lastJumpTrigger = useRef(0);
+  const jumpStartTime = useRef(null);
+  const arcDoneRef = useRef(false);
+  const pendingResumeRef = useRef(false);
+  const baseY = useRef(-4.8);
+  const jumpDuration = 0.5;
+  const jumpHeight = 1.2;
 
-  // Log available animation names for debugging
   useEffect(() => {
-    if (actions) {
-      console.log('Available animation actions:', Object.keys(actions));
-    }
-  }, [actions]);
+    if (!actions) return undefined;
+    const walk = actions['Armature|Walk'];
+    const jump = actions['Armature|Jump'];
+    walkActionRef.current = walk || null;
+    jumpActionRef.current = jump || null;
 
-  // Play walk animation (default)
-  useEffect(() => {
-    if (actions && !jumping.current) {
-      actions['Armature|Walk']?.reset().fadeIn(0.2).play();
+    if (walk) {
+      walk.enabled = true;
+      walk.reset().fadeIn(0.15).play();
+      walk.setEffectiveWeight(1);
     }
+
+    if (jump) {
+      jump.enabled = true;
+      jump.clampWhenFinished = true;
+      jump.setLoop(THREE.LoopOnce, 1);
+      jump.setEffectiveWeight(0);
+    }
+
     return () => {
-      if (actions && !jumping.current) actions['Armature|Walk']?.fadeOut(0.2).stop();
+      if (walk) walk.stop();
+      if (jump) jump.stop();
     };
   }, [actions]);
 
-  // Handle jump trigger
   useEffect(() => {
-    // Only trigger jump if not already jumping and jumpTrigger changed
     if (
       jumpTrigger &&
       actions &&
@@ -61,74 +76,126 @@ function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, jumpT
       !jumping.current &&
       jumpTrigger !== lastJumpTrigger.current
     ) {
+      const walkAction = walkActionRef.current;
+      const jumpAction = jumpActionRef.current;
+      if (!jumpAction) return undefined;
+
+      const mixer = jumpAction._mixer;
+      if (mixer && finishedHandlerRef.current) {
+        mixer.removeEventListener('finished', finishedHandlerRef.current);
+      }
+
       jumping.current = true;
       lastJumpTrigger.current = jumpTrigger;
-      actions['Armature|Walk']?.fadeOut(0.1);
-      const jumpAction = actions['Armature|Jump'];
-      jumpAction?.reset().fadeIn(0.1).play();
-      jumpAction.clampWhenFinished = true;
-      jumpAction.setLoop(THREE.LoopOnce, 1);
+      jumpStartTime.current = null;
+      arcDoneRef.current = false;
+      pendingResumeRef.current = false;
 
-      // Handler to resume walk
+      if (walkAction) {
+        walkAction.enabled = true;
+        walkAction.setEffectiveWeight(1);
+        walkAction.play();
+      }
+
+      jumpAction.enabled = true;
+      jumpAction.reset();
+      jumpAction.setEffectiveWeight(1);
+      if (walkAction) {
+        jumpAction.crossFadeFrom(walkAction, 0.12, false);
+      }
+      jumpAction.play();
+
       const resumeWalk = () => {
-        jumpAction?.fadeOut(0.1);
-        actions['Armature|Walk']?.reset().fadeIn(0.2).play();
+        if (walkAction) {
+          walkAction.enabled = true;
+          walkAction.setEffectiveWeight(1);
+          walkAction.reset().fadeIn(0.2).play();
+        }
+        jumpAction.setEffectiveWeight(0);
         jumping.current = false;
+        if (group.current) group.current.position.y = baseY.current;
         if (onJumpEnd) onJumpEnd();
       };
 
-      // Listen for animation finished event on the mixer
-      const mixer = actions['Armature|Jump']?._mixer;
       const onMixerFinished = (e) => {
         if (e.action === jumpAction) {
-          resumeWalk();
+          if (arcDoneRef.current) {
+            resumeWalk();
+          } else {
+            pendingResumeRef.current = true;
+          }
         }
       };
-      mixer && mixer.addEventListener('finished', onMixerFinished);
 
-      // Fallback: resume walk after animation duration
-      const duration = jumpAction.getClip().duration * 1000;
+      if (mixer) {
+        finishedHandlerRef.current = onMixerFinished;
+        mixer.addEventListener('finished', onMixerFinished);
+      }
+
+      const clipDuration = jumpAction.getClip()?.duration ?? jumpDuration;
+      const duration = Math.max(clipDuration, jumpDuration);
       const timeout = setTimeout(() => {
         resumeWalk();
-      }, duration + 100); // small buffer
+      }, duration * 1000 + 120);
 
-      // Cleanup
       return () => {
         clearTimeout(timeout);
-        mixer && mixer.removeEventListener('finished', onMixerFinished);
+        if (mixer && onMixerFinished) mixer.removeEventListener('finished', onMixerFinished);
       };
     }
   }, [jumpTrigger, actions, onJumpEnd]);
 
-  // Set initial position to extreme left only once
   useFrame(() => {
     if (group.current && !initialized.current) {
       group.current.position.x = -walkRange;
+      group.current.position.y = baseY.current;
       initialized.current = true;
     }
   });
 
-  // Animate walking, turning, and move during jump
   useFrame((state, delta) => {
     if (group.current && initialized.current) {
-      // Move in current direction (always, even if jumping)
+      if (jumping.current) {
+        const now = state.clock.getElapsedTime();
+        if (jumpStartTime.current === null) jumpStartTime.current = now;
+        const t = Math.min(1, (now - jumpStartTime.current) / jumpDuration);
+        const eased = t * t * (3 - 2 * t);
+        const offset = Math.sin(Math.PI * eased) * jumpHeight;
+        group.current.position.y = baseY.current + offset;
+        if (t >= 1) {
+          group.current.position.y = baseY.current;
+          arcDoneRef.current = true;
+          if (pendingResumeRef.current) {
+            pendingResumeRef.current = false;
+            const walkAction = walkActionRef.current;
+            const jumpAction = jumpActionRef.current;
+            if (walkAction) {
+              walkAction.enabled = true;
+              walkAction.setEffectiveWeight(1);
+              walkAction.reset().fadeIn(0.2).play();
+            }
+            if (jumpAction) jumpAction.setEffectiveWeight(0);
+            jumping.current = false;
+            if (onJumpEnd) onJumpEnd();
+          }
+        }
+      } else {
+        group.current.position.y = baseY.current;
+      }
+
       group.current.position.x += 0.01 * speed * direction;
-      // Smoothly rotate towards targetRotation
       group.current.rotation.y += (targetRotation - group.current.rotation.y) * 0.15;
-      // If reached right edge, turn to walk left
       if (direction === 1 && group.current.position.x > walkRange) {
         setDirection(-1);
-        setTargetRotation(-Math.PI / 2); // Face right
+        setTargetRotation(-Math.PI / 2);
       }
-      // If reached left edge, turn to walk right
       if (direction === -1 && group.current.position.x < -walkRange) {
         setDirection(1);
-        setTargetRotation(Math.PI / 2); // Face left
+        setTargetRotation(Math.PI / 2); 
       }
     }
   });
 
-  // Place at bottom and rotate to face left
   return (
     <group ref={group} position={[0, -4.8, 0]} rotation={[0, Math.PI / 2, 0]} scale={1}>
       <primitive object={gltf.scene} />
@@ -145,7 +212,6 @@ function LoadingFallback() {
   );
 }
 
-// New RoadBlock component
 function RoadBlock({ position = [10, -4.8, 0] }) {
   const gltf = useLoader(GLTFLoader, '/assets-3d/RoadBlock.glb');
   const scene = gltf.scene.clone(true);
@@ -175,7 +241,7 @@ function StreetLight({
   coneRadius = 1.6, // Base radius of the cone
   coneLength = 10, // Height/length of the cone
   coneRotation = [-Math.PI / 3, 0, 0], // Rotation of the cone mesh
-  conePosition = [0, -1, 0], // Position of the cone mesh (relative to lamp head)
+  conePosition = [0, -1, 0], // Position of the cone mesh
 }) {
   const gltf = useLoader(GLTFLoader, '/assets-3d/StreetLight-2.glb');
   const scene = gltf.scene.clone(true);
@@ -223,7 +289,7 @@ function StreetLight({
 }
 
 export default function Scene3D() {
-  const { theme } = useTheme();
+  const isDark = true;
   // Use the same walkRange as AnimatedCharacter
   const walkRange = 14;
   // RoadBlock positions (repeat along x-axis)
@@ -257,8 +323,8 @@ export default function Scene3D() {
         dpr={[1, 2]}
         onPointerDown={handleCanvasPointerDown}
       >
-        {/* Lighting setup: only change for dark mode */}
-        {theme === 'dark' ? (
+        {/* Static lighting (dark mode styling) */}
+        {isDark ? (
           <>
             <hemisphereLight intensity={0.25} groundColor="#181a22" skyColor="#1a1a2a" />
             <ambientLight intensity={0.08} />
@@ -268,18 +334,11 @@ export default function Scene3D() {
             />
             <pointLight position={[0, 2, 2]} intensity={0.3} color="#aaccff" />
           </>
-        ) : (
-          <>
-            <hemisphereLight intensity={2.5} groundColor="#222244" skyColor="#ffffff" />
-            <ambientLight intensity={1.2} />
-            <directionalLight position={[0, 2, 4]} intensity={2.5} />
-            <pointLight position={[0, 1, 2]} intensity={1.5} color="#ffffff" />
-          </>
-        )}
+        ) : null}
         <Suspense fallback={null}>
           {/* StreetLights with spotlights in dark mode */}
-          <StreetLight position={[10, -4.8, -1.3]} rotation={[0, Math.PI / 4, 0]} withSpotlight={theme === 'dark'} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.215, -2.6, 0.0]} />
-          <StreetLight position={[-6, -4.3, 2]} rotation={[0, Math.PI / 0.13, 0]} withSpotlight={theme === 'dark'} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.19, -2.6, 0.0]} coneTopRadius={0.15} />
+          <StreetLight position={[10, -4.8, -1.3]} rotation={[0, Math.PI / 4, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.215, -2.6, 0.0]} />
+          <StreetLight position={[-6, -4.3, 2]} rotation={[0, Math.PI / 0.13, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.1} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.19, -2.6, 0.0]} coneTopRadius={0.15} />
           <Suspense fallback={<LoadingFallback />}>
             <AnimatedCharacter path="/assets-3d/Animated_Me.glb" scale={0.8} speed={2} walkRange={walkRange} jumpTrigger={jumpTrigger} />
           </Suspense>

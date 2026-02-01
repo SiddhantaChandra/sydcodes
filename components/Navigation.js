@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useScrollDirection } from '@/hooks/useScrollAnimation';
 
@@ -17,19 +16,7 @@ const navItems = [
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
   const scrollDirection = useScrollDirection();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
-
-  if (!mounted) return null;
 
   return (
     <motion.nav
@@ -71,43 +58,23 @@ export default function Navigation() {
           ))}
         </div>
 
-        {/* Theme Toggle & Mobile Menu */}
-        <div className="flex items-center space-x-4">
-          <motion.button
-            onClick={toggleTheme}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={cn(
-              'p-2 rounded-full transition-colors',
-              'hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary'
-            )}
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-          </motion.button>
-
-          {/* Mobile Menu Button */}
-          <motion.button
-            onClick={() => setIsOpen(!isOpen)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={cn(
-              'md:hidden p-2 rounded-full transition-colors',
-              'hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary'
-            )}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </motion.button>
-        </div>
+        {/* Mobile Menu Button */}
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className={cn(
+            'md:hidden p-2 rounded-full transition-colors',
+            'hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary'
+          )}
+          aria-label="Toggle menu"
+        >
+          {isOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </motion.button>
       </div>
 
       {/* Mobile Menu */}
