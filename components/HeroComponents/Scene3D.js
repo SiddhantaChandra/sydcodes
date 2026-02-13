@@ -6,24 +6,8 @@ import { useAnimations } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import * as THREE from 'three';
 
-// Debug utility: Traverse house.glb and log all object names/types
-function DebugHouseGLB() {
-  useEffect(() => {
-    const loader = new GLTFLoader();
-    loader.load('/assets-3d/house.glb', (gltf) => {
-      console.log('Traversing house.glb scene graph:');
-      gltf.scene.traverse((obj) => {
-        console.log(`Name: ${obj.name}, Type: ${obj.type}`);
-      });
-    }, undefined, (err) => {
-      console.error('Failed to load house.glb:', err);
-    });
-  }, []);
-  return null;
-}
 
-
-function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, jumpTrigger, onJumpEnd }) {
+function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, y = -4.8, jumpTrigger, onJumpEnd }) {
   const group = useRef();
   const gltf = useLoader(GLTFLoader, path);
   const { actions } = useAnimations(gltf.animations, group);
@@ -38,9 +22,16 @@ function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, jumpT
   const jumpStartTime = useRef(null);
   const arcDoneRef = useRef(false);
   const pendingResumeRef = useRef(false);
-  const baseY = useRef(-4.8);
+  const baseY = useRef(y);
   const jumpDuration = 0.5;
   const jumpHeight = 1.2;
+
+  useEffect(() => {
+    baseY.current = y;
+    if (group.current && !jumping.current) {
+      group.current.position.y = y;
+    }
+  }, [y]);
 
   useEffect(() => {
     if (!actions) return undefined;
@@ -197,112 +188,21 @@ function AnimatedCharacter({ path, scale = 0.8, speed = 2, walkRange = 14, jumpT
   });
 
   return (
-    <group ref={group} position={[0, -4.8, 0]} rotation={[0, Math.PI / 2, 0]} scale={1}>
+    <group ref={group} position={[0, y, 0]} rotation={[0, Math.PI / 2, 0]} scale={scale}>
       <primitive object={gltf.scene} />
     </group>
   );
 }
 
-function LoadingFallback() {
-  return (
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#0066FF" transparent opacity={0.3} />
-    </mesh>
-  );
-}
-
-function RoadBlock({ position = [10, -4.8, 0] }) {
-  const gltf = useLoader(GLTFLoader, '/assets-3d/RoadBlock.glb');
-  const scene = gltf.scene.clone(true);
-  return (
-    <group position={position} scale={5}>
-      <primitive object={scene} />
-    </group>
-  );
-}
-
-function StreetLight({
-  position = [10, -4.8, -1.3], // Lamp post base position
-  rotation = [0, 0, 0], // Lamp post rotation
-  withSpotlight = false, // Enable/disable spotlight and cone
-  // Spotlight parameters
-  spotColor = '#ffb347', // Color of the spotlight
-  spotIntensity = 9, // Intensity of the spotlight
-  spotAngle = 2, // Angle (radians) of the spotlight cone
-  spotPenumbra = 0.9, // Penumbra (softness) of the spotlight
-  spotDistance = 30, // How far the spotlight reaches
-  spotDecay = 2, // How quickly the light dims
-  // Cone (visual beam) parameters
-  coneColor = '#ffb347', // Color of the visible cone
-  coneOpacity = 1, // Opacity of the cone
-  coneEmissive = '#ffb347', // Emissive color for glow
-  coneEmissiveIntensity = 0.5, // Emissive intensity for glow
-  coneRadius = 1.6, // Base radius of the cone
-  coneLength = 10, // Height/length of the cone
-  coneRotation = [-Math.PI / 3, 0, 0], // Rotation of the cone mesh
-  conePosition = [0, -1, 0], // Position of the cone mesh
+export default function Scene3D({
+  path = '/assets-3d/Animated_Me.glb',
+  scale = 0.8,
+  speed = 2,
+  walkRange = 14,
+  y = -4.8,
+  className = 'absolute inset-0 pointer-events-none z-20'
 }) {
-  const gltf = useLoader(GLTFLoader, '/assets-3d/StreetLight-2.glb');
-  const scene = gltf.scene.clone(true);
-  const lampHeadOffset = [2, 5.5, -0.7]; // Offset from base to lamp head
-  const lightRef = useRef();
-  const targetRef = useRef();
-  useEffect(() => {
-    if (withSpotlight && lightRef.current && targetRef.current) {
-      lightRef.current.target = targetRef.current;
-    }
-  }, [withSpotlight]);
-  return (
-    <group position={position} scale={6} rotation={rotation}>
-      <primitive object={scene} />
-      {withSpotlight && (
-        <>
-          {/* --- Spotlight (real light source) --- */}
-          <spotLight
-            ref={lightRef}
-            position={lampHeadOffset} // Position at lamp head
-            color={spotColor} // Light color
-            intensity={spotIntensity} // Light intensity
-            angle={spotAngle} // Cone angle (radians)
-            penumbra={spotPenumbra} // Softness
-            distance={spotDistance} // Reach
-            decay={spotDecay} // Dimming
-          />
-          {/* Target for the spotlight (where it points) */}
-          <object3D ref={targetRef} position={[0, -4, 2]} />
-          {/* --- Visible cone mesh (visual beam) --- */}
-          <mesh position={conePosition} rotation={coneRotation}>
-            <cylinderGeometry args={[0.02, coneRadius, coneLength, 32, 1, true]} />
-            <meshStandardMaterial
-              color={coneColor} // Cone color
-              transparent
-              opacity={coneOpacity} // Cone opacity
-              emissive={coneEmissive} // Glow color
-              emissiveIntensity={coneEmissiveIntensity} // Glow intensity
-            />
-          </mesh>
-        </>
-      )}
-    </group>
-  );
-}
-
-export default function Scene3D() {
   const isDark = true;
-  // Use the same walkRange as AnimatedCharacter
-  const walkRange = 14;
-  // RoadBlock positions (repeat along x-axis)
-  const blockCount = 7;
-  const blockSpacing = 4;
-  const blockY = -5.8;
-  const blockZ = 0;
-  const blockScale = 1.2;
-  const roadBlockPositions = Array.from({ length: blockCount }, (_, i) => [
-    -walkRange + i * blockSpacing,
-    blockY,
-    blockZ
-  ]);
   const [jumpTrigger, setJumpTrigger] = useState(0);
   // Handler to trigger jump
   const handleCanvasPointerDown = () => {
@@ -314,9 +214,7 @@ export default function Scene3D() {
     }
   };
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      {/* Debug utility for house.glb traversal */}
-      {/* <DebugHouseGLB /> */}
+    <div className={className}>
       <Canvas
         camera={{ position: [0, 0, 8], fov: 75 }}
         style={{ background: 'transparent' }}
@@ -336,23 +234,7 @@ export default function Scene3D() {
           </>
         ) : null}
         <Suspense fallback={null}>
-          {/* StreetLights with spotlights in dark mode */}
-          <StreetLight position={[10, -4.8, -1.3]} rotation={[0, Math.PI / 4, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.2} coneRadius={1.6} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.215, -2.6, 0.0]} />
-          <StreetLight position={[-6, -4.3, 2]} rotation={[0, Math.PI / 0.13, 0]} withSpotlight={isDark} coneColor="#ffb347" coneOpacity={0.4} coneEmissive="#ffb347" coneEmissiveIntensity={0.5} coneRadius={1.5} coneLength={7} coneRotation={[0, 0, 0]} conePosition={[-0.19, -2.6, 0.0]} coneTopRadius={0.15} />
-          <Suspense fallback={<LoadingFallback />}>
-            <AnimatedCharacter path="/assets-3d/Animated_Me.glb" scale={0.8} speed={2} walkRange={walkRange} jumpTrigger={jumpTrigger} />
-          </Suspense>
-          <RoadBlock position={[15, -4.8, 0]} />
-          <RoadBlock position={[11.7, -4.8, 0]} />
-          <RoadBlock position={[8.4, -4.8, 0]} />
-          <RoadBlock position={[5.1, -4.8, 0]} />
-          <RoadBlock position={[1.8, -4.8, 0]} />
-          <RoadBlock position={[-1.4, -4.8, 0]} />
-          <RoadBlock position={[-4.5, -4.81, 0]} />
-          <RoadBlock position={[-7.68, -4.82, 0]} />
-          <RoadBlock position={[-10.8, -4.83, 0]} />
-          <RoadBlock position={[-13.7, -4.84, 0]} />
-          <RoadBlock position={[-15.7, -4.85, 0]} />
+          <AnimatedCharacter path={path} scale={scale} speed={speed} walkRange={walkRange} y={y} jumpTrigger={jumpTrigger} />
         </Suspense>
       </Canvas>
     </div>

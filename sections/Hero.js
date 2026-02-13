@@ -1,25 +1,29 @@
 'use client';
-
 import { cn } from '@/lib/utils';
 import BackgroundEffects from '@/components/HeroComponents/BackgroundEffects';
-import Character3D from '@/components/HeroComponents/Scene3D';
 import HeroText from '@/components/HeroComponents/HeroText';
+import SceneMobile from '@/components/HeroComponents/Scene/SceneMobile';
+import SceneTablet from '@/components/HeroComponents/Scene/SceneTablet';
+import SceneDesktop from '@/components/HeroComponents/Scene/SceneDesktop';
 
 export default function Hero() {
   return (
-    <section 
+    <section
       id="home"
       className={cn(
-        'min-h-screen flex items-center justify-center relative overflow-hidden',
+        'relative flex min-h-screen items-center justify-center overflow-hidden',
         'bg-gradient-to-br from-background via-white/5 to-primary/10'
       )}
     >
-      {/* Hero Text */}
-      <HeroText  />
-      {/* Background Effects */}
+      <div className="relative z-30">
+        <HeroText />
+      </div>
+
+      <SceneMobile />
+      <SceneTablet />
+      <SceneDesktop />
+
       <BackgroundEffects />
-      {/* 3D Character Model */}
-      <Character3D />
     </section>
   );
-} 
+}
