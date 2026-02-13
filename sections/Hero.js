@@ -12,7 +12,7 @@ export default function Hero() {
       id="home"
       className={cn(
         'relative flex min-h-screen items-center justify-center overflow-hidden',
-        'bg-gradient-to-br from-background via-white/5 to-primary/10'
+        'bg-gradient-to-br from-[rgb(14,10,8)] via-[rgba(255,196,122,0.05)] to-[rgb(32,16,16)]'
       )}
     >
       <div className="relative z-30">

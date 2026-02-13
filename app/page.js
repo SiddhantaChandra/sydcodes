@@ -4,7 +4,7 @@ import Hero from '@/sections/Hero';
 export default function Home() {
   return (
     <main className="relative">
-      <Navigation />
+      {/* <Navigation /> */}
       <Hero />
       
       {/* Placeholder sections for now */}

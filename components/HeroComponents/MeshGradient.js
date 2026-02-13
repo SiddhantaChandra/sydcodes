@@ -106,8 +106,8 @@ export default function MeshGradient() {
           Math.min(canvas.width, canvas.height) * 0.6
         );
 
-        gradient.addColorStop(0, toRgba(point.color, 0.25));
-        gradient.addColorStop(0.5, toRgba(point.color, 0.125));
+        gradient.addColorStop(0, toRgba(point.color, 0.16));
+        gradient.addColorStop(0.5, toRgba(point.color, 0.08));
         gradient.addColorStop(1, toRgba(point.color, 0));
 
         ctx.fillStyle = gradient;
@@ -132,9 +132,9 @@ export default function MeshGradient() {
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none"
       style={{ 
-        background: 'transparent',
+        background: 'linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35))',
         mixBlendMode: 'multiply',
-        filter: 'blur(40px)',
+        filter: 'blur(36px)',
       }}
     />
   );
