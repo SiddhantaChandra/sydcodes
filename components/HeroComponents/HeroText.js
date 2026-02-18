@@ -42,7 +42,7 @@ export default function HeroText() {
 
       currentX += velocityX;
       currentY += velocityY;
-      scrollOffsetY += (scrollOffsetTargetY - scrollOffsetY) * 5;
+      scrollOffsetY += (scrollOffsetTargetY - scrollOffsetY) * 0.24;
 
       element.style.transform = `translate3d(${currentX}px, ${currentY + scrollOffsetY}px, 0) rotateX(${currentY * -0.2}deg) rotateY(${currentX * 0.2}deg)`;
       element.style.opacity = '1';
@@ -84,16 +84,16 @@ export default function HeroText() {
       ref={containerRef}
       className="relative z-20 flex flex-col items-center text-center select-none -mt-36 sm:-mt-24 md:-mt-28 lg:-mt-32 will-change-transform [transform-style:preserve-3d]"
     >
-      <span className="mb-4 inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-sm font-medium tracking-wide text-accent animate-fade-in-down [animation-delay:120ms] [animation-fill-mode:both]">
+      <span className="mb-4 inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-sm font-medium tracking-wide text-accent">
         Fullstack Developer
       </span>
-      <h1 className="text-6xl md:text-6xl lg:text-7xl font-bold text-primary mb-2 drop-shadow-lg animate-text-reveal [animation-delay:320ms] [animation-fill-mode:both]">
+      <h1 className="text-6xl md:text-6xl lg:text-7xl font-bold text-primary mb-2 drop-shadow-lg">
         Siddhanta Chandra
       </h1>
-      <p className="max-w-xl lg:max-w-2xl text-base md:text-lg lg:text-xl text-white px-4 mb-2 drop-shadow-lg animate-fade-in-up [animation-delay:440ms] [animation-fill-mode:both]">
-        I&apos;m committed to developing websites that deliver memorable digital experiences through clean, reusable code.
+      <p className="max-w-xl lg:max-w-2xl text-base md:text-lg lg:text-xl text-white px-4 mb-2 drop-shadow-lg">
+       Fullstack Developer based in Kolkata, building robust architectures with creative designs and intuitive user interfaces.
       </p>
-      <div className="mt-3 h-0.5 w-28 rounded-full bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-gradient-x [animation-delay:560ms] [animation-fill-mode:both]" />
+      <div className="mt-3 h-0.5 w-28 rounded-full bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%]" />
     </div>
   );
 } 
