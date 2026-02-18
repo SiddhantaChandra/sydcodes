@@ -1,10 +1,12 @@
 import Navigation from '@/components/Navigation';
+import DesktopLinks from '@/components/DesktopLinks';
 import Hero from '@/sections/Hero';
 
 export default function Home() {
   return (
     <main className="relative">
-      {/* <Navigation /> */}
+      <Navigation />
+      <DesktopLinks />
       <Hero />
       
       {/* Placeholder sections for now */}

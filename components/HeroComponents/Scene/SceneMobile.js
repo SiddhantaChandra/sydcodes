@@ -11,7 +11,7 @@ const SceneMobile = () => {
         speed={0.8}
         walkRange={4}
         y={-5}
-        className="pointer-events-none absolute inset-0 z-20"
+        className="pointer-events-none absolute inset-0 z-30"
       />
       <Image
         src={streetMobileImage}

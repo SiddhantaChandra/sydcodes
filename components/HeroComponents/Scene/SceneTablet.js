@@ -5,13 +5,13 @@ import Character3D from '@/components/HeroComponents/Scene3D';
 
 const SceneTablet = () => {
   return (
-    <div className="hidden sm:block lg:hidden">
+    <div className="absolute inset-0 hidden sm:block lg:hidden">
       <Character3D
         scale={0.8}
         speed={0.8}
         walkRange={5}
         y={-4.6}
-        className="pointer-events-none absolute inset-0 z-20"
+        className="pointer-events-none absolute inset-0 z-30"
       />
       <Image
         src={streetTabletsImage}

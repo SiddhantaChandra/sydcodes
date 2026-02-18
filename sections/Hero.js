@@ -15,7 +15,7 @@ export default function Hero() {
         'bg-gradient-to-br from-[rgb(14,10,8)] via-[rgba(255,196,122,0.05)] to-[rgb(32,16,16)]'
       )}
     >
-      <div className="relative z-30">
+      <div className="relative">
         <HeroText />
       </div>
 
