@@ -11,7 +11,7 @@ import logo2 from '@/public/images/logoStyle2.webp'
 
 const navItems = [
   { name: 'Home', href: '#home' },
-  { name: 'About', href: '#services' },
+  { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
   { name: 'Contact', href: '#contact' },
 ];
@@ -91,7 +91,7 @@ export default function Navigation() {
               transition={{ duration: 0.25 }}
               className="md:hidden fixed inset-0 z-40"
             >
-              <div className="absolute inset-0 bg-[rgba(192,57,43,0.92)]">
+              <div className="absolute inset-0 bg-accent">
                 <div className="absolute -top-12 right-6 w-40 h-40 bg-white/6 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 -left-12 w-44 h-44 bg-white/5 rounded-full blur-3xl" />
               </div>
@@ -99,10 +99,7 @@ export default function Navigation() {
               <div className="relative h-full px-6 pt-6 pb-10 flex flex-col text-primary">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-[rgba(24,16,12,0.9)] font-bold shadow-inner shadow-black/30">
-                      G
-                    </div>
-                    <span className="text-lg font-semibold tracking-wide">GRAFFICO</span>
+                    <Image src={logo1} alt='Logo' className='h-16 w-16' />
                   </div>
 
                   <motion.button

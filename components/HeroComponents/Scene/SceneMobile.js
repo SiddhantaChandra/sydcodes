@@ -9,7 +9,7 @@ const SceneMobile = () => {
       <Character3D
         scale={0.6}
         speed={0.8}
-        walkRange={4}
+        walkRange={3.2}
         y={-5}
         className="pointer-events-none absolute inset-0 z-30"
       />

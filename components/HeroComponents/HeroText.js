@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import MobileLinks from '../MobileLinks';
 
 export default function HeroText() {
   const containerRef = useRef(null);
@@ -82,7 +83,7 @@ export default function HeroText() {
   return (
     <div
       ref={containerRef}
-      className="relative z-20 flex flex-col items-center text-center select-none -mt-36 sm:-mt-24 md:-mt-28 lg:-mt-32 will-change-transform [transform-style:preserve-3d]"
+      className="relative z-20 flex flex-col items-center text-center select-none -mt-72 sm:-mt-24 md:-mt-28 lg:-mt-32 will-change-transform [transform-style:preserve-3d]"
     >
       <span className="mb-4 inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-sm font-medium tracking-wide text-accent">
         Fullstack Developer
@@ -94,6 +95,7 @@ export default function HeroText() {
        Fullstack Developer based in Kolkata, building robust architectures with creative designs and intuitive user interfaces.
       </p>
       <div className="mt-3 h-0.5 w-28 rounded-full bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%]" />
+      <MobileLinks />
     </div>
   );
 } 
