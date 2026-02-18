@@ -1,6 +1,8 @@
 import Navigation from '@/components/Navigation';
 import DesktopLinks from '@/components/DesktopLinks';
 import Hero from '@/sections/Hero';
+import MobileLinks from '@/components/MobileLinks';
+import Experience from '@/sections/Experience';
 
 export default function Home() {
   return (
@@ -8,25 +10,14 @@ export default function Home() {
       <Navigation />
       <DesktopLinks />
       <Hero />
+      <Experience />
       
       {/* Placeholder sections for now */}
-      <section id="about" className="min-h-screen flex items-center justify-center bg-muted/50">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4">About Section</h2>
-          <p className="text-muted-foreground">Coming soon...</p>
-        </div>
-      </section>
+
       
       <section id="projects" className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-4xl font-bold mb-4">Projects Section</h2>
-          <p className="text-muted-foreground">Coming soon...</p>
-        </div>
-      </section>
-      
-      <section id="experience" className="min-h-screen flex items-center justify-center bg-muted/50">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4">Experience Section</h2>
           <p className="text-muted-foreground">Coming soon...</p>
         </div>
       </section>
