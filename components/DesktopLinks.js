@@ -37,6 +37,10 @@ export default function DesktopLinks() {
 						className="group relative rounded-full p-2 text-primary/85 transition-colors duration-200 hover:text-primary transform-gpu origin-center will-change-transform"
 					>
 						<Icon size={24} weight="fill" className="h-6 w-6" />
+
+						<span className="pointer-events-none absolute right-full mr-3 top-1/2 -translate-y-1/2 rounded-full border border-primary/20 bg-transparent px-3 py-1 text-sm text-primary/85 backdrop-blur-[1px] opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 ease-out">
+							{link.name}
+						</span>
 						<span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-transparent transition-all duration-300 ease-out group-hover:ring-accent/60" />
 					</motion.a>
 					);
