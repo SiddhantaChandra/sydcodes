@@ -18,7 +18,7 @@ const links = [
 
 export default function DesktopLinks() {
 	return (
-		<div className="pointer-events-none fixed right-5 top-[40%] z-40 hidden -translate-y-1/2 md:flex">
+		<div className="pointer-events-none fixed right-5 top-[40%] z-50 hidden -translate-y-1/2 md:flex sm:right-3 lg:right-5">
 			<div className="pointer-events-auto flex flex-col items-center gap-3 rounded-full border border-primary/20 bg-transparent px-2 py-3 backdrop-blur-[1px]">
                 <div className='w-[1px] h-24 bg-primary rounded-full'></div>
 				{links.map((link) => {
