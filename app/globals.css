@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #c23132;
+  --color-primary: #e7d5c3;
+  --font-sans: var(
+    --font-inter,
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial
+  );
+}
+
+:root {
+  --background: #1d1d1d;
+  --foreground: #e7d5c3;
+  --accent: var(--color-accent);
+  --font-sans: var(
+    --font-inter,
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+
+
+.projects-section {
+  --projects-progress: 0;
+  --projects-ease: 0;
+}
+
+.projects-stack {
+  perspective: 1100px;
+}
+
+.project-card {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity, filter, border-color;
+  transform-origin: center top;
+  --project-local: clamp(
+    0,
+    calc((var(--projects-progress) - var(--project-start)) / var(--project-span)),
+    1
+  );
+  transform: translate3d(
+      0,
+      calc((1 - var(--project-local)) * 130px),
+      0
+    )
+    rotateX(calc((1 - var(--project-local)) * 8deg))
+    rotateZ(calc(var(--project-tilt) * (1 - var(--project-local))))
+    scale(calc(0.9 + (var(--project-local) * 0.1)));
+  opacity: calc(var(--project-local) * 1);
+  filter: blur(calc((1 - var(--project-local)) * 5px));
+  transition: border-color 320ms ease, background-color 320ms ease;
+}
+
+.project-card:hover {
+  border-color: color-mix(in oklab, var(--accent) 44%, transparent);
+  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+}
+
+.gradient{
+  background: #2b1616;
+  background: linear-gradient(135deg,rgb(27, 14, 14) 0%, rgb(14, 3, 3) 60%, rgb(12, 0, 0) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    position: relative;
+    inset: auto;
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+
+  .projects-stack {
+    display: grid;
+    gap: 1rem;
+    height: auto;
+    min-height: auto;
+  }
+
+  .projects-section {
+    min-height: auto !important;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
