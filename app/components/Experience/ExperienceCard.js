@@ -4,10 +4,18 @@ import React from 'react';
 import TechStackPhysics from './TechStackPhysics';
 import Image from 'next/image';
 
-const ExperienceCard = ({ item, isCurrent = false }) => {
+const ExperienceCard = ({ item, isCurrent = false, isFirst = false, isLast = false }) => {
   return (
-    <div className="relative flex w-full flex-col gap-4 lg:flex-row lg:items-start">
-      <div className="hidden lg:flex w-20 flex-col items-center">
+    <div className="relative flex w-full flex-col gap-4 lg:flex-row lg:items-stretch">
+      <div className="relative hidden w-20 self-stretch lg:flex flex-col items-center">
+        {!isFirst && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-4 left-1/2 h-12 w-px -translate-x-1/2"
+            style={{ backgroundColor: 'var(--foreground)', opacity: 0.35 }}
+          />
+        )}
+
         <div
           className={`relative flex h-16 w-16 items-center justify-center rounded-full border ${
             isCurrent
@@ -22,8 +30,19 @@ const ExperienceCard = ({ item, isCurrent = false }) => {
             height={56}
             className="h-14 w-14 rounded-full object-cover"
           />
-          <span className="pointer-events-none absolute -right-6 top-1/2 h-px w-6 bg-border" />
+          <span
+            className="pointer-events-none absolute -right-6 top-1/2 h-px w-6"
+            style={{ backgroundColor: 'var(--foreground)', opacity: 0.35 }}
+          />
         </div>
+
+        {!isLast && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-8 -bottom-4 w-px -translate-x-1/2"
+            style={{ backgroundColor: 'var(--foreground)', opacity: 0.35 }}
+          />
+        )}
       </div>
 
       <article className="relative w-full min-w-0 flex-1 overflow-hidden rounded-2xl border border-border bg-card/60 p-5 backdrop-blur-sm transition-colors hover:bg-card lg:pl-6">

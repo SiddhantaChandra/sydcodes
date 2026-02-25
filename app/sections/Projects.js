@@ -75,7 +75,7 @@ const Projects = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="projects-section relative px-6 md:px-12 lg:px-20"
+      className="projects-section relative px-6 lg:max-w-4xl 2xl:max-w-7xl mx-auto "
       style={{ minHeight: "500vh" }}
     >
       <div className="projects-sticky sticky top-0 flex h-screen items-center">

@@ -76,7 +76,7 @@ const Experience = () => {
 
   return (
     <section id="experience" className="flex min-h-screen items-center justify-center bg-muted/10 px-6 py-20 ">
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="mx-auto w-full lg:max-w-4xl 2xl:max-w-7xl">
         <div className='flex items-center sm:justify-between mb-4 flex-col gap-4 sm:gap-0 sm:flex-row'>
         <ExperienceTitle title="My Journey" />
 
@@ -84,14 +84,15 @@ const Experience = () => {
         </div>
 
         <div className="relative">
-          <span
-            aria-hidden
-            className="absolute bottom-8 left-10 top-8 hidden w-px bg-border/50 lg:block"
-          />
-
           <div className={activeTab === 'experience' ? 'space-y-4' : 'hidden'}>
             {experienceItems.map((item, idx) => (
-              <ExperienceCard key={`${item.period}-${item.company}`} item={item} isCurrent={idx === 0} />
+              <ExperienceCard
+                key={`${item.period}-${item.company}`}
+                item={item}
+                isFirst={idx === 0}
+                isCurrent={idx === 0}
+                isLast={idx === experienceItems.length - 1}
+              />
             ))}
           </div>
 
