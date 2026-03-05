@@ -50,6 +50,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@utility font-oswald {
+  font-family: var(--font-oswald), Oswald, var(--font-sans);
+}
+
 
 
 button,
@@ -115,12 +119,111 @@ html.lenis body {
   background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
 }
 
-.gradient{
-  background: #2b1616;
-  background: linear-gradient(135deg,rgb(27, 14, 14) 0%, rgb(14, 3, 3) 60%, rgb(12, 0, 0) 100%);
+.gradient {
+  background-color: #2b1616;
+  background-image: linear-gradient(
+    135deg,
+    rgb(27, 14, 14) 0%,
+    rgb(14, 3, 3) 58%,
+    rgb(12, 0, 0) 100%
+  );
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  animation: heroGradientLoop 16s ease-in-out infinite;
+}
+
+.hero-text2-wrap {
+  pointer-events: none;
+  position: absolute;
+  z-index: -10;
+}
+
+.hero-text2-title {
+  text-transform: uppercase;
+  text-align: right;
+}
+
+/* HeroText2 blank viewport overrides */
+@media (min-width: 640px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-sm: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-sm: initial;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-md: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-md: initial;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-lg: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-lg: initial;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-xl: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-xl: initial;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-2xl: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-2xl: initial;
+  }
+  
+}
+
+@media (min-width: 1967px) {
+  .hero-text2-wrap {
+    --hero-text2-wrap-2xl: initial;
+  }
+
+  .hero-text2-title {
+    --hero-text2-title-2xl: initial;
+  }
+  
+}
+
+@keyframes heroGradientLoop {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .gradient {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
   .project-card {
     position: relative;
     inset: auto;

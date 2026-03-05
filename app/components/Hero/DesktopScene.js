@@ -1,6 +1,7 @@
 import React from "react";
 import Scene3d from "../Scene3d";
 import Image from "next/image";
+import HeroText2 from "./HeroText2";
 
 import roadDesktop from "@/public/scene/roads.webp";
 import roadOverlayDesktop from "@/public/scene/roads_overlay.webp";
@@ -8,6 +9,7 @@ import roadOverlayDesktop from "@/public/scene/roads_overlay.webp";
 const DesktopScene = () => {
   return (
     <div className="relative isolate h-screen w-full overflow-hidden hidden lg:block">
+      <HeroText2 />
       <Image
         src={roadOverlayDesktop}
         alt="Road with a streetlight where my avatar is walking"
