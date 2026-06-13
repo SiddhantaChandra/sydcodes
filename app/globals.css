@@ -91,32 +91,79 @@ html.lenis body {
   perspective: 1100px;
 }
 
-.project-card {
-  position: absolute;
-  inset: 0;
-  will-change: transform, opacity, filter, border-color;
-  transform-origin: center top;
-  --project-local: clamp(
-    0,
-    calc((var(--projects-progress) - var(--project-start)) / var(--project-span)),
-    1
-  );
-  transform: translate3d(
-      0,
-      calc((1 - var(--project-local)) * 130px),
-      0
-    )
-    rotateX(calc((1 - var(--project-local)) * 8deg))
-    rotateZ(calc(var(--project-tilt) * (1 - var(--project-local))))
-    scale(calc(0.9 + (var(--project-local) * 0.1)));
-  opacity: calc(var(--project-local) * 1);
-  filter: blur(calc((1 - var(--project-local)) * 5px));
-  transition: border-color 320ms ease, background-color 320ms ease;
+.project-preview {
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.project-card:hover {
-  border-color: color-mix(in oklab, var(--accent) 44%, transparent);
-  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+.project-preview[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.project-preview[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-preview-frame {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.project-card {
+  background: #2b2621;
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.projects-stack[data-empty="true"] .project-card,
+.projects-stack[data-empty="true"] .project-stack-layer {
+  opacity: 0;
+}
+
+.project-stack-layer {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+    #241f1b;
+  transform:
+    translate3d(
+      calc(var(--layer-index) * 8px),
+      calc(var(--layer-index) * -10px),
+      calc(var(--layer-index) * -30px)
+    )
+    scale(calc(1 - (var(--layer-index) * 0.018)));
+  opacity: calc(0.34 - (var(--layer-index) * 0.08));
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.projects-stack[data-empty="false"] .project-card {
+  opacity: 1;
+}
+
+.projects-stack[data-visible="false"] .project-card {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.projects-stack[data-visible="true"] .project-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.projects-stack[data-visible="false"] .project-stack-layer {
+  opacity: 0;
+  transform:
+    translate3d(
+      calc(var(--layer-index) * 8px),
+      calc(var(--layer-index) * -4px),
+      calc(var(--layer-index) * -30px)
+    )
+    scale(calc(1 - (var(--layer-index) * 0.018)));
 }
 
 .gradient {
@@ -230,6 +277,8 @@ html.lenis body {
     transform: none;
     opacity: 1;
     filter: none;
+    background: #2b2621;
+    transition: none;
   }
 
   .projects-stack {
@@ -237,6 +286,11 @@ html.lenis body {
     gap: 1rem;
     height: auto;
     min-height: auto;
+    perspective: none;
+  }
+
+  .project-stack-layer {
+    display: none;
   }
 
   .projects-section {
