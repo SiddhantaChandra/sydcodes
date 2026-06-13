@@ -2,13 +2,12 @@ import React from "react";
 import MobileScene from "../components/Hero/MobileScene";
 import TabletScene from "../components/Hero/TabletScene";
 import DesktopScene from "../components/Hero/DesktopScene";
-// import HeroText from "../components/Hero/HeroText";
+import HeroText from "../components/Hero/HeroText";
 
 const Hero = () => {
   return (
-    // <section className="relative gradient" id="#home">
     <section className="relative bg-black" id="#home">
-      {/* <HeroText /> */}
+      <HeroText />
       <MobileScene />
       <TabletScene />
       <DesktopScene />
