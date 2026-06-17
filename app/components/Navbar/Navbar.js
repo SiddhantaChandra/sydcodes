@@ -90,7 +90,7 @@ const Navbar = () => {
   return (
     <div className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
       {/* Desktop Navbar */}
-      <div className="w-full max-w-4xl items-center justify-between px-6 py-2 bg-[#181212]/75 rounded-full backdrop-blur-sm border border-primary/20 hidden lg:flex 2xl:max-w-7xl">
+      <div className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#181212]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
         <Image src={logoLarge} alt="Description" className="h-8 w-auto" />
         <div className="flex gap-1">
           {links.map((l) => {
@@ -113,7 +113,7 @@ const Navbar = () => {
 
       {/* Mobile Navbar */}
       <div className="w-full lg:hidden">
-        <div className="w-full items-center justify-between px-5 py-3 rounded-full border border-primary/20 flex bg-[#181212]/75 backdrop-blur-sm">
+        <div className="w-full items-center justify-between px-5 py-3 rounded-full border border-primary/20 flex bg-[#181212]/75 backdrop-blur-sm shadow-none">
           <Image src={logoShort} alt="Description" className="h-8 w-auto" />
           <button
             type="button"
@@ -131,11 +131,10 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`fixed inset-0 z-40 bg-accent transition-all duration-300 ease-out ${
-            isMenuOpen
-              ? 'opacity-100 visible'
-              : 'opacity-0 invisible pointer-events-none'
-          }`}
+          className={`fixed inset-0 z-40 bg-accent transition-all duration-300 ease-out ${isMenuOpen
+            ? 'opacity-100 visible'
+            : 'opacity-0 invisible pointer-events-none'
+            }`}
         >
           <div className="flex h-full flex-col px-8 py-5">
             <div className="flex items-center justify-between">
@@ -151,9 +150,8 @@ const Navbar = () => {
             </div>
 
             <div
-              className={`mt-16 flex flex-1 flex-col justify-center gap-4 transition-all duration-500 ${
-                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-              }`}
+              className={`mt-16 flex flex-1 flex-col justify-center gap-4 transition-all duration-500 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                }`}
             >
               {links.map((l, idx) => {
                 const isActive = active === l.id

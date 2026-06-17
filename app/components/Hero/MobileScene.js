@@ -1,12 +1,16 @@
 import React from "react";
+import { motion } from "framer-motion";
 import Scene3d from "../Scene3d";
 import Image from "next/image";
 
 import roadMobile from "@/public/scene/roadsMobile.webp";
 
-const MobileScene = () => {
+const MobileScene = ({ parallaxStyle }) => {
   return (
-    <div className="relative isolate h-screen w-full overflow-hidden sm:hidden">
+    <motion.div
+      className="hero-parallax-layer relative isolate h-screen w-full overflow-hidden sm:hidden"
+      style={parallaxStyle}
+    >
       <div className="absolute inset-0 z-0">
         <Scene3d distance={5} speed={1.2} yaxis={-5.3} zoom={-16} />
       </div>
@@ -15,7 +19,7 @@ const MobileScene = () => {
         alt="Road with a streetlight where my avatar is walking"
         className="pointer-events-none absolute bottom-0 left-0 -z-10 h-auto w-full select-none"
       />
-    </div>
+    </motion.div>
   );
 };
 

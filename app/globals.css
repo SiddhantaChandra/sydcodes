@@ -131,6 +131,10 @@ html.lenis body {
   animation: heroGradientLoop 16s ease-in-out infinite;
 }
 
+.hero-parallax-layer {
+  will-change: transform;
+}
+
 .hero-text2-wrap {
   pointer-events: none;
   position: absolute;
@@ -218,6 +222,11 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-parallax-layer {
+    transform: none !important;
+    transition: none !important;
+  }
+
   .gradient {
     animation: none;
     background-position: 0% 50%;
