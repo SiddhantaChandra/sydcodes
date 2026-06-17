@@ -20,9 +20,9 @@ const ExperienceCard = ({ item, mobile = false }) => {
 
       <div className="flex justify-between items-start gap-4 z-10">
         <div className="min-w-0">
-          <h3 className="text-2xl md:text-3xl font-bold text-[#e7d5c3] mb-2 leading-tight">
+          <h4 className="text-2xl md:text-3xl font-bold text-[#e7d5c3] mb-2 leading-tight">
             {item.role}
-          </h3>
+          </h4>
           <p className="text-sm md:text-base text-white/50 leading-relaxed">
             {item.company} • {item.period}
           </p>
@@ -46,7 +46,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
       <div className="flex flex-wrap gap-3 mt-6 md:mt-8 z-10">
         {item.techstack.map((tech, idx) => (
           <div key={idx} className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-full border border-white/10 bg-black/40 text-xs 2xl:text-sm text-[#e7d5c3]">
-            <Image src={tech.icon} alt={tech.name} width={16} height={16} className="w-4 h-4 opacity-80" />
+            <Image src={tech.icon} alt="" aria-hidden="true" width={16} height={16} className="w-4 h-4 opacity-80" />
             {tech.name}
           </div>
         ))}
@@ -75,9 +75,9 @@ const EducationCard = ({ items, mobile = false }) => {
             className={idx === items.length - 1 ? 'px-1 py-3 md:py-4' : 'px-1 py-3 md:py-4 border-b border-white/10'}
           >
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2">
-              <h4 className="text-sm md:text-lg font-semibold text-[#e7d5c3] leading-snug">
+              <h5 className="text-sm md:text-lg font-semibold text-[#e7d5c3] leading-snug">
                 {item.title}
-              </h4>
+              </h5>
               <div className="shrink-0 inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-medium text-white/50 tracking-wider whitespace-nowrap">
                 {item.period}
               </div>
@@ -164,9 +164,9 @@ const Experience = () => {
 
         <div className="space-y-10">
           <div>
-            <p className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Experience
-            </p>
+            </h3>
             <div className="space-y-6">
               {experienceItems.map((item, idx) => (
                 <ExperienceCard key={`mobile-exp-${idx}`} item={item} mobile />
@@ -176,9 +176,9 @@ const Experience = () => {
 
           <div>
             <div className="w-full h-px bg-white/10 mb-6" />
-            <p className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Education
-            </p>
+            </h3>
             <EducationCard items={educationItems} mobile />
           </div>
         </div>
@@ -195,9 +195,9 @@ const Experience = () => {
           style={{ x }}
           className="flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
         >
-          <div className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
+          <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
             Experience
-          </div>
+          </h3>
 
           {experienceItems.map((item, idx) => (
             <ExperienceCard key={`exp-${idx}`} item={item} />
@@ -205,9 +205,9 @@ const Experience = () => {
 
           <div className="flex items-center gap-8 md:gap-16 mx-4">
             <div className="w-[1px] h-32 bg-white/10 shrink-0" />
-            <div className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
+            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
               Education
-            </div>
+            </h3>
           </div>
 
           <EducationCard items={educationItems} />

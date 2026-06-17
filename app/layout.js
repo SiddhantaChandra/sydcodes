@@ -101,6 +101,7 @@ const personJsonLd = {
   name: "Siddhanta Chandra",
   jobTitle: "Full-stack Developer",
   url: "https://www.siddhantachandra.com",
+  image: "https://www.siddhantachandra.com/og/og-image-home.jpg",
   sameAs: [
     "https://www.linkedin.com/in/siddhantachandra/",
     "https://github.com/SiddhantaChandra",
@@ -113,6 +114,26 @@ const personJsonLd = {
     "TypeScript",
     "UI/UX Design",
   ],
+  alumniOf: [
+    {
+      "@type": "EducationalOrganization",
+      "name": "Sister Nivedita University"
+    },
+    {
+      "@type": "EducationalOrganization",
+      "name": "University of Engineering & Management"
+    }
+  ],
+  worksFor: [
+    {
+      "@type": "Organization",
+      "name": "Onlybees Pvt. Ltd."
+    },
+    {
+      "@type": "Organization",
+      "name": "CricketWinner LLC"
+    }
+  ]
 };
 
 const websiteJsonLd = {

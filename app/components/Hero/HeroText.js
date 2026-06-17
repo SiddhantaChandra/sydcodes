@@ -33,10 +33,12 @@ const HeroText = ({ parallaxStyle }) => {
         Fullstack Developer
       </span>
       <h1 className="mb-2">
-        <span className="inline-block text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary drop-shadow-lg lg:hidden">
+        <span className="sr-only">Siddhanta Chandra</span>
+        <span aria-hidden="true" className="inline-block text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary drop-shadow-lg lg:hidden">
           Siddhanta Chandra
         </span>
         <span
+          aria-hidden="true"
           className="relative hidden lg:block lg:w-2xl xl:w-3xl mb-4"
           onMouseEnter={() => setIsRevealing(true)}
           onMouseMove={handleRevealMove}
@@ -44,7 +46,7 @@ const HeroText = ({ parallaxStyle }) => {
         >
           <Image
             src={textStroked}
-            alt="Siddhanta Chandra"
+            alt=""
             className="w-full h-auto pointer-events-none"
             style={{
               opacity: isRevealing ? 1 : 0,
@@ -55,7 +57,7 @@ const HeroText = ({ parallaxStyle }) => {
           />
           <Image
             src={textFilled}
-            alt="Siddhanta Chandra"
+            alt=""
             className="absolute inset-0 h-full w-full pointer-events-none"
             style={{
               WebkitMaskImage: isRevealing ? concealMask : "none",

@@ -88,9 +88,9 @@ const Navbar = () => {
   ]
 
   return (
-    <div className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
+    <header className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
       {/* Desktop Navbar */}
-      <div className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#181212]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
+      <nav aria-label="Main navigation" className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#181212]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
         <Image src={logoLarge} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
         <div className="flex gap-1">
           {links.map((l) => {
@@ -109,7 +109,7 @@ const Navbar = () => {
             )
           })}
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Navbar */}
       <div className="w-full lg:hidden">
@@ -124,7 +124,8 @@ const Navbar = () => {
           >
             <Image
               src={isMenuOpen ? closeIcon : menuIcon}
-              alt="menu toggle"
+              alt=""
+              aria-hidden="true"
               className="h-10 w-10"
             />
           </button>
@@ -145,11 +146,12 @@ const Navbar = () => {
                 aria-label="Close navigation menu"
                 className="grid h-10 w-10 place-items-center rounded-xl  transition-colors duration-200"
               >
-                <Image src={closeIcon} alt="close menu" className="h-10 w-10" />
+                <Image src={closeIcon} alt="" aria-hidden="true" className="h-10 w-10" />
               </button>
             </div>
 
-            <div
+            <nav
+              aria-label="Mobile navigation"
               className={`mt-16 flex flex-1 flex-col justify-center gap-4 transition-all duration-500 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
                 }`}
             >
@@ -172,7 +174,7 @@ const Navbar = () => {
                   </Link>
                 )
               })}
-            </div>
+            </nav>
 
             <div className="flex items-center justify-between gap-3 rounded-2xl bg-black/10 p-3">
               <Link
@@ -182,7 +184,7 @@ const Navbar = () => {
                 aria-label="LinkedIn"
                 className="grid h-12 w-12 place-items-center rounded-xl bg-black/10 hover:bg-black/20 transition-colors duration-200"
               >
-                <Image src={linkedinIcon} alt="LinkedIn" className="h-5 w-5" />
+                <Image src={linkedinIcon} alt="" aria-hidden="true" className="h-5 w-5" />
               </Link>
               <Link
                 href={socialLinks.github}
@@ -191,20 +193,20 @@ const Navbar = () => {
                 aria-label="GitHub"
                 className="grid h-12 w-12 place-items-center rounded-xl bg-black/10 hover:bg-black/20 transition-colors duration-200"
               >
-                <Image src={githubIcon} alt="GitHub" className="h-5 w-5" />
+                <Image src={githubIcon} alt="" aria-hidden="true" className="h-5 w-5" />
               </Link>
               <Link
                 href={socialLinks.resume}
                 className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-black border border-black/20 hover:bg-primary/90 transition-colors duration-200"
               >
-                <Image src={resumeIcon} alt="Download resume" className="h-4 w-4" />
+                <Image src={resumeIcon} alt="" aria-hidden="true" className="h-4 w-4" />
                 Download Resume
               </Link>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
   )
 }
 
