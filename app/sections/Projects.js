@@ -8,6 +8,15 @@ import urmiImage from "@/public/project-image/urmi-portfolio.webp";
 
 const projects = [
   {
+    title: "Slaysuki TCG",
+    type: "E-commerce",
+    description:
+      "A full-stack trading card marketplace with a microservices backend, custom inventory and order management CMS, customer storefront, payment processing, shipping automation, and cloud-based asset management.",
+    tech: ["Next.js", "React", "NestJS", "Prisma ORM", "Redis", "Tanstack Query", "Tailwind CSS", "Cloudflare R2", "BullMQ", "Cashfree", "Shiprocket"],
+    live: "https://www.slaysuki.com/",
+    image: slaysukiImage,
+  },
+  {
     title: "Journalist Portfolio & CMS",
     type: "Portfolio",
     description:
@@ -18,17 +27,8 @@ const projects = [
     image: urmiImage,
   },
   {
-    title: "Slaysuki Trading",
-    type: "Creative Portfolio",
-    description:
-      "Full-stack trading card marketplace built with a microservices backend, custom inventory and order management CMS, customer storefront, payment processing, shipping automation, and cloud-based asset management.",
-    tech: ["Next.js", "React", "NestJS", "Prisma ORM", "Redis", "Tanstack Query", "Tailwind CSS", "Cloudflare R2", "BullMQ", "Cashfree", "Shiprocket"],
-    live: "https://www.slaysuki.com/",
-    image: slaysukiImage,
-  },
-  {
-    title: "PulseBoard",
-    type: "SaaS Dashboard",
+    title: "ZestQuiz",
+    type: "SaaS",
     description:
       "A quiz platform featuring AI-powered quiz generation, role-based authentication, quiz management, real-time chatbot support, performance tracking, and an admin dashboard for content management.",
     tech: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
@@ -299,12 +299,12 @@ const Projects = () => {
   const shouldShowStack = effectiveDisplayProjectIndex !== -1;
   const visibleDesktopTech = shouldShowStack
     ? [
-        ...new Set(
-          projects
-            .slice(0, effectiveDisplayProjectIndex + 1)
-            .flatMap((project) => project.tech),
-        ),
-      ]
+      ...new Set(
+        projects
+          .slice(0, effectiveDisplayProjectIndex + 1)
+          .flatMap((project) => project.tech),
+      ),
+    ]
     : [];
 
   return (
