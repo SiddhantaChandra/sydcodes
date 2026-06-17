@@ -36,7 +36,7 @@ const HeroText = ({ parallaxStyle }) => {
         Siddhanta Chandra
       </h1>
       <div
-        className="relative hidden lg:block lg:w-2xl xl:w-4xl mb-4"
+        className="relative hidden lg:block lg:w-2xl xl:w-3xl mb-4"
         onMouseEnter={() => setIsRevealing(true)}
         onMouseMove={handleRevealMove}
         onMouseLeave={() => setIsRevealing(false)}
