@@ -65,12 +65,12 @@ export default function Footer() {
             <Link href="#home" aria-label="Back to home" className="shrink-0">
               <Image
                 src={logoLarge}
-                alt="Siddhanta"
+                alt="Siddhanta Chandra Logo"
                 className="hidden h-8 w-auto lg:block"
               />
               <Image
                 src={logoShort}
-                alt="Siddhanta"
+                alt="Siddhanta Chandra Logo"
                 className="h-8 w-auto lg:hidden"
               />
             </Link>

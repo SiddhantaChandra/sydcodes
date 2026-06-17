@@ -19,6 +19,23 @@ export const metadata = {
   title: "Siddhanta Chandra - Full-stack Developer",
   description:
     "Portfolio of Siddhanta Chandra, a full-stack developer crafting robust backends, creative designs and intuitive user interfaces.",
+  authors: [{ name: "Siddhanta Chandra", url: "https://www.siddhantachandra.com" }],
+  creator: "Siddhanta Chandra",
+  publisher: "Siddhanta Chandra",
+  keywords: [
+    "Siddhanta Chandra",
+    "Full-stack Developer",
+    "Web Developer",
+    "React Developer",
+    "Next.js Developer",
+    "Portfolio",
+    "Kolkata",
+    "Frontend Developer",
+    "Backend Developer",
+  ],
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [
       { url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -78,11 +95,51 @@ export const viewport = {
   themeColor: "#000000",
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Siddhanta Chandra",
+  jobTitle: "Full-stack Developer",
+  url: "https://www.siddhantachandra.com",
+  sameAs: [
+    "https://www.linkedin.com/in/siddhantachandra/",
+    "https://github.com/SiddhantaChandra",
+  ],
+  knowsAbout: [
+    "Full-stack Development",
+    "React",
+    "Next.js",
+    "Node.js",
+    "TypeScript",
+    "UI/UX Design",
+  ],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Siddhanta Chandra - Full-stack Developer",
+  url: "https://www.siddhantachandra.com",
+  publisher: {
+    "@type": "Person",
+    name: "Siddhanta Chandra",
+    url: "https://www.siddhantachandra.com",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${oswald.variable} antialiased`}>
         <SmoothScroll>{children}</SmoothScroll>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       </body>
     </html>
   );

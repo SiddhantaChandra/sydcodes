@@ -91,7 +91,7 @@ const Navbar = () => {
     <div className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
       {/* Desktop Navbar */}
       <div className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#181212]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
-        <Image src={logoLarge} alt="Description" className="h-8 w-auto" />
+        <Image src={logoLarge} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
         <div className="flex gap-1">
           {links.map((l) => {
             const isActive = active === l.id
@@ -114,7 +114,7 @@ const Navbar = () => {
       {/* Mobile Navbar */}
       <div className="w-full lg:hidden">
         <div className="w-full items-center justify-between px-5 py-3 rounded-full border border-primary/20 flex bg-[#181212]/75 backdrop-blur-sm shadow-none">
-          <Image src={logoShort} alt="Description" className="h-8 w-auto" />
+          <Image src={logoShort} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
           <button
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -138,7 +138,7 @@ const Navbar = () => {
         >
           <div className="flex h-full flex-col px-8 py-5">
             <div className="flex items-center justify-between">
-              <Image src={logoShort} alt="Description" className="h-8 w-auto" />
+              <Image src={logoShort} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
@@ -177,6 +177,8 @@ const Navbar = () => {
             <div className="flex items-center justify-between gap-3 rounded-2xl bg-black/10 p-3">
               <Link
                 href={socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="grid h-12 w-12 place-items-center rounded-xl bg-black/10 hover:bg-black/20 transition-colors duration-200"
               >
@@ -184,6 +186,8 @@ const Navbar = () => {
               </Link>
               <Link
                 href={socialLinks.github}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="GitHub"
                 className="grid h-12 w-12 place-items-center rounded-xl bg-black/10 hover:bg-black/20 transition-colors duration-200"
               >
