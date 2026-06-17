@@ -6,7 +6,7 @@ import HeroText from "../components/Hero/HeroText";
 
 const Hero = () => {
   return (
-    <section className="relative bg-black" id="#home">
+    <section className="relative bg-black" id="home">
       <HeroText />
       <MobileScene />
       <TabletScene />

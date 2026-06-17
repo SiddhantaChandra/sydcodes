@@ -2,73 +2,174 @@
 
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import slaysukiImage from "@/public/project-image/slaysuki.png";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import slaysukiImage from "@/public/project-image/slaysuki-trading.webp";
+import urmiImage from "@/public/project-image/urmi-portfolio.webp";
 
 const projects = [
   {
-    title: "Vertex Commerce",
-    type: "Fullstack Platform",
+    title: "Journalist Portfolio & CMS",
+    type: "Portfolio",
     description:
-      "Headless storefront with blazing-fast catalog discovery, custom checkout, and analytics-ready event tracking.",
-    tech: ["Next.js", "Tailwind", "Prisma", "PostgreSQL"],
-    github: "https://github.com/username/vertex-commerce",
-    live: "https://vertex-commerce.example.com",
-    image: slaysukiImage,
+      "A full-stack portfolio and blogging platform for a journalist featuring a custom CMS, rich-text article editor, media management, secure authentication, and cloud-based file storage.",
+    tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma ORM", "Cloudflare R2", "Tailwind CSS", "BlockNode"],
+    github: "https://github.com/SiddhantaChandra/urmi-portfolio-website",
+    live: "https://www.urmichakraborty.com/",
+    image: urmiImage,
   },
   {
-    title: "Luma Studio",
+    title: "Slaysuki Trading",
     type: "Creative Portfolio",
     description:
-      "Immersive agency website with smooth storytelling sections, modular CMS blocks, and responsive media pipelines.",
-    tech: ["Next.js", "Sanity", "Tailwind"],
-    github: "https://github.com/username/luma-studio",
-    live: "https://luma-studio.example.com"
+      "Full-stack trading card marketplace built with a microservices backend, custom inventory and order management CMS, customer storefront, payment processing, shipping automation, and cloud-based asset management.",
+    tech: ["Next.js", "React", "NestJS", "Prisma ORM", "Redis", "Tanstack Query", "Tailwind CSS", "Cloudflare R2", "BullMQ", "Cashfree", "Shiprocket"],
+    live: "https://www.slaysuki.com/",
+    image: slaysukiImage,
   },
   {
     title: "PulseBoard",
     type: "SaaS Dashboard",
     description:
-      "Live operational dashboard with role-based views, real-time widgets, and contextual drill-down interactions.",
-    tech: ["React", "Express", "WebSockets"],
-    github: "https://github.com/username/pulseboard",
-    live: "https://pulseboard.example.com",
+      "A quiz platform featuring AI-powered quiz generation, role-based authentication, quiz management, real-time chatbot support, performance tracking, and an admin dashboard for content management.",
+    tech: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
+    github: "https://github.com/SiddhantaChandra/ZestQuiz",
+    // live: "https://pulseboard.example.com",
     image: slaysukiImage,
-  },
-  {
-    title: "Nomad Routes",
-    type: "Travel Product",
-    description:
-      "Trip-planning platform combining route optimization, collaborative itinerary editing, and map-centric UI patterns.",
-    tech: ["Next.js", "Prisma", "Mapbox"],
-    github: "https://github.com/username/nomad-routes"
-  },
-  {
-    title: "Signal Hiring",
-    type: "Recruitment Suite",
-    description:
-      "Hiring workflow system with candidate pipelines, scorecards, and interview scheduling automation.",
-    tech: ["Next.js", "Supabase", "TypeScript"],
-    github: "https://github.com/username/signal-hiring"
-  },
+  }
 ];
 
 const PROJECT_START_OFFSET = 0.06;
 const PROJECT_PROGRESS_SPAN = 0.18;
+const CARD_EXIT_MS = 180;
+const CARD_ENTER_DELAY_MS = 24;
+
+const desktopCardMotion = {
+  initial: { opacity: 0, y: "112%" },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.56, ease: [0.16, 1, 0.3, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -18,
+    transition: { duration: 0.18, ease: "easeOut" },
+  },
+};
+
+const mobileCardMotion = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+  },
+  viewport: { once: true, amount: 0.2 },
+};
+
+const techBadgeMotion = {
+  initial: { opacity: 0, y: 10, scale: 0.92 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -8,
+    scale: 0.94,
+    transition: { duration: 0.18, ease: "easeOut" },
+  },
+};
 
 const getProjectCenter = (index) =>
   PROJECT_START_OFFSET + index * PROJECT_PROGRESS_SPAN + PROJECT_PROGRESS_SPAN / 2;
 
+const ProjectCardContent = ({ project }) => (
+  <>
+    {project.image ? (
+      <div
+        className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl  bg-[#26201b] xl:mx-20 2xl:mx-0"
+        style={{ aspectRatio: "1920 / 947" }}
+      >
+        <Image
+          src={project.image}
+          alt={`${project.title} preview`}
+          fill
+          className="object-cover object-top"
+          sizes="(min-width: 1024px) 36rem, 100vw"
+        />
+      </div>
+    ) : null}
+
+    <div className="mb-4 flex items-start justify-between gap-3">
+      <div>
+        <h3 className="text-2xl font-semibold text-primary">{project.title}</h3>
+      </div>
+      <span className="rounded-full border border-accent/35 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-accent uppercase">
+        {project.type}
+      </span>
+    </div>
+
+    <p className="mb-4 max-w-xl text-base leading-relaxed text-primary/82 xl:text-sm 2xl:text-base">
+      {project.description}
+    </p>
+
+    <div className="mb-6 flex flex-wrap gap-2.5">
+      {project.tech.map((tech) => (
+        <span
+          key={`${project.title}-${tech}`}
+          className="rounded-full border border-primary/10 bg-[#2c2620] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72 xl:hidden 2xl:inline-block"
+        >
+          {tech}
+        </span>
+      ))}
+    </div>
+
+    {project.github || project.live ? (
+      <div className="flex flex-wrap gap-3">
+        {project.github ? (
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center rounded-full border border-primary/18 bg-[#322b24] px-4 py-2 text-sm font-medium text-primary transition-colors duration-300 hover:border-primary/30 hover:bg-[#3a322b]"
+          >
+            GitHub
+          </a>
+        ) : null}
+
+        {project.live ? (
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center rounded-full border border-accent/25 bg-accent/12 px-4 py-2 text-sm font-medium text-accent transition-colors duration-300 hover:border-accent/45 hover:bg-accent/18"
+          >
+            Live Demo
+          </a>
+        ) : null}
+      </div>
+    ) : null}
+  </>
+);
+
 const Projects = () => {
   const sectionRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
   const [activeProjectIndex, setActiveProjectIndex] = useState(-1);
   const [displayProjectIndex, setDisplayProjectIndex] = useState(-1);
   const [isCardVisible, setIsCardVisible] = useState(false);
-  const transitionTimeoutRef = useRef(null);
+  const swapTimeoutRef = useRef(null);
+  const enterTimeoutRef = useRef(null);
 
   useEffect(() => {
+    if (shouldReduceMotion) return undefined;
+
     const updateProgress = () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || window.innerWidth < 1024) return;
 
       const rect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
@@ -93,7 +194,7 @@ const Projects = () => {
       }, 0);
 
       setActiveProjectIndex((current) =>
-        current === nextActiveIndex ? current : nextActiveIndex
+        current === nextActiveIndex ? current : nextActiveIndex,
       );
     };
 
@@ -103,178 +204,210 @@ const Projects = () => {
     window.addEventListener("resize", updateProgress);
 
     return () => {
-      if (transitionTimeoutRef.current) {
-        window.clearTimeout(transitionTimeoutRef.current);
-      }
       window.removeEventListener("lenis:scroll", updateProgress);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
     };
-  }, []);
+  }, [shouldReduceMotion]);
 
   useEffect(() => {
-    if (transitionTimeoutRef.current) {
-      window.clearTimeout(transitionTimeoutRef.current);
-      transitionTimeoutRef.current = null;
+    if (shouldReduceMotion) return undefined;
+
+    if (swapTimeoutRef.current) {
+      window.clearTimeout(swapTimeoutRef.current);
+      swapTimeoutRef.current = null;
     }
 
-    if (activeProjectIndex === displayProjectIndex) {
-      const nextVisible = activeProjectIndex !== -1;
-      if (isCardVisible !== nextVisible) {
-        window.requestAnimationFrame(() => {
-          setIsCardVisible(nextVisible);
-        });
-      }
-      return;
+    if (enterTimeoutRef.current) {
+      window.clearTimeout(enterTimeoutRef.current);
+      enterTimeoutRef.current = null;
     }
 
     if (activeProjectIndex === -1) {
       window.requestAnimationFrame(() => {
         setIsCardVisible(false);
       });
-      transitionTimeoutRef.current = window.setTimeout(() => {
-        setDisplayProjectIndex(-1);
-      }, 140);
-      return;
+
+      if (displayProjectIndex !== -1) {
+        swapTimeoutRef.current = window.setTimeout(() => {
+          setDisplayProjectIndex(-1);
+        }, CARD_EXIT_MS);
+      }
+
+      return undefined;
     }
 
     if (displayProjectIndex === -1) {
       window.requestAnimationFrame(() => {
         setDisplayProjectIndex(activeProjectIndex);
+        enterTimeoutRef.current = window.setTimeout(() => {
+          setIsCardVisible(true);
+        }, CARD_ENTER_DELAY_MS);
+      });
+
+      return undefined;
+    }
+
+    if (activeProjectIndex === displayProjectIndex) {
+      if (!isCardVisible) {
         window.requestAnimationFrame(() => {
           setIsCardVisible(true);
         });
-      });
-      return;
+      }
+
+      return undefined;
     }
 
     window.requestAnimationFrame(() => {
       setIsCardVisible(false);
     });
-    transitionTimeoutRef.current = window.setTimeout(() => {
-      setDisplayProjectIndex(activeProjectIndex);
-      window.requestAnimationFrame(() => {
-        setIsCardVisible(true);
-      });
-    }, 160);
-  }, [activeProjectIndex, displayProjectIndex, isCardVisible]);
 
-  const activeProject = projects[displayProjectIndex];
-  const visibleStackLayers = activeProject
-    ? Math.min(3, projects.length - displayProjectIndex - 1)
-    : 0;
+    swapTimeoutRef.current = window.setTimeout(() => {
+      setDisplayProjectIndex(activeProjectIndex);
+      enterTimeoutRef.current = window.setTimeout(() => {
+        setIsCardVisible(true);
+      }, CARD_ENTER_DELAY_MS);
+    }, CARD_EXIT_MS);
+
+    return () => {
+      if (swapTimeoutRef.current) {
+        window.clearTimeout(swapTimeoutRef.current);
+        swapTimeoutRef.current = null;
+      }
+
+      if (enterTimeoutRef.current) {
+        window.clearTimeout(enterTimeoutRef.current);
+        enterTimeoutRef.current = null;
+      }
+    };
+  }, [activeProjectIndex, displayProjectIndex, isCardVisible, shouldReduceMotion]);
+
+  useEffect(() => {
+    return () => {
+      if (swapTimeoutRef.current) {
+        window.clearTimeout(swapTimeoutRef.current);
+      }
+
+      if (enterTimeoutRef.current) {
+        window.clearTimeout(enterTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const effectiveDisplayProjectIndex = shouldReduceMotion ? 0 : displayProjectIndex;
+  const activeProject = projects[effectiveDisplayProjectIndex];
+  const shouldShowStack = effectiveDisplayProjectIndex !== -1;
+  const visibleDesktopTech = shouldShowStack
+    ? [
+        ...new Set(
+          projects
+            .slice(0, effectiveDisplayProjectIndex + 1)
+            .flatMap((project) => project.tech),
+        ),
+      ]
+    : [];
 
   return (
     <section
       ref={sectionRef}
       id="projects"
-      className="projects-section relative lg:max-w-4xl 2xl:max-w-7xl mx-auto "
-      style={{ minHeight: `${projects.length * 125}vh` }}
+      className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-32"
+      style={{
+        minHeight: shouldReduceMotion ? "auto" : undefined,
+      }}
     >
-      <div className="projects-sticky sticky top-0 flex h-screen items-center">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
-          <div>
-            <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
-              Selected Work
-            </p>
-            <h2 className="max-w-md text-4xl font-bold leading-tight text-primary md:text-5xl">
-              Projects
-            </h2>
-            <p className="mt-4 max-w-md text-base text-primary/80">
-              Scroll through five crafted projects. They appear one by one and
-              stack into a single centered stage.
-            </p>
+      <div className="relative mx-auto max-w-4xl px-5 pt-36 pb-0 lg:max-w-6xl lg:pt-40 2xl:max-w-7xl">
+        <div className={`mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+          <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
+            Selected Work
+          </p>
+          <h2 className="max-w-md text-4xl font-bold leading-tight text-primary md:text-5xl">
+            Projects
+          </h2>
+          <p className="mt-4 max-w-xl text-base text-primary/80">
+            A curated selection of product, platform, and interface work with a
+            focus on motion, usability, and scalable frontends.
+          </p>
+        </div>
 
-            {activeProject?.image ? (
-              <div
-                className="project-preview mt-8 hidden lg:block"
-                data-visible={isCardVisible ? "true" : "false"}
-              >
-                <div className="project-preview-frame relative aspect-[16/10] overflow-hidden rounded-[1.75rem] border border-primary/15 bg-[#26201b] shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-                  <Image
-                    src={activeProject.image}
-                    alt={`${activeProject.title} preview`}
-                    fill
-                    className="object-cover object-top"
-                    sizes="(min-width: 1536px) 28rem, (min-width: 1024px) 22rem, 0px"
-                  />
-                </div>
-              </div>
-            ) : null}
-          </div>
+        <div className={`space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+          {projects.map((project) => (
+            <motion.article
+              key={`mobile-${project.title}`}
+              className="flex min-h-[24rem] flex-col rounded-3xl bg-[#2b2621] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
+              initial={shouldReduceMotion ? false : mobileCardMotion.initial}
+              whileInView={
+                shouldReduceMotion ? undefined : mobileCardMotion.whileInView
+              }
+              viewport={shouldReduceMotion ? undefined : mobileCardMotion.viewport}
+            >
+              <ProjectCardContent project={project} />
+            </motion.article>
+          ))}
+        </div>
 
-          <div
-            className="projects-stack relative h-[68vh] min-h-96"
-            data-empty={activeProject ? "false" : "true"}
-            data-visible={isCardVisible ? "true" : "false"}
-          >
-            {Array.from({ length: visibleStackLayers }).map((_, layerIndex) => (
-              <div
-                key={`stack-layer-${displayProjectIndex}-${layerIndex}`}
-                className="project-stack-layer rounded-3xl"
-                style={{ "--layer-index": `${layerIndex + 1}` }}
-              />
-            ))}
-
-            {activeProject ? (
-              <article
-                className="project-card relative z-10 flex h-full flex-col rounded-3xl p-7 md:p-8"
-              >
-                <div className="mb-4 flex items-start justify-between gap-3">
-                  <div>
-                    
-                    <h3 className="text-2xl font-semibold text-primary">
-                      {activeProject.title}
-                    </h3>
-                  </div>
-                  <span className="rounded-full border border-accent/35 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-accent uppercase">
-                    {activeProject.type}
-                  </span>
-                </div>
-                <p className="mb-4 max-w-xl text-base leading-relaxed text-primary/82">
-                  {activeProject.description}
+        <div
+          className={`projects-desktop-stage ${shouldReduceMotion ? "hidden" : "hidden lg:block"}`}
+          style={{ minHeight: shouldReduceMotion ? "auto" : `${projects.length * 125}vh` }}
+        >
+          <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-6rem)] items-start py-6">
+            <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
+              <div>
+                <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
+                  Selected Work
+                </p>
+                <h2 className="max-w-md text-4xl font-bold leading-tight text-primary md:text-5xl">
+                  Projects
+                </h2>
+                <p className="mt-4 max-w-md text-base text-primary/80">
+                  Scroll through five crafted projects. They appear one by one and
+                  stack into a single centered stage.
                 </p>
 
-                <div className="mt-auto space-y-6">
-                  <div className="flex flex-wrap gap-2.5">
-                    {activeProject.tech.map((tech) => (
-                      <span
-                        key={`${activeProject.title}-${tech}`}
-                        className="rounded-full border border-primary/10 bg-[#2c2620] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {activeProject.github || activeProject.live ? (
-                    <div className="flex flex-wrap gap-3">
-                      {activeProject.github ? (
-                        <a
-                          href={activeProject.github}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center rounded-full border border-primary/18 bg-[#322b24] px-4 py-2 text-sm font-medium text-primary transition-colors duration-300 hover:border-primary/30 hover:bg-[#3a322b]"
-                        >
-                          GitHub
-                        </a>
-                      ) : null}
-
-                      {activeProject.live ? (
-                        <a
-                          href={activeProject.live}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center rounded-full border border-accent/25 bg-accent/12 px-4 py-2 text-sm font-medium text-accent transition-colors duration-300 hover:border-accent/45 hover:bg-accent/18"
-                        >
-                          Live Demo
-                        </a>
-                      ) : null}
+                {shouldShowStack ? (
+                  <div className="mt-6">
+                    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-primary/55 uppercase">
+                      Project Stack
+                    </p>
+                    <div className="flex max-w-md flex-wrap gap-2.5">
+                      <AnimatePresence initial={false}>
+                        {visibleDesktopTech.map((tech) => (
+                          <motion.span
+                            key={`desktop-stack-${tech}`}
+                            className="rounded-full border border-primary/10 bg-[#2c2620] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72"
+                            initial={shouldReduceMotion ? false : techBadgeMotion.initial}
+                            animate={shouldReduceMotion ? undefined : techBadgeMotion.animate}
+                            exit={shouldReduceMotion ? undefined : techBadgeMotion.exit}
+                            layout
+                          >
+                            {tech}
+                          </motion.span>
+                        ))}
+                      </AnimatePresence>
                     </div>
+                  </div>
+                ) : null}
+              </div>
+
+              <div
+                className="projects-stack relative min-h-[26rem] pb-10"
+                data-empty={activeProject ? "false" : "true"}
+              >
+                <AnimatePresence initial={false} mode="wait">
+                  {activeProject && isCardVisible ? (
+                    <motion.article
+                      key={activeProject.title}
+                      className="project-card relative z-10 flex flex-col rounded-3xl p-7 md:p-8"
+                      initial={shouldReduceMotion ? false : desktopCardMotion.initial}
+                      animate={shouldReduceMotion ? undefined : desktopCardMotion.animate}
+                      exit={shouldReduceMotion ? undefined : desktopCardMotion.exit}
+                    >
+                      <ProjectCardContent project={activeProject} />
+                    </motion.article>
                   ) : null}
-                </div>
-              </article>
-            ) : null}
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </div>

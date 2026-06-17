@@ -89,81 +89,33 @@ html.lenis body {
 
 .projects-stack {
   perspective: 1100px;
-}
-
-.project-preview {
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-
-.project-preview[data-visible="false"] {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.project-preview[data-visible="true"] {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.project-preview-frame {
-  transition: opacity 180ms ease, transform 180ms ease;
+  overflow: visible;
 }
 
 .project-card {
   background: #2b2621;
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
   transform-origin: center center;
-  transition: opacity 180ms ease, transform 180ms ease;
+  will-change: transform, opacity;
 }
 
-.projects-stack[data-empty="true"] .project-card,
-.projects-stack[data-empty="true"] .project-stack-layer {
+.projects-stack[data-empty="true"] .project-card {
   opacity: 0;
 }
 
-.project-stack-layer {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
-    #241f1b;
-  transform:
-    translate3d(
-      calc(var(--layer-index) * 8px),
-      calc(var(--layer-index) * -10px),
-      calc(var(--layer-index) * -30px)
-    )
-    scale(calc(1 - (var(--layer-index) * 0.018)));
-  opacity: calc(0.34 - (var(--layer-index) * 0.08));
+.contact-card-shape {
+  fill: rgba(255, 255, 255, 0.03);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1.5;
   transition:
-    transform 180ms ease,
-    opacity 180ms ease;
+    fill 300ms ease,
+    stroke 300ms ease;
 }
 
-.projects-stack[data-empty="false"] .project-card {
-  opacity: 1;
-}
-
-.projects-stack[data-visible="false"] .project-card {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.projects-stack[data-visible="true"] .project-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.projects-stack[data-visible="false"] .project-stack-layer {
-  opacity: 0;
-  transform:
-    translate3d(
-      calc(var(--layer-index) * 8px),
-      calc(var(--layer-index) * -4px),
-      calc(var(--layer-index) * -30px)
-    )
-    scale(calc(1 - (var(--layer-index) * 0.018)));
+.contact-card-shell:hover .contact-card-shape {
+  fill: rgba(255, 255, 255, 0.05);
+  stroke: rgba(255, 255, 255, 0.18);
 }
 
 .gradient {
@@ -287,10 +239,6 @@ html.lenis body {
     height: auto;
     min-height: auto;
     perspective: none;
-  }
-
-  .project-stack-layer {
-    display: none;
   }
 
   .projects-section {

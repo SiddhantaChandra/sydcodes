@@ -16,13 +16,13 @@ const Navbar = () => {
   const [active, setActive] = useState('home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const socialLinks = {
-    linkedin: '#',
-    github: '#',
-    resume: '/resume.pdf',
+    linkedin: 'https://www.linkedin.com/in/siddhantachandra/',
+    github: 'https://github.com/SiddhantaChandra',
+    resume: '/SiddhantaChandra_CV.pdf',
   }
 
   useEffect(() => {
-    const ids = ['home', 'experience', 'projects', 'more']
+    const ids = ['home', 'experience', 'projects', 'expertise', 'contact']
     const sectionEntries = new Map()
 
     const observer = new IntersectionObserver((entries) => {
@@ -83,7 +83,8 @@ const Navbar = () => {
     { id: 'home', label: 'Home' },
     { id: 'experience', label: 'Experience' },
     { id: 'projects', label: 'Projects' },
-    { id: 'more', label: 'More' },
+    { id: 'expertise', label: 'Expertise' },
+    { id: 'contact', label: 'Contact' },
   ]
 
   return (
