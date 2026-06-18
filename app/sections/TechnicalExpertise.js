@@ -128,9 +128,9 @@ export default function TechnicalExpertise() {
           <h2 className="max-w-2xl text-2xl font-bold leading-tight text-primary md:text-3xl lg:text-[2.15rem]">
             What I&apos;m good at
           </h2>
-          <p className="max-w-lg text-[0.8rem] leading-relaxed text-primary/65 md:text-[0.88rem]">
-            Frontend, backend, tools, and AI workflow.
-          </p>
+          {/* <p className="max-w-lg text-[0.8rem] leading-relaxed text-primary/65 md:text-[0.88rem]">
+            
+          </p> */}
         </div>
       </div>
 

@@ -153,11 +153,11 @@ export default function ContactMe() {
         </p>
         <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <h2 className="max-w-2xl text-2xl font-bold leading-tight text-primary md:text-3xl lg:text-[2.15rem]">
-            Let&apos;s build something sharp and usable
+            Let&apos;s build something together.
           </h2>
-          <p className="max-w-lg text-sm font-semibold leading-relaxed text-primary/65">
+          {/* <p className="max-w-lg text-sm font-semibold leading-relaxed text-primary/65">
             Reach out directly, browse my work, or grab the resume.
-          </p>
+          </p> */}
         </div>
       </div>
 
