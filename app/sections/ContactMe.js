@@ -141,7 +141,7 @@ export default function ContactMe() {
   return (
     <motion.section
       id="contact"
-      className="relative w-full scroll-mt-28 bg-[#121212] lg:scroll-mt-32"
+      className="relative w-full scroll-mt-28 bg-[#0f0f0f] lg:scroll-mt-32"
       initial={shouldReduceMotion ? false : sectionMotion.initial}
       whileInView={shouldReduceMotion ? undefined : sectionMotion.whileInView}
       viewport={shouldReduceMotion ? undefined : sectionMotion.viewport}
