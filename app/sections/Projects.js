@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import slaysukiImage from "@/public/project-image/slaysuki-trading.webp";
 import urmiImage from "@/public/project-image/urmi-portfolio.webp";
 
@@ -97,7 +98,7 @@ const ProjectCardContent = ({ project }) => (
   <>
     {project.image ? (
       <div
-        className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl  bg-[#26201b] xl:mx-20 2xl:mx-0"
+        className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl  bg-[#1a1a1a] xl:mx-20 2xl:mx-0"
         style={{ aspectRatio: "1920 / 947" }}
       >
         <Image
@@ -127,7 +128,7 @@ const ProjectCardContent = ({ project }) => (
       {project.tech.map((tech) => (
         <span
           key={`${project.title}-${tech}`}
-          className="rounded-full border border-primary/10 bg-[#2c2620] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72 xl:hidden 2xl:inline-block"
+          className="rounded-full border border-primary/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72 xl:hidden 2xl:inline-block"
         >
           {tech}
         </span>
@@ -141,8 +142,9 @@ const ProjectCardContent = ({ project }) => (
             href={project.github}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-primary/18 bg-[#322b24] px-4 py-2 text-sm font-medium text-primary transition-colors duration-300 hover:border-primary/30 hover:bg-[#3a322b]"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-white/90 bg-white px-4 py-2 text-sm font-medium text-[#0a0a0a] transition-colors duration-300 hover:bg-white/90"
           >
+            <GithubLogo size={16} weight="fill" aria-hidden="true" />
             GitHub
           </a>
         ) : null}
@@ -152,9 +154,10 @@ const ProjectCardContent = ({ project }) => (
             href={project.live}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-accent/25 bg-accent/12 px-4 py-2 text-sm font-medium text-accent transition-colors duration-300 hover:border-accent/45 hover:bg-accent/18"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#4ade80] bg-[#4ade80] px-4 py-2 text-sm font-medium text-[#0a0a0a] transition-colors duration-300 hover:bg-[#34d399]"
           >
-            Live Demo
+            Live
+            <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
           </a>
         ) : null}
       </div>
@@ -343,7 +346,7 @@ const Projects = () => {
           {projects.map((project) => (
             <motion.article
               key={`mobile-${project.title}`}
-              className="flex min-h-[24rem] flex-col rounded-3xl bg-[#2b2621] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]"
+              className="flex min-h-[24rem] flex-col rounded-2xl bg-[#1a1a1a] px-3 py-3"
               initial={shouldReduceMotion ? false : mobileCardMotion.initial}
               whileInView={
                 shouldReduceMotion ? undefined : mobileCardMotion.whileInView
@@ -387,7 +390,7 @@ const Projects = () => {
                         {visibleDesktopTech.map((tech) => (
                           <motion.span
                             key={`desktop-stack-${tech}`}
-                            className="rounded-full border border-primary/10 bg-[#2c2620] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72"
+                            className="rounded-full border border-primary/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72"
                             initial={shouldReduceMotion ? false : techBadgeMotion.initial}
                             animate={shouldReduceMotion ? undefined : techBadgeMotion.animate}
                             exit={shouldReduceMotion ? undefined : techBadgeMotion.exit}

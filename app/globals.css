@@ -93,7 +93,7 @@ html.lenis body {
 }
 
 .project-card {
-  background: #2b2621;
+  background: #0f0f0f;
   position: relative;
   width: 100%;
   transform-origin: center center;
@@ -102,6 +102,7 @@ html.lenis body {
 
 .projects-stack[data-empty="true"] .project-card {
   opacity: 0;
+  background: #0f0f0f;
 }
 
 .contact-card-shape {
