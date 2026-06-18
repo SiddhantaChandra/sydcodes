@@ -311,12 +311,12 @@ const Projects = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-32"
+      className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-28"
       style={{
         minHeight: shouldReduceMotion ? "auto" : undefined,
       }}
     >
-      <div className="relative mx-auto max-w-4xl px-5 pt-36 pb-0 lg:max-w-6xl lg:pt-40 2xl:max-w-7xl">
+      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-16 2xl:max-w-7xl lg:px-0 2xl:pt-20">
         <div className={`mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
@@ -350,7 +350,7 @@ const Projects = () => {
           className={`projects-desktop-stage ${shouldReduceMotion ? "hidden" : "hidden lg:block"}`}
           style={{ minHeight: shouldReduceMotion ? "auto" : `${projects.length * 125}vh` }}
         >
-          <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-6rem)] items-start py-6">
+          <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-6rem)] items-start">
             <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
               <div>
                 <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">

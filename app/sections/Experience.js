@@ -153,18 +153,23 @@ const Experience = () => {
       institution: 'Julien Day School, Kolkata',
       period: '2019 — 2020',
     },
+     {
+      title: 'Council for the Indian School Certificate Examinations (CISCE)',
+      institution: 'Julien Day School, Kolkata',
+      period: '2017 — 2018',
+    },
   ];
 
   return (
     <section ref={targetRef} id="experience" className="relative bg-[#000] pt-8 md:h-[400vh]">
       <div className="px-5 pt-20 pb-12 md:hidden">
-        <h2 className="text-4xl font-black uppercase text-white/10 tracking-tighter leading-none mb-8">
+        <h2 className="text-4xl font-black uppercase text-white/35 tracking-tighter leading-none mb-8">
           Journey
         </h2>
 
         <div className="space-y-10">
           <div>
-            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/40 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Experience
             </h3>
             <div className="space-y-6">
@@ -176,7 +181,7 @@ const Experience = () => {
 
           <div>
             <div className="w-full h-px bg-white/10 mb-6" />
-            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/40 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Education
             </h3>
             <EducationCard items={educationItems} mobile />
