@@ -38,8 +38,9 @@ const projects = [
   }
 ];
 
-const PROJECT_START_OFFSET = 0.06;
-const PROJECT_PROGRESS_SPAN = 0.18;
+const PROJECT_START_OFFSET = 0.12;
+const PROJECT_END_OFFSET = 0.88;
+const DESKTOP_STAGE_VH_PER_PROJECT = 98;
 const CARD_EXIT_MS = 180;
 const CARD_ENTER_DELAY_MS = 24;
 
@@ -83,8 +84,14 @@ const techBadgeMotion = {
   },
 };
 
-const getProjectCenter = (index) =>
-  PROJECT_START_OFFSET + index * PROJECT_PROGRESS_SPAN + PROJECT_PROGRESS_SPAN / 2;
+const getProjectCenter = (index, totalProjects) => {
+  if (totalProjects <= 1) {
+    return (PROJECT_START_OFFSET + PROJECT_END_OFFSET) / 2;
+  }
+
+  const t = index / (totalProjects - 1);
+  return PROJECT_START_OFFSET + t * (PROJECT_END_OFFSET - PROJECT_START_OFFSET);
+};
 
 const ProjectCardContent = ({ project }) => (
   <>
@@ -187,8 +194,10 @@ const Projects = () => {
       }
 
       const nextActiveIndex = projects.reduce((closestIndex, _project, index) => {
-        const currentDistance = Math.abs(clamped - getProjectCenter(index));
-        const closestDistance = Math.abs(clamped - getProjectCenter(closestIndex));
+        const currentDistance = Math.abs(clamped - getProjectCenter(index, projects.length));
+        const closestDistance = Math.abs(
+          clamped - getProjectCenter(closestIndex, projects.length),
+        );
 
         return currentDistance < closestDistance ? index : closestIndex;
       }, 0);
@@ -311,12 +320,12 @@ const Projects = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-28"
+      className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-28 2xl:pt-20"
       style={{
         minHeight: shouldReduceMotion ? "auto" : undefined,
       }}
     >
-      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-16 2xl:max-w-7xl lg:px-0 2xl:pt-20">
+      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-16 2xl:max-w-7xl lg:px-0 xl:pb-0">
         <div className={`mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
@@ -348,7 +357,11 @@ const Projects = () => {
 
         <div
           className={`projects-desktop-stage ${shouldReduceMotion ? "hidden" : "hidden lg:block"}`}
-          style={{ minHeight: shouldReduceMotion ? "auto" : `${projects.length * 125}vh` }}
+          style={{
+            minHeight: shouldReduceMotion
+              ? "auto"
+              : `${projects.length * DESKTOP_STAGE_VH_PER_PROJECT}vh`,
+          }}
         >
           <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-6rem)] items-start">
             <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
