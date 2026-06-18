@@ -337,8 +337,7 @@ const Projects = () => {
             Projects
           </h2>
           <p className="mt-4 max-w-xl text-base text-primary/80">
-            A curated selection of product, platform, and interface work with a
-            focus on motion, usability, and scalable frontends.
+            Projects that reflect how I build software - scalable backends, polished interfaces, and attention to detail.
           </p>
         </div>
 
@@ -376,8 +375,7 @@ const Projects = () => {
                   Projects
                 </h2>
                 <p className="mt-4 max-w-md text-base text-primary/80">
-                  Scroll through five crafted projects. They appear one by one and
-                  stack into a single centered stage.
+                  Projects that reflect how I build software - scalable backends, polished interfaces, and attention to detail.
                 </p>
 
                 {shouldShowStack ? (
