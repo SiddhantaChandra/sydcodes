@@ -1,10 +1,13 @@
+import dynamic from "next/dynamic";
+
 import Hero from "./sections/Hero";
-import Experience from "./sections/Experience";
-import Projects from "./sections/Projects";
-import TechnicalExpertise from "./sections/TechnicalExpertise";
-import ContactMe from "./sections/ContactMe";
-import Footer from "./sections/Footer";
 import Navbar from "./components/Navbar/Navbar";
+
+const Experience = dynamic(() => import("./sections/Experience"));
+const Projects = dynamic(() => import("./sections/Projects"));
+const TechnicalExpertise = dynamic(() => import("./sections/TechnicalExpertise"));
+const ContactMe = dynamic(() => import("./sections/ContactMe"));
+const Footer = dynamic(() => import("./sections/Footer"));
 
 export default function Home() {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Scene3d from "../Scene3d";
+import Scene3dDynamic from "../Scene3dDynamic";
 import Image from "next/image";
 
 import roadMobile from "@/public/scene/roadsMobile.webp";
@@ -12,7 +12,7 @@ const MobileScene = ({ parallaxStyle }) => {
       style={parallaxStyle}
     >
       <div className="absolute inset-0 z-0">
-        <Scene3d distance={5} speed={1.2} yaxis={-5.3} zoom={-16} />
+        <Scene3dDynamic distance={5} speed={1.2} yaxis={-5.3} zoom={-16} />
       </div>
       <Image
         src={roadMobile}

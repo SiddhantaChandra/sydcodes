@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Scene3d from "../Scene3d";
+import Scene3dDynamic from "../Scene3dDynamic";
 import Image from "next/image";
 
 import tabletMobile from "@/public/scene/roadsTablets.webp";
@@ -12,7 +12,7 @@ const TabletScene = ({ parallaxStyle }) => {
       style={parallaxStyle}
     >
       <div className="absolute inset-0 z-0">
-        <Scene3d distance={5} speed={1.2} yaxis={-3.4} zoom={-12} />
+        <Scene3dDynamic distance={5} speed={1.2} yaxis={-3.4} zoom={-12} />
       </div>
       <Image
         src={tabletMobile}

@@ -2,7 +2,20 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import {
+  AmbientLight,
+  AnimationMixer,
+  Box3,
+  Clock,
+  DirectionalLight,
+  LoopOnce,
+  LoopRepeat,
+  PerspectiveCamera,
+  Scene,
+  SRGBColorSpace,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const Scene3d = ({ distance, speed, yaxis, zoom }) => {
@@ -18,10 +31,10 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     const clickHintEl = clickHintRef.current;
     const heroSectionEl = mountEl.closest("section");
 
-    const scene = new THREE.Scene();
+    const scene = new Scene();
     scene.background = null;
 
-    const camera = new THREE.PerspectiveCamera(
+    const camera = new PerspectiveCamera(
       45,
       mountEl.clientWidth / mountEl.clientHeight,
       0.1,
@@ -29,26 +42,26 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     );
     camera.position.set(0, 1.3, 3.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(mountEl.clientWidth, mountEl.clientHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.outputColorSpace = SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
     mountEl.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    const ambientLight = new AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    const keyLight = new DirectionalLight(0xffffff, 1.4);
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    const fillLight = new DirectionalLight(0xffffff, 0.7);
     fillLight.position.set(-2, 2, -3);
     scene.add(fillLight);
 
     const loader = new GLTFLoader();
-    const clock = new THREE.Clock();
+    const clock = new Clock();
     let mixer;
     let model;
     let animationFrameId;
@@ -65,8 +78,8 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     let walkDirection = 1;
     const rightFacingY = Math.PI / 2;
     const leftFacingY = -Math.PI / 2;
-    const projectedPosition = new THREE.Vector3();
-    const worldPosition = new THREE.Vector3();
+    const projectedPosition = new Vector3();
+    const worldPosition = new Vector3();
 
     const findClip = (animations, exactName, fallbackName) =>
       animations.find((clip) => clip.name === exactName) ||
@@ -113,7 +126,7 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         return;
       }
 
-      walkAction.setLoop(THREE.LoopRepeat);
+      walkAction.setLoop(LoopRepeat);
       walkAction.clampWhenFinished = false;
       fadeToAction(walkAction);
     };
@@ -131,9 +144,9 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
 
       isJumping = true;
 
-      jumpAction.setLoop(THREE.LoopOnce, 1);
+      jumpAction.setLoop(LoopOnce, 1);
       jumpAction.clampWhenFinished = true;
-      groundedAction.setLoop(THREE.LoopOnce, 1);
+      groundedAction.setLoop(LoopOnce, 1);
       groundedAction.clampWhenFinished = true;
 
       fadeToAction(jumpAction, 0.12);
@@ -196,8 +209,8 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         model.scale.setScalar(1.15);
         scene.add(model);
 
-        const modelBounds = new THREE.Box3().setFromObject(model);
-        const modelSize = new THREE.Vector3();
+        const modelBounds = new Box3().setFromObject(model);
+        const modelSize = new Vector3();
         modelBounds.getSize(modelSize);
         if (modelSize.y > 0) {
           hintHeightOffset = modelSize.y * 0.84;
@@ -205,7 +218,7 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         }
 
         if (gltf.animations && gltf.animations.length > 0) {
-          mixer = new THREE.AnimationMixer(model);
+          mixer = new AnimationMixer(model);
           const walkClip = findClip(gltf.animations, "Armature|Walk", "walk");
           const jumpClip = findClip(gltf.animations, "Armature|Jump", "jump");
           const groundedClip = findClip(
@@ -274,7 +287,7 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
           model.getWorldPosition(worldPosition);
           projectedPosition
             .copy(worldPosition)
-            .add(new THREE.Vector3(hintSideOffset, hintHeightOffset, 0))
+            .add(new Vector3(hintSideOffset, hintHeightOffset, 0))
             .project(camera);
 
           const isBehindCamera = projectedPosition.z < -1 || projectedPosition.z > 1;
