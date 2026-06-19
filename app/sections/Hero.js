@@ -129,7 +129,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative bg-black"
+      className="relative overflow-x-clip bg-black"
       id="home"
       onPointerMove={handlePointerMove}
       onPointerLeave={resetPointer}

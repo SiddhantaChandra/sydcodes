@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 
@@ -113,9 +113,38 @@ const EducationCard = ({ items, mobile = false }) => {
 
 const Experience = () => {
   const targetRef = useRef(null);
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
+  const [maxTranslateX, setMaxTranslateX] = useState(0);
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+
+    if (!viewport || !track) {
+      return undefined;
+    }
+
+    const updateBounds = () => {
+      const nextMaxTranslate = Math.max(track.scrollWidth - viewport.clientWidth, 0);
+      setMaxTranslateX(nextMaxTranslate);
+    };
+
+    updateBounds();
+
+    const resizeObserver = new ResizeObserver(updateBounds);
+    resizeObserver.observe(viewport);
+    resizeObserver.observe(track);
+    window.addEventListener('resize', updateBounds);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateBounds);
+    };
+  }, []);
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslateX]);
 
   const experienceItems = [
     {
@@ -180,7 +209,11 @@ const Experience = () => {
   ];
 
   return (
-    <section ref={targetRef} id="experience" className="relative bg-[#000] pt-8 md:h-[400vh]">
+    <section
+      ref={targetRef}
+      id="experience"
+      className="relative overflow-x-clip bg-[#000] pt-8 md:h-[400vh]"
+    >
       <div className="px-5 pt-20 pb-12 md:hidden">
         <h2 className="text-4xl font-black uppercase text-white/35 tracking-tighter leading-none mb-8">
           Journey
@@ -208,7 +241,10 @@ const Experience = () => {
         </div>
       </div>
 
-      <div className="hidden md:block sticky top-0 h-screen overflow-hidden md:pt-36 lg:pt-36">
+      <div
+        ref={viewportRef}
+        className="hidden md:block sticky top-0 h-screen w-full overflow-hidden overflow-x-clip bg-[#000] md:pt-36 lg:pt-36"
+      >
         <div className="absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/10 tracking-tighter leading-none">
             Journey
@@ -216,6 +252,7 @@ const Experience = () => {
         </div>
 
         <motion.div
+          ref={trackRef}
           style={{ x }}
           className="flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
         >
