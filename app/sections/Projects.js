@@ -1,11 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
-import slaysukiImage from "@/public/project-image/slaysuki-trading.webp";
-import urmiImage from "@/public/project-image/urmi-portfolio.webp";
+import slaysuki1 from "@/public/project-image/slaysuki/1.webp";
+import slaysuki2 from "@/public/project-image/slaysuki/2.webp";
+import urmi1 from "@/public/project-image/urmi-portfolio/1.webp";
+import urmi2 from "@/public/project-image/urmi-portfolio/2.webp";
+import urmi3 from "@/public/project-image/urmi-portfolio/3.webp";
+import urmi4 from "@/public/project-image/urmi-portfolio/4.webp";
+import zestquiz1 from "@/public/project-image/zestquiz/1.webp";
+import zestquiz2 from "@/public/project-image/zestquiz/2.webp";
+import zestquiz3 from "@/public/project-image/zestquiz/3.webp";
+import zestquiz4 from "@/public/project-image/zestquiz/4.webp";
 
 const projects = [
   {
@@ -15,7 +23,7 @@ const projects = [
       "A full-stack trading card marketplace with a microservices backend, custom inventory and order management CMS, customer storefront, payment processing, shipping automation, and cloud-based asset management.",
     tech: ["Next.js", "React", "NestJS", "Prisma ORM", "Redis", "Tanstack Query", "Tailwind CSS", "Cloudflare R2", "BullMQ", "Cashfree", "Shiprocket"],
     live: "https://www.slaysuki.com/",
-    image: slaysukiImage,
+    images: [slaysuki1, slaysuki2],
   },
   {
     title: "Journalist Portfolio & CMS",
@@ -25,7 +33,7 @@ const projects = [
     tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma ORM", "Cloudflare R2", "Tailwind CSS", "BlockNode"],
     github: "https://github.com/SiddhantaChandra/urmi-portfolio-website",
     live: "https://www.urmichakraborty.com/",
-    image: urmiImage,
+    images: [urmi1, urmi2, urmi3, urmi4],
   },
   {
     title: "ZestQuiz",
@@ -35,7 +43,7 @@ const projects = [
     tech: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
     github: "https://github.com/SiddhantaChandra/ZestQuiz",
     // live: "https://pulseboard.example.com",
-    image: slaysukiImage,
+    images: [zestquiz1, zestquiz2, zestquiz3, zestquiz4],
   }
 ];
 
@@ -94,21 +102,167 @@ const getProjectCenter = (index, totalProjects) => {
   return PROJECT_START_OFFSET + t * (PROJECT_END_OFFSET - PROJECT_START_OFFSET);
 };
 
-const ProjectCardContent = ({ project }) => (
-  <>
-    {project.image ? (
-      <div
-        className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl  bg-[#1a1a1a] xl:mx-20 2xl:mx-0"
-        style={{ aspectRatio: "1920 / 947" }}
-      >
+const SWIPE_THRESHOLD = 80;
+const SWIPE_VELOCITY = 400;
+
+const slideVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+};
+
+const slideTransition = {
+  x: { type: "tween", duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  opacity: { duration: 0.35 },
+};
+
+const ProjectImageCarousel = ({ images, title }) => {
+  const containerRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+  const reduceMotion = shouldReduceMotion ?? false;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef(null);
+  const isInView = useInView(containerRef, { amount: 0.2, once: false });
+
+  const stopAuto = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  const startAuto = useCallback(() => {
+    if (images.length <= 1 || reduceMotion) return;
+    stopAuto();
+    intervalRef.current = window.setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+  }, [images.length, reduceMotion, stopAuto]);
+
+  const restartAuto = useCallback(() => {
+    if (!isHovered && isInView) {
+      startAuto();
+    } else {
+      stopAuto();
+    }
+  }, [isHovered, isInView, startAuto, stopAuto]);
+
+  useEffect(() => {
+    restartAuto();
+    return () => stopAuto();
+  }, [restartAuto, stopAuto]);
+
+  const goTo = (target) => {
+    if (target === currentIndex) return;
+    setDirection(target > currentIndex ? 1 : -1);
+    setCurrentIndex(target);
+    restartAuto();
+  };
+
+  const goNext = useCallback(() => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const goPrev = useCallback(() => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  const handleDragEnd = (_event, info) => {
+    if (info.offset.x < -SWIPE_THRESHOLD || info.velocity.x < -SWIPE_VELOCITY) {
+      goNext();
+      restartAuto();
+    } else if (info.offset.x > SWIPE_THRESHOLD || info.velocity.x > SWIPE_VELOCITY) {
+      goPrev();
+      restartAuto();
+    }
+  };
+
+  if (!images || images.length === 0) return null;
+
+  return (
+    <div
+      ref={containerRef}
+      className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl bg-[#1a1a1a] xl:mx-20 2xl:mx-0"
+      style={{ aspectRatio: "1920 / 947" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {reduceMotion ? (
         <Image
-          src={project.image}
-          alt={`${project.title} preview`}
+          src={images[currentIndex]}
+          alt={`${title} preview ${currentIndex + 1}`}
           fill
           className="object-cover object-top"
           sizes="(min-width: 1024px) 36rem, 100vw"
         />
-      </div>
+      ) : (
+        <AnimatePresence initial={false} mode="sync" custom={direction}>
+          <motion.div
+            key={currentIndex}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={slideTransition}
+            drag={images.length > 1 ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragDirectionLock
+            dragElastic={0.05}
+            onDragEnd={handleDragEnd}
+            className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
+          >
+            <Image
+              src={images[currentIndex]}
+              alt={`${title} preview ${currentIndex + 1}`}
+              fill
+              className="object-cover object-top"
+              sizes="(min-width: 1024px) 36rem, 100vw"
+              draggable={false}
+            />
+          </motion.div>
+        </AnimatePresence>
+      )}
+
+      {images.length > 1 && (
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Show ${title} image ${i + 1}`}
+              onClick={() => goTo(i)}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                i === currentIndex
+                  ? "w-5 bg-accent"
+                  : "w-2 bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ProjectCardContent = ({ project }) => (
+  <>
+    {project.images?.length > 0 ? (
+      <ProjectImageCarousel images={project.images} title={project.title} />
     ) : null}
 
     <div className="mb-4 flex items-start justify-between gap-3">
