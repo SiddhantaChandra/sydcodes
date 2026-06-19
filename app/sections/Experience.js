@@ -29,7 +29,16 @@ const ExperienceCard = ({ item, mobile = false }) => {
         </div>
         {item.companyImg && (
           <div className="hidden sm:block w-16 h-16 rounded-full overflow-hidden bg-white/5 border border-white/10 shrink-0">
-            <Image src={item.companyImg} alt={item.company} width={64} height={64} className="object-cover w-full h-full" />
+            <Image
+              src={item.companyImg}
+              alt={item.company}
+              width={64}
+              height={64}
+              sizes="64px"
+              loading="lazy"
+              fetchPriority="low"
+              className="object-cover w-full h-full"
+            />
           </div>
         )}
       </div>
@@ -46,7 +55,17 @@ const ExperienceCard = ({ item, mobile = false }) => {
       <div className="flex flex-wrap gap-3 mt-6 md:mt-8 z-10">
         {item.techstack.map((tech, idx) => (
           <div key={idx} className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-full border border-white/10 bg-black/40 text-xs 2xl:text-sm text-[#e7d5c3]">
-            <Image src={tech.icon} alt="" aria-hidden="true" width={16} height={16} className="w-4 h-4 opacity-80" />
+            <Image
+              src={tech.icon}
+              alt=""
+              aria-hidden="true"
+              width={16}
+              height={16}
+              sizes="16px"
+              loading="lazy"
+              fetchPriority="low"
+              className="w-4 h-4 opacity-80"
+            />
             {tech.name}
           </div>
         ))}

@@ -17,6 +17,8 @@ const TabletScene = ({ parallaxStyle }) => {
       <Image
         src={tabletMobile}
         alt="Road with a streetlight where my avatar is walking"
+        priority
+        sizes="100vw"
         className="pointer-events-none absolute bottom-0 left-0 -z-10 h-auto w-full select-none"
       />
     </motion.div>

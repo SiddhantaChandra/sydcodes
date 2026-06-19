@@ -350,6 +350,8 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         width={72}
         height={36}
         sizes="(max-width: 640px) 44px, (max-width: 1024px) 56px, 72px"
+        loading="lazy"
+        fetchPriority="low"
         style={{
           position: "absolute",
           top: 0,

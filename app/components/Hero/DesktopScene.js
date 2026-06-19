@@ -15,6 +15,8 @@ const DesktopScene = ({ parallaxStyle }) => {
       <Image
         src={roadOverlayDesktop}
         alt="Road with a streetlight where my avatar is walking"
+        priority
+        sizes="100vw"
         className="pointer-events-none absolute bottom-0 left-0 z-10 h-auto w-full select-none"
       />
       <div className="absolute inset-0 z-0">
@@ -23,6 +25,8 @@ const DesktopScene = ({ parallaxStyle }) => {
       <Image
         src={roadDesktop}
         alt="Road with a streetlight where my avatar is walking"
+        priority
+        sizes="100vw"
         className="pointer-events-none absolute bottom-0 left-0 -z-10 h-auto w-full select-none"
       />
     </motion.div>

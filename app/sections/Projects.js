@@ -125,7 +125,14 @@ const slideTransition = {
   opacity: { duration: 0.35 },
 };
 
-const ProjectImageCarousel = ({ images, title }) => {
+const getProjectImagePriority = (projectIndex, imageIndex) => {
+  if (projectIndex === 0 && imageIndex === 0) {
+    return { loading: "lazy", fetchPriority: "auto" };
+  }
+  return { loading: "lazy", fetchPriority: "low" };
+};
+
+const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
   const containerRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
   const reduceMotion = shouldReduceMotion ?? false;
@@ -208,6 +215,7 @@ const ProjectImageCarousel = ({ images, title }) => {
           fill
           className="object-cover object-top"
           sizes="(min-width: 1024px) 36rem, 100vw"
+          {...getProjectImagePriority(projectIndex, currentIndex)}
         />
       ) : (
         <AnimatePresence initial={false} mode="sync" custom={direction}>
@@ -233,6 +241,7 @@ const ProjectImageCarousel = ({ images, title }) => {
               className="object-cover object-top"
               sizes="(min-width: 1024px) 36rem, 100vw"
               draggable={false}
+              {...getProjectImagePriority(projectIndex, currentIndex)}
             />
           </motion.div>
         </AnimatePresence>
@@ -259,10 +268,10 @@ const ProjectImageCarousel = ({ images, title }) => {
   );
 };
 
-const ProjectCardContent = ({ project }) => (
+const ProjectCardContent = ({ project, projectIndex = 0 }) => (
   <>
     {project.images?.length > 0 ? (
-      <ProjectImageCarousel images={project.images} title={project.title} />
+      <ProjectImageCarousel images={project.images} title={project.title} projectIndex={projectIndex} />
     ) : null}
 
     <div className="mb-4 flex items-start justify-between gap-3">
@@ -496,7 +505,7 @@ const Projects = () => {
         </div>
 
         <div className={`space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <motion.article
               key={`mobile-${project.title}`}
               className="flex min-h-[24rem] flex-col rounded-2xl bg-[#1a1a1a] px-3 py-3"
@@ -506,7 +515,7 @@ const Projects = () => {
               }
               viewport={shouldReduceMotion ? undefined : mobileCardMotion.viewport}
             >
-              <ProjectCardContent project={project} />
+              <ProjectCardContent project={project} projectIndex={index} />
             </motion.article>
           ))}
         </div>
@@ -570,7 +579,7 @@ const Projects = () => {
                       animate={shouldReduceMotion ? undefined : desktopCardMotion.animate}
                       exit={shouldReduceMotion ? undefined : desktopCardMotion.exit}
                     >
-                      <ProjectCardContent project={activeProject} />
+                      <ProjectCardContent project={activeProject} projectIndex={effectiveDisplayProjectIndex} />
                     </motion.article>
                   ) : null}
                 </AnimatePresence>

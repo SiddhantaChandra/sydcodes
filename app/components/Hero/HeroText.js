@@ -47,6 +47,8 @@ const HeroText = ({ parallaxStyle }) => {
           <Image
             src={textStroked}
             alt=""
+            priority
+            sizes="(min-width: 1280px) 48rem, (min-width: 1024px) 40rem, 100vw"
             className="w-full h-auto pointer-events-none"
             style={{
               opacity: isRevealing ? 1 : 0,
@@ -58,6 +60,8 @@ const HeroText = ({ parallaxStyle }) => {
           <Image
             src={textFilled}
             alt=""
+            priority
+            sizes="(min-width: 1280px) 48rem, (min-width: 1024px) 40rem, 100vw"
             className="absolute inset-0 h-full w-full pointer-events-none"
             style={{
               WebkitMaskImage: isRevealing ? concealMask : "none",
@@ -75,7 +79,7 @@ const HeroText = ({ parallaxStyle }) => {
         download
         className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-black hover:bg-primary/90 transition-colors duration-200"
       >
-        <Image src={resumeIcon} alt="" className="h-4 w-4" />
+        <Image src={resumeIcon} alt="" width={16} height={16} className="h-4 w-4" />
         Download Resume
       </Link>
       <div className="mt-3 h-0.5 w-28 rounded-full bg-linear-to-r from-primary via-accent to-primary bg-size-[200%_100%]" />

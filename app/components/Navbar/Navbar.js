@@ -91,7 +91,7 @@ const Navbar = () => {
     <header className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
       {/* Desktop Navbar */}
       <nav aria-label="Main navigation" className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#111111]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
-        <Image src={logoLarge} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
+        <Image src={logoLarge} alt="Siddhanta Chandra logo" priority className="h-8 w-auto" />
         <div className="flex gap-1">
           {links.map((l) => {
             const isActive = active === l.id
@@ -114,7 +114,7 @@ const Navbar = () => {
       {/* Mobile Navbar */}
       <div className="w-full lg:hidden">
         <div className="w-full items-center justify-between px-5 py-3 rounded-full border border-primary/20 flex bg-[#111111]/75 backdrop-blur-sm shadow-none">
-          <Image src={logoShort} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
+          <Image src={logoShort} alt="Siddhanta Chandra logo" priority className="h-8 w-auto" />
           <button
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -139,7 +139,7 @@ const Navbar = () => {
         >
           <div className="flex h-full flex-col px-8 py-5">
             <div className="flex items-center justify-between">
-              <Image src={logoShort} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
+              <Image src={logoShort} alt="Siddhanta Chandra logo" priority className="h-8 w-auto" />
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
