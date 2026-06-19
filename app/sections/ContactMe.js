@@ -8,6 +8,7 @@ import {
   GithubLogo,
   LinkedinLogo,
 } from "@phosphor-icons/react";
+import ContactForm from "../components/Contact/ContactForm";
 
 const contactLinks = [
   {
@@ -161,7 +162,9 @@ export default function ContactMe() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+      <ContactForm />
+
+      <div className="mt-10 grid grid-cols-2 gap-3 md:mt-12 md:gap-4 xl:grid-cols-4">
         {contactLinks.map((item, index) => (
           <ContactCard
             key={item.label}
