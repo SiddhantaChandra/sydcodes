@@ -158,6 +158,18 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         return;
       }
 
+      const target = event.target;
+      const isTyping =
+        target instanceof HTMLElement &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable);
+
+      if (isTyping) {
+        return;
+      }
+
       if (triggerJump()) {
         event.preventDefault();
       }
