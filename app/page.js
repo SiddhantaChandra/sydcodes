@@ -1,13 +1,6 @@
-import dynamic from "next/dynamic";
-
 import Hero from "./sections/Hero";
 import Navbar from "./components/Navbar/Navbar";
-
-const Experience = dynamic(() => import("./sections/Experience"));
-const Projects = dynamic(() => import("./sections/Projects"));
-const TechnicalExpertise = dynamic(() => import("./sections/TechnicalExpertise"));
-const ContactMe = dynamic(() => import("./sections/ContactMe"));
-const Footer = dynamic(() => import("./sections/Footer"));
+import DeferredHomepageSection from "./components/DeferredHomepageSection";
 
 export default function Home() {
   return (
@@ -15,12 +8,12 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Experience />
-        <Projects />
-        <TechnicalExpertise />
-        <ContactMe />
+        <DeferredHomepageSection section="experience" minHeightClass="min-h-[32rem] md:min-h-[70rem]" />
+        <DeferredHomepageSection section="projects" minHeightClass="min-h-[32rem] md:min-h-[44rem]" />
+        <DeferredHomepageSection section="expertise" minHeightClass="min-h-[20rem] md:min-h-[28rem]" />
+        <DeferredHomepageSection section="contact" minHeightClass="min-h-[24rem] md:min-h-[30rem]" />
       </main>
-      <Footer />
+      <DeferredHomepageSection section="footer" minHeightClass="min-h-[10rem]" />
     </div>
   );
 }

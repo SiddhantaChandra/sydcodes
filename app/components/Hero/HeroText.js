@@ -2,28 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
-import textStroked from "@/public/text/siddhanta-stroked.webp";
-import textFilled from "@/public/text/siddhanta-filled.webp";
+import textFilled from "@/public/text/siddhanta-filled.svg";
 import resumeIcon from "@/public/general-icons/download_resume_icon.svg";
 
 const HeroText = ({ parallaxStyle }) => {
-  const [isRevealing, setIsRevealing] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState({ x: 50, y: 50 });
-
-  const handleRevealMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    setCursorPosition({ x, y });
-  };
-
-  const revealMask = `radial-gradient(circle 90px at ${cursorPosition.x}% ${cursorPosition.y}%, black 0%, black 58%, transparent 72%)`;
-  const concealMask = `radial-gradient(circle 90px at ${cursorPosition.x}% ${cursorPosition.y}%, transparent 0%, transparent 58%, black 72%)`;
-
   return (
     <motion.div
       className="hero-parallax-layer absolute inset-0 z-20 flex flex-col -top-35 items-center justify-center text-center select-none"
@@ -37,36 +22,12 @@ const HeroText = ({ parallaxStyle }) => {
         <span aria-hidden="true" className="inline-block text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary drop-shadow-lg lg:hidden">
           Siddhanta Chandra
         </span>
-        <span
-          aria-hidden="true"
-          className="relative hidden lg:block lg:w-2xl xl:w-3xl mb-4"
-          onMouseEnter={() => setIsRevealing(true)}
-          onMouseMove={handleRevealMove}
-          onMouseLeave={() => setIsRevealing(false)}
-        >
-          <Image
-            src={textStroked}
-            alt=""
-            priority
-            sizes="(min-width: 1280px) 48rem, (min-width: 1024px) 40rem, 100vw"
-            className="w-full h-auto pointer-events-none"
-            style={{
-              opacity: isRevealing ? 1 : 0,
-              WebkitMaskImage: isRevealing ? revealMask : "none",
-              maskImage: isRevealing ? revealMask : "none",
-              transition: "opacity 200ms ease",
-            }}
-          />
+        <span aria-hidden="true" className="relative hidden lg:block lg:w-2xl xl:w-3xl mb-4">
           <Image
             src={textFilled}
             alt=""
-            priority
             sizes="(min-width: 1280px) 48rem, (min-width: 1024px) 40rem, 100vw"
-            className="absolute inset-0 h-full w-full pointer-events-none"
-            style={{
-              WebkitMaskImage: isRevealing ? concealMask : "none",
-              maskImage: isRevealing ? concealMask : "none",
-            }}
+            className="w-full h-auto pointer-events-none"
           />
         </span>
       </h1>

@@ -148,6 +148,18 @@ html.lenis body {
 }
 
 /* HeroText2 blank viewport overrides */
+
+.hero-desktop-road-overlay {
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+@media (min-width: 1024px) {
+  .hero-desktop-road-overlay {
+    background-image: url("/scene/roads_overlay.webp");
+  }
+}
 @media (min-width: 640px) {
   .hero-text2-wrap {
     --hero-text2-wrap-sm: initial;

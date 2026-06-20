@@ -4,16 +4,16 @@ import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
-import slaysuki1 from "@/public/project-image/slaysuki/1.webp";
-import slaysuki2 from "@/public/project-image/slaysuki/2.webp";
-import urmi1 from "@/public/project-image/urmi-portfolio/1.webp";
-import urmi2 from "@/public/project-image/urmi-portfolio/2.webp";
-import urmi3 from "@/public/project-image/urmi-portfolio/3.webp";
-import urmi4 from "@/public/project-image/urmi-portfolio/4.webp";
-import zestquiz1 from "@/public/project-image/zestquiz/1.webp";
-import zestquiz2 from "@/public/project-image/zestquiz/2.webp";
-import zestquiz3 from "@/public/project-image/zestquiz/3.webp";
-import zestquiz4 from "@/public/project-image/zestquiz/4.webp";
+import slaysuki1 from "@/public/project-image/slaysuki/1-opt.webp";
+import slaysuki2 from "@/public/project-image/slaysuki/2-opt.webp";
+import urmi1 from "@/public/project-image/urmi-portfolio/1-opt.webp";
+import urmi2 from "@/public/project-image/urmi-portfolio/2-opt.webp";
+import urmi3 from "@/public/project-image/urmi-portfolio/3-opt.webp";
+import urmi4 from "@/public/project-image/urmi-portfolio/4-opt.webp";
+import zestquiz1 from "@/public/project-image/zestquiz/1-opt.webp";
+import zestquiz2 from "@/public/project-image/zestquiz/2-opt.webp";
+import zestquiz3 from "@/public/project-image/zestquiz/3-opt.webp";
+import zestquiz4 from "@/public/project-image/zestquiz/4-opt.webp";
 
 const projects = [
   {

@@ -7,10 +7,8 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import MobileScene from "../components/Hero/MobileScene";
-import TabletScene from "../components/Hero/TabletScene";
-import DesktopScene from "../components/Hero/DesktopScene";
 import HeroText from "../components/Hero/HeroText";
+import HeroScene from "../components/Hero/HeroScene";
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -135,9 +133,7 @@ const Hero = () => {
       onPointerLeave={resetPointer}
     >
       <HeroText parallaxStyle={textParallax} />
-      <MobileScene parallaxStyle={sceneParallax} />
-      <TabletScene parallaxStyle={sceneParallax} />
-      <DesktopScene parallaxStyle={sceneParallax} />
+      <HeroScene parallaxStyle={sceneParallax} />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-32 bg-linear-to-b from-transparent to-background" />
     </section>

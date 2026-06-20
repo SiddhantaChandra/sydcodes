@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "@phosphor-icons/react";
 
-import logoLarge from "@/public/logo-large.webp";
+import logoLarge from "@/public/logo-large-opt.webp";
 import logoShort from "@/public/logo-short.webp";
 
 const navLinks = [

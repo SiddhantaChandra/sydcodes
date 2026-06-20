@@ -358,7 +358,7 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     >
       <Image
         ref={clickHintRef}
-        src="/scene/click-me.webp"
+        src="/scene/click-me-opt.webp"
         alt="Click me"
         width={72}
         height={36}
