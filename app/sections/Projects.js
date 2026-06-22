@@ -47,9 +47,9 @@ const projects = [
   }
 ];
 
-const PROJECT_START_OFFSET = 0.12;
-const PROJECT_END_OFFSET = 0.88;
-const DESKTOP_STAGE_VH_PER_PROJECT = 98;
+const PROJECT_START_OFFSET = 0.16;
+const PROJECT_END_OFFSET = 0.84;
+const DESKTOP_STAGE_VH_PER_PROJECT = 88;
 const CARD_EXIT_MS = 180;
 const CARD_ENTER_DELAY_MS = 24;
 
@@ -491,7 +491,7 @@ const Projects = () => {
         minHeight: shouldReduceMotion ? "auto" : undefined,
       }}
     >
-      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-16 2xl:max-w-7xl lg:px-0 xl:pb-0">
+      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-0 xl:pb-0">
         <div className={`mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
@@ -528,7 +528,7 @@ const Projects = () => {
               : `${projects.length * DESKTOP_STAGE_VH_PER_PROJECT}vh`,
           }}
         >
-          <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-6rem)] items-start">
+          <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-8rem)] items-start">
             <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
               <div>
                 <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
