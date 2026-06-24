@@ -140,6 +140,14 @@ const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Siddhanta Chandra - Full-stack Developer",
+  alternateName: [
+    "Siddhanta Chandra",
+    "Siddhanta Chandra Portfolio",
+    "siddhantachandra",
+    "Siddhanta Chandra developer",
+    "Siddhant Chandra fullstack",
+    "Siddhanta Chandra fullstack"
+  ],
   url: "https://www.siddhantachandra.com",
   publisher: {
     "@type": "Person",
