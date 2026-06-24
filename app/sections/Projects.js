@@ -42,7 +42,7 @@ const projects = [
       "A quiz platform featuring AI-powered quiz generation, role-based authentication, quiz management, real-time chatbot support, performance tracking, and an admin dashboard for content management.",
     tech: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
     github: "https://github.com/SiddhantaChandra/ZestQuiz",
-    // live: "https://pulseboard.example.com",
+    live: "https://zest-quiz.vercel.app/",
     images: [zestquiz1, zestquiz2, zestquiz3, zestquiz4],
   }
 ];

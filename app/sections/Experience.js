@@ -151,7 +151,7 @@ const Experience = () => {
       role: 'Frontend Developer Intern',
       company: 'Onlybees Pvt. Ltd.',
       companyImg: '/company-images/onlybees_logo.webp',
-      period: 'Feb, 2026 — Present',
+      period: 'Feb, 2026 — Jun, 2026',
       details: [
         'Develop reusable React components used across multiple application modules, improving development consistency and reducing duplicate UI implementation.',
         'Optimized application performance using TanStack Query caching and data fetching strategies, minimizing redundant API requests and improving user experience.',
