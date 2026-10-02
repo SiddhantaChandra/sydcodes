@@ -47,6 +47,22 @@ const projects = [
   }
 ];
 
+const preloadedProjectImageUrls = new Set();
+
+const preloadProjectImages = () => {
+  if (typeof window === "undefined") return;
+
+  projects.flatMap((project) => project.images).forEach((image) => {
+    if (preloadedProjectImageUrls.has(image.src)) return;
+
+    preloadedProjectImageUrls.add(image.src);
+    const preloader = new window.Image();
+    preloader.decoding = "async";
+    preloader.fetchPriority = "low";
+    preloader.src = image.src;
+  });
+};
+
 const PROJECT_START_OFFSET = 0.16;
 const PROJECT_END_OFFSET = 0.84;
 const DESKTOP_STAGE_VH_PER_PROJECT = 88;
@@ -123,13 +139,6 @@ const slideVariants = {
 const slideTransition = {
   x: { type: "tween", duration: 0.5, ease: [0.16, 1, 0.3, 1] },
   opacity: { duration: 0.35 },
-};
-
-const getProjectImagePriority = (projectIndex, imageIndex) => {
-  if (projectIndex === 0 && imageIndex === 0) {
-    return { loading: "lazy", fetchPriority: "auto" };
-  }
-  return { loading: "lazy", fetchPriority: "low" };
 };
 
 const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
@@ -214,8 +223,9 @@ const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
           alt={`${title} preview ${currentIndex + 1}`}
           fill
           className="object-cover object-top"
-          sizes="(min-width: 1024px) 36rem, 100vw"
-          {...getProjectImagePriority(projectIndex, currentIndex)}
+          unoptimized
+          loading="eager"
+          fetchPriority={projectIndex === 0 && currentIndex === 0 ? "high" : "low"}
         />
       ) : (
         <AnimatePresence initial={false} mode="sync" custom={direction}>
@@ -239,9 +249,10 @@ const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
               alt={`${title} preview ${currentIndex + 1}`}
               fill
               className="object-cover object-top"
-              sizes="(min-width: 1024px) 36rem, 100vw"
               draggable={false}
-              {...getProjectImagePriority(projectIndex, currentIndex)}
+              unoptimized
+              loading="eager"
+              fetchPriority={projectIndex === 0 && currentIndex === 0 ? "high" : "low"}
             />
           </motion.div>
         </AnimatePresence>
@@ -336,6 +347,10 @@ const Projects = () => {
   const [isCardVisible, setIsCardVisible] = useState(false);
   const swapTimeoutRef = useRef(null);
   const enterTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    preloadProjectImages();
+  }, []);
 
   useEffect(() => {
     if (shouldReduceMotion) return undefined;

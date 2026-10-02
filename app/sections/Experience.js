@@ -35,8 +35,8 @@ const ExperienceCard = ({ item, mobile = false }) => {
               width={64}
               height={64}
               sizes="64px"
-              loading="lazy"
-              fetchPriority="low"
+              loading={mobile ? 'lazy' : 'eager'}
+              fetchPriority={mobile ? 'low' : 'high'}
               className="object-cover w-full h-full"
             />
           </div>
