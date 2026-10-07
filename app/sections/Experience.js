@@ -14,7 +14,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
       className={`${
         mobile
           ? 'w-full min-h-[460px] p-6'
-          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] h-[min(72vh,calc(100dvh-11rem))] max-h-[760px] p-8 md:p-12'
+          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] min-h-[min(72vh,calc(100dvh-11rem))] px-8 md:px-12 pt-8 pb-6'
       } flex flex-col justify-between border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
     >
       <div className="flex justify-between items-start gap-4 z-10">
@@ -43,27 +43,34 @@ const ExperienceCard = ({ item, mobile = false }) => {
         )}
       </div>
 
-      <ul tabIndex={mobile ? undefined : 0} aria-label={`${item.company} responsibilities`} className={`mt-6 md:mt-8 list-disc pl-5 marker:text-[#c23132] space-y-4 flex-grow min-h-0 z-10 ${mobile ? '' : 'overflow-y-auto overscroll-contain pr-4'} custom-scrollbar`}>
-        {item.details.map((detail, idx) => (
-          <li key={idx} className="text-white/90 text-sm 2xl:text-lg leading-relaxed">
-            {detail}
-          </li>
-        ))}
-      </ul>
+      <div className="mt-5 md:mt-6 flex-grow shrink-0 z-10" aria-label={`${item.company} responsibilities`}>
+        {item.intro && (
+          <p className="mb-4 text-xs 2xl:text-[13px] font-medium text-white/75 leading-relaxed">
+            {item.intro}
+          </p>
+        )}
+        <ul className="list-disc pl-5 marker:text-[#c23132] space-y-3">
+          {item.details.map((detail, idx) => (
+            <li key={idx} className={`text-white/90 text-[13px] 2xl:text-sm leading-relaxed ${item.hideLastDetailOnMobile && idx === item.details.length - 1 ? 'hidden md:list-item' : ''}`}>
+              {detail}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="flex flex-wrap gap-3 mt-6 md:mt-8 z-10">
+      <div className="flex flex-wrap gap-2 mt-5 md:mt-6 z-10">
         {item.techstack.map((tech, idx) => (
-          <div key={idx} className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-full border border-white/10 bg-black/40 text-xs 2xl:text-sm text-[#e7d5c3]">
+          <div key={idx} className="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 rounded-full border border-white/10 bg-black/40 text-[11px] 2xl:text-xs text-[#e7d5c3]">
             <Image
               src={tech.icon}
               alt=""
               aria-hidden="true"
-              width={16}
-              height={16}
-              sizes="16px"
+              width={14}
+              height={14}
+              sizes="14px"
               loading="lazy"
               fetchPriority="low"
-              className="w-4 h-4 opacity-80"
+              className="w-3.5 h-3.5 shrink-0 opacity-80"
             />
             {tech.name}
           </div>
@@ -150,35 +157,50 @@ const Experience = () => {
       role: 'Frontend Developer Intern',
       company: 'Onlybees Pvt. Ltd.',
       companyImg: '/company-images/onlybees_logo.webp',
+      intro: 'Contributed to a Meghalaya Government-sponsored D2C platform from MVP to production, reaching 2,000+ users and 1,000+ bookings in its first month.',
+      hideLastDetailOnMobile: true,
       period: 'Feb, 2026 — Jun, 2026',
       details: [
-        'Develop reusable React components used across multiple application modules, improving development consistency and reducing duplicate UI implementation.',
-        'Optimized application performance using TanStack Query caching and data fetching strategies, minimizing redundant API requests and improving user experience.',
-        'Develop and maintain REST APIs and business logic modules using NestJS, TypeScript and PostgreSQL.',
-        'Owned backend implementation for multiple product features, designing endpoints, implementing business logic and supporting production deployments.'
+        'Built the ordering and booking flow end to end, adding order locking to prevent overselling under concurrent demand.',
+        'Integrated payment gateway workflows, location polling, and support ticketing into production.',
+        'Developed REST APIs and business logic in NestJS, TypeScript, Prisma, and PostgreSQL, powering booking, checkout, and support flows.',
+        'Built custom CRM workflows for sensitive KYC data, with role-based access control, authentication, and verification flows.',
+        'Cut landing page load time by 107 ms and removed redundant API calls using TanStack Query caching, background refetching, and query invalidation.',
+        'Built reusable Next.js and Tailwind CSS components for browsing, ordering, and payment interfaces, used across multiple application modules.'
       ],
       techstack: [
         { name: 'Next.js', icon: '/icons-tech/nextjs.svg' },
         { name: 'React.js', icon: '/icons-tech/react.svg' },
-        { name: 'JavaScript', icon: '/icons-tech/javascript.svg' },
+        { name: 'TypeScript', icon: '/icons-tech/typescript.svg' },
+        { name: 'NestJS', icon: '/icons-tech/nestjs.svg' },
+        { name: 'PostgreSQL', icon: '/icons-tech/postgresql.svg' },
+        { name: 'Prisma', icon: '/icons-tech/prisma.svg' },
+        { name: 'TanStack Query', icon: '/icons-tech/reactquery.svg' },
         { name: 'Tailwind CSS', icon: '/icons-tech/tailwind.svg' },
       ],
     },
     {
-      role: 'Frontend Developer',
+      role: 'Freelance Frontend Developer',
       company: 'CricketWinner LLC',
       companyImg: '/company-images/cricketwinner.webp',
+      intro: "Modernized CricketWinner's public-facing website by migrating it from a WordPress theme to a React front end.",
       period: 'June, 2021 — Nov, 2022',
       details: [
-        'Designed responsive, accessible, and visually appealing user interfaces using React.js and SCSS',
-        'Implemented React Query caching and query management, reducing redundant API requests and improving application responsiveness.',
-        'Optimized website performance by reducing render-blocking resources and improving asset loading times by 1.89 seconds.',
-        'Collaborated with back-end developers to create and integrate APIs efficiently.',
+        "Migrated the site's WordPress theme to React and CSS, rebuilding the layout to modern standards and integrating WCAG accessibility guidelines.",
+        'Converted all images to WebP and removed render-blocking resources, reducing load time by 46%.',
+        'Redesigned all public-facing pages with responsive layouts and current design standards, and optimized article pages for SEO with meta tags, structured data, semantic headings, and improved page speed.',
+        'Integrated dynamic Google Ads and custom ad spaces into the page layouts.',
+        'Implemented React Query caching and query management to cut redundant API requests.',
+        "Collaborated with the client's back-end developers to design and integrate APIs.",
       ],
       techstack: [
-        { name: 'React', icon: '/icons-tech/react.svg' },
-        { name: 'SASS', icon: '/icons-tech/scss.svg' },
+        { name: 'React.js', icon: '/icons-tech/react.svg' },
+        { name: 'React Query', icon: '/icons-tech/reactquery.svg' },
+        { name: 'HTML', icon: '/icons-tech/html.svg' },
         { name: 'JavaScript', icon: '/icons-tech/javascript.svg' },
+        { name: 'CSS', icon: '/icons-tech/css.svg' },
+        { name: 'Google Ads', icon: '/icons-tech/googleads.svg' },
+        { name: 'WCAG', icon: '/icons-tech/wcag.svg' },
         { name: 'Figma', icon: '/icons-tech/figma.svg' },
       ],
     },
@@ -242,7 +264,7 @@ const Experience = () => {
 
       <div
         ref={viewportRef}
-        className="experience-desktop hidden md:block sticky top-0 h-dvh w-full overflow-hidden overflow-x-clip bg-[#000] md:pt-36 lg:pt-36"
+        className="experience-desktop hidden md:block sticky top-0 min-h-dvh w-full overflow-x-clip bg-[#000] pt-36 pb-4"
       >
         <div className="absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/30 tracking-tighter leading-none">
