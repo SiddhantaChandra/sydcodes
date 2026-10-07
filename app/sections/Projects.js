@@ -19,33 +19,88 @@ const projects = [
   {
     title: "Slaysuki TCG",
     type: "E-commerce",
-    description:
-      "A full-stack trading card marketplace with a microservices backend, custom inventory and order management CMS, customer storefront, payment processing, shipping automation, and cloud-based asset management.",
-    tech: ["Next.js", "React", "NestJS", "Prisma ORM", "Redis", "Tanstack Query", "Tailwind CSS", "Cloudflare R2", "BullMQ", "Cashfree", "Shiprocket"],
+    description: "Full-stack trading card marketplace, built end to end and still in progress.",
+    highlights: [
+      "Customer storefront and custom CMS for inventory and order management",
+      "Inventory reservation and order locking to prevent overselling limited stock under concurrent demand",
+      "Razorpay payments and Shiprocket shipping automation",
+      "Jest and Playwright tests for checkout and order-locking flows, self-hosted on a Linux VPS",
+    ],
+    tech: ["TypeScript", "Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "Tailwind CSS", "TanStack Query", "Redis", "BullMQ", "Cloudflare R2", "Razorpay", "Shiprocket"],
     live: "https://www.slaysuki.com/",
     images: [slaysuki1, slaysuki2],
   },
   {
     title: "Journalist Portfolio & CMS",
-    type: "Portfolio",
-    description:
-      "A full-stack portfolio and blogging platform for a journalist featuring a custom CMS, rich-text article editor, media management, secure authentication, and cloud-based file storage.",
-    tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma ORM", "Cloudflare R2", "Tailwind CSS", "BlockNode"],
+    type: "Client Work",
+    description: "A full-stack portfolio and blogging platform for a journalist.",
+    highlights: [
+      "Public portfolio and blog for showcasing articles and published work",
+      "Custom CMS with a rich-text editor for article management",
+      "Media management and cloud-based file storage",
+      "Secure authentication for managing and publishing content",
+    ],
+    tech: ["TypeScript", "JavaScript", "Next.js", "React", "NestJS", "Supabase", "Prisma ORM", "Tailwind CSS", "TanStack Query", "Cloudflare R2", "BlockNote"],
     github: "https://github.com/SiddhantaChandra/urmi-portfolio-website",
     live: "https://www.urmichakraborty.com/",
     images: [urmi1, urmi2, urmi3, urmi4],
   },
   {
     title: "ZestQuiz",
-    type: "SaaS",
-    description:
-      "A quiz platform featuring AI-powered quiz generation, role-based authentication, quiz management, real-time chatbot support, performance tracking, and an admin dashboard for content management.",
-    tech: ["Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
+    type: "AI Platform",
+    description: "A quiz platform with AI-powered generation and performance tracking.",
+    highlights: [
+      "Quiz creation and management with an admin dashboard and JWT-based role authentication",
+      "Results and analytics for quiz attempts",
+      "Automated quiz generation using the DeepSeek API",
+      "Separate AI chat support feature with REST APIs and persistent conversation history",
+    ],
+    tech: ["TypeScript", "Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "JWT Authentication", "DeepSeek API", "Tailwind CSS", "Docker"],
     github: "https://github.com/SiddhantaChandra/ZestQuiz",
     live: "https://zest-quiz.vercel.app/",
     images: [zestquiz1, zestquiz2, zestquiz3, zestquiz4],
   }
 ];
+
+const techIcons = {
+  "Next.js": "nextjs.svg",
+  React: "react.svg",
+  NestJS: "nestjs.svg",
+  TypeScript: "typescript.svg",
+  JavaScript: "javascript.svg",
+  PostgreSQL: "postgresql.svg",
+  Supabase: "supabase.svg",
+  "Prisma ORM": "prisma.svg",
+  Prisma: "prisma.svg",
+  Redis: "redis.svg",
+  "TanStack Query": "reactquery.svg",
+  "Tailwind CSS": "tailwind.svg",
+  Tailwind: "tailwind.svg",
+  BullMQ: "bullmq.png",
+  "Cloudflare R2": "cloudflare-r2.svg",
+  Razorpay: "razorpay.svg",
+  Shiprocket: "shiprocket.png",
+  BlockNote: "blocknote.svg",
+  "JWT Authentication": "jsonwebtokens.svg",
+  "DeepSeek API": "deepseek.svg",
+  Docker: "docker.svg",
+};
+
+const TechLabel = ({ tech }) => (
+  <>
+    {techIcons[tech] ? (
+      <Image
+        src={`/icons-tech/${techIcons[tech]}`}
+        alt=""
+        aria-hidden="true"
+        width={14}
+        height={14}
+        className="h-3.5 w-3.5 shrink-0"
+      />
+    ) : null}
+    {tech}
+  </>
+);
 
 const preloadedProjectImageUrls = new Set();
 
@@ -141,7 +196,7 @@ const slideTransition = {
   opacity: { duration: 0.35 },
 };
 
-const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
+const ProjectImageCarousel = ({ images, title, projectIndex = 0, desktop = false }) => {
   const containerRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
   const reduceMotion = shouldReduceMotion ?? false;
@@ -212,7 +267,7 @@ const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
   return (
     <div
       ref={containerRef}
-      className="project-card-preview relative mb-6 shrink-0 overflow-hidden rounded-xl bg-[#1a1a1a] xl:mx-20 2xl:mx-0"
+      className={`project-card-preview relative shrink-0 overflow-hidden bg-[#1a1a1a] ${desktop ? "" : "mb-6 rounded-xl xl:mx-20 2xl:mx-0"}`}
       style={{ aspectRatio: "1920 / 947" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -279,38 +334,46 @@ const ProjectImageCarousel = ({ images, title, projectIndex = 0 }) => {
   );
 };
 
-const ProjectCardContent = ({ project, projectIndex = 0 }) => (
+const ProjectCardContent = ({ project, projectIndex = 0, showTech = true }) => (
   <>
     {project.images?.length > 0 ? (
-      <ProjectImageCarousel images={project.images} title={project.title} projectIndex={projectIndex} />
+      <ProjectImageCarousel images={project.images} title={project.title} projectIndex={projectIndex} desktop={!showTech} />
     ) : null}
 
-    <div className="mb-4 flex items-start justify-between gap-3">
+    <div className={`project-card-body ${showTech ? "" : "px-5 pt-5 pb-6 xl:px-6"}`}>
+    <div className={`project-card-heading flex items-start justify-between gap-3 ${showTech ? "mb-4" : "mb-3"}`}>
       <div>
-        <h3 className="text-2xl font-bold text-primary">{project.title}</h3>
+        <h3 className={`font-bold text-primary ${showTech ? "text-2xl" : "text-xl leading-tight xl:text-[1.375rem]"}`}>{project.title}</h3>
       </div>
-      <span className="rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-[#f17c7c] uppercase">
+      <span className="project-type-tag rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-[#f17c7c] uppercase">
         {project.type}
       </span>
     </div>
 
-    <p className="mb-4 max-w-xl text-base leading-relaxed text-primary/95 xl:text-sm 2xl:text-base">
-      {project.description}
-    </p>
-
-    <div className="mb-6 flex flex-wrap gap-2.5">
-      {project.tech.map((tech) => (
-        <span
-          key={`${project.title}-${tech}`}
-          className="rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90 xl:hidden 2xl:inline-block"
-        >
-          {tech}
-        </span>
-      ))}
+    <div className={`project-card-description shrink-0 text-primary/95 ${showTech ? "mb-4 max-w-xl text-base leading-relaxed xl:text-sm 2xl:text-base" : "text-[13px] leading-[1.5] xl:text-sm"}`}>
+      <p>{project.description}</p>
+      <ul className={`list-disc pl-5 marker:text-accent ${showTech ? "mt-4 space-y-2" : "mt-3 space-y-1.5"}`}>
+        {project.highlights.map((highlight) => (
+          <li key={highlight}>{highlight}</li>
+        ))}
+      </ul>
     </div>
 
+    {showTech ? (
+      <div className="mb-6 flex flex-wrap gap-2.5">
+        {project.tech.map((tech) => (
+          <span
+            key={`${project.title}-${tech}`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
+          >
+            <TechLabel tech={tech} />
+          </span>
+        ))}
+      </div>
+    ) : null}
+
     {project.github || project.live ? (
-      <div className="flex flex-wrap gap-3">
+      <div className={`project-card-links flex shrink-0 flex-wrap gap-3 ${showTech ? "pt-2" : "pt-6"}`}>
         {project.github ? (
           <a
             href={project.github}
@@ -328,7 +391,7 @@ const ProjectCardContent = ({ project, projectIndex = 0 }) => (
             href={project.live}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#4ade80] bg-[#4ade80] px-4 py-2 text-sm font-medium text-[#0a0a0a] transition-colors duration-300 hover:bg-[#34d399]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-accent bg-accent px-4 py-2 text-sm font-medium text-white transition-colors duration-300 hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
             Live
             <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
@@ -336,6 +399,7 @@ const ProjectCardContent = ({ project, projectIndex = 0 }) => (
         ) : null}
       </div>
     ) : null}
+    </div>
   </>
 );
 
@@ -506,7 +570,7 @@ const Projects = () => {
         minHeight: shouldReduceMotion ? "auto" : undefined,
       }}
     >
-      <div className="section-content relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-0 xl:pb-0">
+      <div className="section-content relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-6 xl:pb-0">
         <div className={`projects-static mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
@@ -544,35 +608,35 @@ const Projects = () => {
           }}
         >
           <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-8rem)] items-start">
-            <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
-              <div tabIndex={0} aria-label="Project summary and technologies" className="max-h-[calc(100dvh-8rem)] overflow-y-auto overscroll-contain">
-                <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
+            <div className="mx-auto grid w-full gap-8 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1.15fr)] xl:gap-10">
+              <div tabIndex={0} aria-label="Project summary and technologies" className="projects-summary max-h-[calc(100dvh-8rem)] overflow-y-auto overscroll-contain">
+                <p className="projects-eyebrow mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
                   Selected Work
                 </p>
                 <h2 className="max-w-md text-4xl font-bold leading-tight text-primary md:text-5xl">
                   Projects
                 </h2>
-                <p className="mt-4 max-w-md text-base text-primary/80">
+                <p className="projects-intro mt-4 max-w-md text-base text-primary/80">
                   Projects that reflect how I build software - scalable backends, polished interfaces, and attention to detail.
                 </p>
 
                 {shouldShowStack ? (
-                  <div className="mt-6">
-                    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-primary/80 uppercase">
+                  <div className="projects-tech-group mt-6">
+                    <p className="projects-stack-label mb-4 text-xs font-semibold tracking-[0.18em] text-primary/80 uppercase">
                       Project Stack
                     </p>
-                    <div className="flex max-w-md flex-wrap gap-2.5">
+                    <div className="projects-tech flex max-w-md flex-wrap gap-2.5">
                       <AnimatePresence initial={false}>
                         {visibleDesktopTech.map((tech) => (
                           <motion.span
                             key={`desktop-stack-${tech}`}
-                            className="rounded-full border border-primary/20 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
                             initial={shouldReduceMotion ? false : techBadgeMotion.initial}
                             animate={shouldReduceMotion ? undefined : techBadgeMotion.animate}
                             exit={shouldReduceMotion ? undefined : techBadgeMotion.exit}
                             layout
                           >
-                            {tech}
+                            <TechLabel tech={tech} />
                           </motion.span>
                         ))}
                       </AnimatePresence>
@@ -591,12 +655,12 @@ const Projects = () => {
                       key={activeProject.title}
                       tabIndex={0}
                       aria-label={`${activeProject.title} project details`}
-                      className="project-card relative z-10 flex max-h-[calc(100dvh-8rem)] flex-col overflow-y-auto overscroll-contain rounded-3xl p-7 md:p-8"
+                      className="project-card relative z-10 flex max-h-[calc(100dvh-8rem)] flex-col overflow-y-auto overscroll-contain rounded-3xl"
                       initial={shouldReduceMotion ? false : desktopCardMotion.initial}
                       animate={shouldReduceMotion ? undefined : desktopCardMotion.animate}
                       exit={shouldReduceMotion ? undefined : desktopCardMotion.exit}
                     >
-                      <ProjectCardContent project={activeProject} projectIndex={effectiveDisplayProjectIndex} />
+                      <ProjectCardContent project={activeProject} projectIndex={effectiveDisplayProjectIndex} showTech={false} />
                     </motion.article>
                   ) : null}
                 </AnimatePresence>

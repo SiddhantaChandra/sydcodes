@@ -14,10 +14,10 @@ const ExperienceCard = ({ item, mobile = false }) => {
       className={`${
         mobile
           ? 'w-full min-h-[460px] p-6'
-          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] min-h-[min(72vh,calc(100dvh-11rem))] px-8 md:px-12 pt-8 pb-6'
-      } flex flex-col justify-between border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
+          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] px-8 md:px-12 pt-8 pb-6'
+      } experience-card flex flex-col justify-between border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
     >
-      <div className="flex justify-between items-start gap-4 z-10">
+      <div className="experience-card-header flex shrink-0 justify-between items-start gap-4 z-10">
         <div className="min-w-0">
           <h4 className="text-2xl md:text-3xl font-bold text-[#e7d5c3] mb-2 leading-tight">
             {item.role}
@@ -27,7 +27,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
           </p>
         </div>
         {item.companyImg && (
-          <div className="hidden sm:block w-16 h-16 rounded-full overflow-hidden bg-white/5 border border-white/10 shrink-0">
+          <div className="experience-company-logo hidden sm:block w-16 h-16 rounded-full overflow-hidden bg-white/5 border border-white/10 shrink-0">
             <Image
               src={item.companyImg}
               alt={item.company}
@@ -43,7 +43,10 @@ const ExperienceCard = ({ item, mobile = false }) => {
         )}
       </div>
 
-      <div className="mt-5 md:mt-6 flex-grow shrink-0 z-10" aria-label={`${item.company} responsibilities`}>
+      <div
+        className="experience-responsibilities mt-5 md:mt-6 z-10 flex-grow shrink-0"
+        aria-label={`${item.company} responsibilities`}
+      >
         {item.intro && (
           <p className="mb-4 text-xs 2xl:text-[13px] font-medium text-white/75 leading-relaxed">
             {item.intro}
@@ -58,7 +61,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
         </ul>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-5 md:mt-6 z-10">
+      <div className="experience-tech flex shrink-0 flex-wrap gap-2 mt-5 md:mt-6 z-10">
         {item.techstack.map((tech, idx) => (
           <div key={idx} className="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 rounded-full border border-white/10 bg-black/40 text-[11px] 2xl:text-xs text-[#e7d5c3]">
             <Image
@@ -90,10 +93,10 @@ const EducationCard = ({ items, mobile = false }) => {
       className={`${
         mobile
           ? 'w-full'
-          : 'flex-shrink-0 w-[85vw] md:w-[58vw] lg:w-[46vw] h-[min(72vh,calc(100dvh-11rem))] max-h-[760px]'
-      } flex flex-col border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl p-5 md:p-6 overflow-hidden relative`}
+          : 'flex-shrink-0 w-[85vw] md:w-[58vw] lg:w-[46vw]'
+      } education-card flex flex-col border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl p-5 md:p-6 overflow-hidden relative`}
     >
-      <div tabIndex={mobile ? undefined : 0} aria-label="Education history" className={`z-10 flex-1 min-h-0 space-y-3 ${mobile ? '' : 'overflow-y-auto overscroll-contain'}`}>
+      <div aria-label="Education history" className="education-history z-10 space-y-3">
         {items.map((item, idx) => (
           <div
             key={`${item.title}-${idx}`}
@@ -233,9 +236,9 @@ const Experience = () => {
     <section
       ref={targetRef}
       id="experience"
-      className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 md:h-[400vh]"
+      className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 lg:h-[400vh]"
     >
-      <div className="experience-static mx-auto max-w-4xl px-5 pt-20 pb-12 md:hidden">
+      <div className="experience-static mx-auto max-w-4xl px-5 pt-20 pb-12 lg:hidden">
         <h2 className="text-4xl font-black uppercase text-white/60 tracking-tighter leading-none mb-8">
           Journey
         </h2>
@@ -264,9 +267,9 @@ const Experience = () => {
 
       <div
         ref={viewportRef}
-        className="experience-desktop hidden md:block sticky top-0 min-h-dvh w-full overflow-x-clip bg-[#000] pt-36 pb-4"
+        className="experience-desktop hidden lg:block sticky top-0 h-dvh w-full overflow-x-clip bg-[#000] pt-36 pb-4"
       >
-        <div className="absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
+        <div className="experience-journey absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/30 tracking-tighter leading-none">
             Journey
           </h2>
@@ -275,7 +278,7 @@ const Experience = () => {
         <motion.div
           ref={trackRef}
           style={{ x }}
-          className="flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
+          className="experience-track flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
         >
           <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
             Experience
