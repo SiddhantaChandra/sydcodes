@@ -8,8 +8,8 @@ const ExperienceCard = ({ item, mobile = false }) => {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+      initial={reduceMotion || !mobile ? false : { opacity: 0, scale: 0.95 }}
+      whileInView={reduceMotion || !mobile ? undefined : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`${
         mobile
@@ -87,8 +87,8 @@ const EducationCard = ({ items, mobile = false }) => {
   const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={reduceMotion || !mobile ? false : { opacity: 0, y: 30 }}
+      whileInView={reduceMotion || !mobile ? undefined : { opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`${
         mobile
@@ -121,11 +121,35 @@ const EducationCard = ({ items, mobile = false }) => {
 };
 
 const Experience = () => {
+  const reduceMotion = useReducedMotion();
   const targetRef = useRef(null);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: targetRef });
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ['start start', 'end end'],
+  });
   const [maxTranslateX, setMaxTranslateX] = useState(0);
+  const [hasScrollPause, setHasScrollPause] = useState(false);
+  const [entryOffset, setEntryOffset] = useState({ x: 0, y: 0 });
+  const { scrollYProgress: entryProgress } = useScroll({
+    target: targetRef,
+    offset: ['start start', 'start -1'],
+  });
+  const entryX = useTransform(entryProgress, [0, 1], [entryOffset.x, 0]);
+  const entryY = useTransform(entryProgress, [0, 1], [entryOffset.y, 0]);
+  const entryOpacity = useTransform(entryProgress, [0, 0.5], [0, 1]);
+  // Give the exit 100vh while pinned, finishing as the sticky viewport releases.
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: targetRef,
+    offset: ['end 2', 'end end'],
+  });
+  const exitX = useTransform(exitProgress, [0, 1], [0, -entryOffset.x]);
+  const exitY = useTransform(exitProgress, [0, 1], [0, -entryOffset.y]);
+  const exitOpacity = useTransform(exitProgress, [0.5, 1], [1, 0]);
+  const contentX = useTransform(() => entryX.get() + exitX.get());
+  const contentY = useTransform(() => entryY.get() + exitY.get());
+  const contentOpacity = useTransform(() => entryOpacity.get() * exitOpacity.get());
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -138,6 +162,11 @@ const Experience = () => {
     const updateBounds = () => {
       const nextMaxTranslate = Math.max(track.scrollWidth - viewport.clientWidth, 0);
       setMaxTranslateX(nextMaxTranslate);
+      setHasScrollPause(window.matchMedia('(min-width: 1024px)').matches);
+      setEntryOffset({
+        x: viewport.clientWidth * 0.18,
+        y: viewport.clientHeight * 0.32,
+      });
     };
 
     updateBounds();
@@ -153,7 +182,12 @@ const Experience = () => {
     };
   }, []);
 
-  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslateX]);
+  // Of the 550vh pinned scroll: entry 100vh, cards 300vh, pause 50vh, exit 100vh.
+  const x = useTransform(
+    scrollYProgress,
+    hasScrollPause ? [0, 2 / 11, 8 / 11, 1] : [0, 1],
+    hasScrollPause ? [0, 0, -maxTranslateX, -maxTranslateX] : [0, -maxTranslateX],
+  );
 
   const experienceItems = [
     {
@@ -236,7 +270,7 @@ const Experience = () => {
     <section
       ref={targetRef}
       id="experience"
-      className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 lg:h-[400vh]"
+      className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 lg:h-[650vh]"
     >
       <div className="experience-static mx-auto max-w-4xl px-5 pt-20 pb-12 lg:hidden">
         <h2 className="text-4xl font-black uppercase text-white/60 tracking-tighter leading-none mb-8">
@@ -269,33 +303,44 @@ const Experience = () => {
         ref={viewportRef}
         className="experience-desktop hidden lg:block sticky top-0 h-dvh w-full overflow-x-clip bg-[#000] pt-36 pb-4"
       >
-        <div className="experience-journey absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/30 tracking-tighter leading-none">
-            Journey
-          </h2>
-        </div>
-
         <motion.div
-          ref={trackRef}
-          style={{ x }}
-          className="experience-track flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
+          style={{
+            x: reduceMotion ? 0 : contentX,
+            y: reduceMotion ? 0 : contentY,
+            opacity: reduceMotion ? 1 : contentOpacity,
+            paddingTop: 'inherit',
+            paddingBottom: 'inherit',
+          }}
+          className="experience-content absolute inset-0"
         >
-          <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
-            Experience
-          </h3>
-
-          {experienceItems.map((item, idx) => (
-            <ExperienceCard key={`exp-${idx}`} item={item} />
-          ))}
-
-          <div className="flex items-center gap-8 md:gap-16 mx-4">
-            <div className="w-[1px] h-32 bg-white/10 shrink-0" />
-            <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
-              Education
-            </h3>
+          <div className="experience-journey absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/30 tracking-tighter leading-none">
+              Journey
+            </h2>
           </div>
 
-          <EducationCard items={educationItems} />
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="experience-track flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
+          >
+            <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
+              Experience
+            </h3>
+
+            {experienceItems.map((item, idx) => (
+              <ExperienceCard key={`exp-${idx}`} item={item} />
+            ))}
+
+            <div className="flex items-center gap-8 md:gap-16 mx-4">
+              <div className="w-[1px] h-32 bg-white/10 shrink-0" />
+              <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
+                Education
+              </h3>
+            </div>
+
+            <EducationCard items={educationItems} />
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -292,6 +292,12 @@ html.lenis body {
   }
 }
 
+@media (min-width: 1024px) {
+  .experience-section {
+    height: 650vh;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .experience-section {
     height: auto;
