@@ -465,6 +465,16 @@ html.lenis body {
   padding-block: 2.5rem;
 }
 
+@media (max-width: 767.98px) {
+  #expertise .scroll-scene-stage {
+    padding-bottom: 4rem;
+  }
+
+  #contact .scroll-scene-stage {
+    padding-top: 4rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .scroll-scene-stage {
     display: flex;

@@ -267,7 +267,7 @@ const ProjectImageCarousel = ({ images, title, projectIndex = 0, desktop = false
   return (
     <div
       ref={containerRef}
-      className={`project-card-preview relative shrink-0 overflow-hidden bg-[#1a1a1a] ${desktop ? "" : "mb-6 rounded-xl xl:mx-20 2xl:mx-0"}`}
+      className={`project-card-preview relative shrink-0 overflow-hidden bg-[#1a1a1a] ${desktop ? "" : "mb-6"}`}
       style={{ aspectRatio: "1920 / 947" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -340,7 +340,7 @@ const ProjectCardContent = ({ project, projectIndex = 0, showTech = true }) => (
       <ProjectImageCarousel images={project.images} title={project.title} projectIndex={projectIndex} desktop={!showTech} />
     ) : null}
 
-    <div className={`project-card-body ${showTech ? "" : "px-5 pt-5 pb-6 xl:px-6"}`}>
+    <div className={`project-card-body ${showTech ? "px-3 pb-3" : "px-5 pt-5 pb-6 xl:px-6"}`}>
     <div className={`project-card-heading flex items-start justify-between gap-3 ${showTech ? "mb-4" : "mb-3"}`}>
       <div>
         <h3 className={`font-bold text-primary ${showTech ? "text-2xl" : "text-xl leading-tight xl:text-[1.375rem]"}`}>{project.title}</h3>
@@ -360,15 +360,24 @@ const ProjectCardContent = ({ project, projectIndex = 0, showTech = true }) => (
     </div>
 
     {showTech ? (
-      <div className="mb-6 flex flex-wrap gap-2.5">
-        {project.tech.map((tech) => (
+      <div className="project-tech-tags mb-6 flex flex-wrap gap-2.5">
+        {project.tech.map((tech, index) => (
           <span
             key={`${project.title}-${tech}`}
-            className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
+            className={`${index < 5 ? "inline-flex" : "hidden md:inline-flex"} items-center gap-1.5 rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90`}
           >
             <TechLabel tech={tech} />
           </span>
         ))}
+        {project.tech.length > 5 ? (
+          <span
+            className="inline-flex items-center rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90 md:hidden"
+            aria-label={`${project.tech.length - 5} additional technologies`}
+            title={project.tech.slice(5).join(", ")}
+          >
+            + {project.tech.length - 5}
+          </span>
+        ) : null}
       </div>
     ) : null}
 
@@ -587,7 +596,7 @@ const Projects = () => {
           {projects.map((project, index) => (
             <motion.article
               key={`mobile-${project.title}`}
-              className="project-card flex min-h-[24rem] flex-col rounded-2xl px-3 py-3"
+              className="project-card flex min-h-[24rem] flex-col overflow-hidden rounded-2xl"
               initial={shouldReduceMotion ? false : mobileCardMotion.initial}
               whileInView={
                 shouldReduceMotion ? undefined : mobileCardMotion.whileInView
