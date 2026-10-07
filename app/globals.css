@@ -458,6 +458,44 @@ html.lenis body {
   }
 }
 
+.scroll-scene-stage {
+  display: block;
+  height: auto;
+  min-height: 0;
+  padding-block: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .scroll-scene-stage {
+    display: flex;
+    align-items: center;
+    min-height: 100dvh;
+    padding-block: 6rem 3rem;
+  }
+}
+
+.scroll-scene-item:focus-within {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .scroll-scene[data-pinned="true"] {
+    height: 300dvh;
+  }
+
+  .scroll-scene[data-pinned="true"][data-exit-enabled="false"] {
+    height: 200dvh;
+  }
+
+  .scroll-scene[data-pinned="true"] .scroll-scene-stage {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: clip;
+  }
+}
+
 .contact-card-shape {
   fill: rgba(255, 255, 255, 0.03);
   stroke: rgba(255, 255, 255, 0.1);

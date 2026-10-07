@@ -11,7 +11,7 @@ const STATUS = {
   ERROR: "error",
 };
 
-export default function ContactForm() {
+export default function ContactForm({ animateEntrance = true }) {
   const turnstileRef = useRef(null);
   const pendingSubmission = useRef(null);
   const reduceMotion = useReducedMotion();
@@ -124,9 +124,9 @@ export default function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="relative w-full rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 md:p-8"
-      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      className="relative w-full rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 md:p-8 lg:p-5"
+      initial={reduceMotion || !animateEntrance ? false : { opacity: 0, y: 24 }}
+      whileInView={reduceMotion || !animateEntrance ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Contact form"

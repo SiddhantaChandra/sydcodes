@@ -117,9 +117,6 @@ export default function Footer() {
             <p className="text-xs font-medium text-primary/45">
               © {new Date().getFullYear()} Siddhanta Chandra. All rights reserved.
             </p>
-            <p className="text-xs font-medium text-primary/45">
-              Designed & built with care.
-            </p>
           </motion.div>
         </div>
       </motion.div>

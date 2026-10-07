@@ -1,3 +1,7 @@
+"use client";
+
+import ScrollScene, { ScrollSceneItem } from "../components/ScrollScene";
+
 const expertiseGroups = [
   {
     title: "Frontend",
@@ -79,34 +83,42 @@ function ExpertiseCard({ group }) {
 
 export default function TechnicalExpertise() {
   return (
-    <section
-      id="expertise"
-      className="relative w-full scroll-mt-28 bg-[#0f0f0f] lg:scroll-mt-32"
-    >
-      <div className="section-content mx-auto max-w-4xl px-5 pt-10 pb-14 lg:max-w-6xl lg:px-6 lg:pt-24 lg:pb-8 2xl:max-w-7xl">
-        <div className="mb-5 lg:mb-6">
-        <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
-          Technical Expertise
-        </p>
-        <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
-          <h2 className="max-w-2xl text-2xl font-bold leading-tight text-primary md:text-3xl lg:text-[2.15rem]">
-            What I&apos;m good at
-          </h2>
-          {/* <p className="max-w-lg text-[0.8rem] leading-relaxed text-primary/65 md:text-[0.88rem]">
-            
-          </p> */}
-        </div>
-      </div>
+    <ScrollScene id="expertise">
+      {({ progress, animated }) => (
+        <>
+          <ScrollSceneItem
+            progress={progress}
+            animated={animated}
+            enterX={64}
+            enterY={48}
+            className="mb-8 lg:mb-12"
+          >
+            <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+              Technical Expertise
+            </p>
+            <h2 className="mt-2 max-w-2xl text-2xl font-bold leading-tight text-primary md:text-3xl lg:text-[2.15rem]">
+              What I&apos;m good at
+            </h2>
+          </ScrollSceneItem>
 
-      <div className="grid gap-x-12 gap-y-6 md:grid-cols-2 md:gap-y-7 lg:content-start lg:gap-x-16 lg:gap-y-8">
-        {expertiseGroups.map((group) => (
-          <ExpertiseCard
-            key={group.title}
-            group={group}
-          />
-        ))}
-        </div>
-      </div>
-    </section>
+          <div className="grid gap-x-12 gap-y-8 md:grid-cols-2 lg:gap-x-16 lg:gap-y-10">
+            {expertiseGroups.map((group, index) => (
+              <ScrollSceneItem
+                key={group.title}
+                progress={progress}
+                animated={animated}
+                index={index + 1}
+                enterX={index % 2 === 0 ? 64 : -64}
+                enterY={80 + index * 12}
+                exitX={-64 - index * 12}
+                exitY={-80}
+              >
+                <ExpertiseCard group={group} />
+              </ScrollSceneItem>
+            ))}
+          </div>
+        </>
+      )}
+    </ScrollScene>
   );
 }
