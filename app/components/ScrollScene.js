@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useReducedMotion, useScroll, useTransform } from "framer-motion";
+import CompactScrollItem from "./CompactScrollItem";
 
 export default function ScrollScene({ id, children, enableExit = true }) {
   const sectionRef = useRef(null);
@@ -78,6 +79,7 @@ export function ScrollSceneItem({
   enterScale = 1,
   exitScale = 1,
   className = "",
+  compactPreset = "group",
 }) {
   // Entry-only scenes use 200vh; exit scenes add another 100vh.
   // Small stagger offsets stay inside the entry phase so the hold is motionless.
@@ -95,16 +97,19 @@ export function ScrollSceneItem({
   );
 
   return (
-    <motion.div
+    <CompactScrollItem
+      preset={compactPreset}
       className={`scroll-scene-item ${className}`}
-      style={{
-        x: animated ? x : 0,
-        y: animated ? y : 0,
-        scale: animated ? scale : 1,
-        opacity: animated ? opacity : 1,
+      desktopMotion={{
+        style: {
+          x: animated ? x : 0,
+          y: animated ? y : 0,
+          scale: animated ? scale : 1,
+          opacity: animated ? opacity : 1,
+        },
       }}
     >
       {children}
-    </motion.div>
+    </CompactScrollItem>
   );
 }

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import CompactScrollItem from "../components/CompactScrollItem";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import slaysuki1 from "@/public/project-image/slaysuki/1-opt.webp";
 import slaysuki2 from "@/public/project-image/slaysuki/2-opt.webp";
@@ -136,16 +137,6 @@ const desktopCardMotion = {
     y: -18,
     transition: { duration: 0.18, ease: "easeOut" },
   },
-};
-
-const mobileCardMotion = {
-  initial: { opacity: 0, y: 40 },
-  whileInView: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-  },
-  viewport: { once: true, amount: 0.2 },
 };
 
 const techBadgeMotion = {
@@ -580,7 +571,7 @@ const Projects = () => {
       }}
     >
       <div className="section-content relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-6 xl:pb-0">
-        <div className={`projects-static mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+        <CompactScrollItem preset="heading" className={`projects-static mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
           </p>
@@ -590,21 +581,18 @@ const Projects = () => {
           <p className="mt-4 max-w-xl text-base text-primary/80">
             Projects that reflect how I build software - scalable backends, polished interfaces, and attention to detail.
           </p>
-        </div>
+        </CompactScrollItem>
 
         <div className={`projects-static space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           {projects.map((project, index) => (
-            <motion.article
+            <CompactScrollItem
+              as="article"
+              preset="card"
               key={`mobile-${project.title}`}
               className="project-card flex min-h-[24rem] flex-col overflow-hidden rounded-2xl"
-              initial={shouldReduceMotion ? false : mobileCardMotion.initial}
-              whileInView={
-                shouldReduceMotion ? undefined : mobileCardMotion.whileInView
-              }
-              viewport={shouldReduceMotion ? undefined : mobileCardMotion.viewport}
             >
               <ProjectCardContent project={project} projectIndex={index} />
-            </motion.article>
+            </CompactScrollItem>
           ))}
         </div>
 

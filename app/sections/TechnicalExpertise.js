@@ -87,6 +87,7 @@ export default function TechnicalExpertise() {
       {({ progress, animated }) => (
         <>
           <ScrollSceneItem
+            compactPreset="heading"
             progress={progress}
             animated={animated}
             enterX={64}

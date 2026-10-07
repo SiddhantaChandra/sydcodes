@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "@phosphor-icons/react";
+import CompactScrollItem, { useCompactViewport } from "../components/CompactScrollItem";
 
 import logoLarge from "@/public/logo-large-opt.webp";
 import logoShort from "@/public/logo-short.webp";
@@ -38,6 +39,8 @@ const itemMotion = {
 
 export default function Footer() {
   const shouldReduceMotion = useReducedMotion();
+  const isCompact = useCompactViewport();
+  const disableItemMotion = isCompact || shouldReduceMotion;
 
   const scrollToTop = () => {
     if (typeof window === "undefined") return;
@@ -46,20 +49,24 @@ export default function Footer() {
 
   return (
     <footer className="w-full border-t border-primary/10 bg-[#121212]">
-      <motion.div
+      <CompactScrollItem
+        preset="footer"
         className="section-content mx-auto flex max-w-4xl flex-col gap-6 px-5 py-8 lg:max-w-6xl lg:gap-8 lg:px-6 lg:py-12 2xl:max-w-7xl"
-        initial={shouldReduceMotion ? false : containerMotion.initial}
-        whileInView={shouldReduceMotion ? undefined : containerMotion.whileInView}
-        viewport={shouldReduceMotion ? undefined : containerMotion.viewport}
+        desktopMotion={{
+          initial: shouldReduceMotion ? false : containerMotion.initial,
+          whileInView: shouldReduceMotion ? undefined : containerMotion.whileInView,
+          viewport: shouldReduceMotion ? undefined : containerMotion.viewport,
+        }}
       >
         {/* Desktop: multi-row layout */}
         <div className="flex flex-col gap-6 lg:gap-8">
           {/* Top row: logo, nav, back-to-top */}
           <motion.div
-            className="flex flex-col items-center gap-5 lg:flex-row lg:items-start lg:justify-between"
-            initial={shouldReduceMotion ? false : itemMotion.initial}
-            whileInView={shouldReduceMotion ? undefined : itemMotion.whileInView}
-            viewport={shouldReduceMotion ? undefined : itemMotion.viewport}
+            className="compact-footer-row flex flex-col items-center gap-5 lg:flex-row lg:items-start lg:justify-between"
+            initial={disableItemMotion ? false : itemMotion.initial}
+            whileInView={disableItemMotion ? undefined : itemMotion.whileInView}
+            viewport={disableItemMotion ? undefined : itemMotion.viewport}
+            style={isCompact ? { y: 0, opacity: 1 } : undefined}
           >
             {/* Logo */}
             <Link href="#home" aria-label="Back to home" className="shrink-0">
@@ -109,17 +116,18 @@ export default function Footer() {
 
           {/* Bottom row: copyright */}
           <motion.div
-            className="flex flex-col items-center justify-between gap-3 border-t border-primary/10 pt-6 text-center lg:flex-row lg:text-left"
-            initial={shouldReduceMotion ? false : itemMotion.initial}
-            whileInView={shouldReduceMotion ? undefined : itemMotion.whileInView}
-            viewport={shouldReduceMotion ? undefined : itemMotion.viewport}
+            className="compact-footer-row flex flex-col items-center justify-between gap-3 border-t border-primary/10 pt-6 text-center lg:flex-row lg:text-left"
+            initial={disableItemMotion ? false : itemMotion.initial}
+            whileInView={disableItemMotion ? undefined : itemMotion.whileInView}
+            viewport={disableItemMotion ? undefined : itemMotion.viewport}
+            style={isCompact ? { y: 0, opacity: 1 } : undefined}
           >
             <p className="text-xs font-medium text-primary/45">
               © {new Date().getFullYear()} Siddhanta Chandra. All rights reserved.
             </p>
           </motion.div>
         </div>
-      </motion.div>
+      </CompactScrollItem>
     </footer>
   );
 }

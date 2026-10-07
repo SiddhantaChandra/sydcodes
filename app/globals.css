@@ -332,6 +332,36 @@ html.lenis body {
   background: #0f0f0f;
 }
 
+@media (max-width: 767.98px) {
+  /* Compact project copy on phones; retain the tablet and desktop type scale. */
+  .projects-static > h2 {
+    font-size: 1.75rem;
+  }
+
+  .projects-static > p {
+    font-size: 0.8125rem;
+  }
+
+  .projects-static .project-card-heading h3 {
+    font-size: 1.125rem;
+    line-height: 1.35;
+  }
+
+  .projects-static .project-card-description {
+    font-size: 0.75rem;
+    line-height: 1.65;
+  }
+
+  .projects-static .project-type-tag,
+  .projects-static .project-tech-tags > span {
+    font-size: 0.625rem;
+  }
+
+  .projects-static .project-card-links a {
+    font-size: 0.75rem;
+  }
+}
+
 @media (min-width: 1024px) and (max-width: 1599.98px) {
   .projects-desktop-stage .project-card {
     height: calc(100dvh - 8rem);
@@ -487,6 +517,16 @@ html.lenis body {
 .scroll-scene-item:focus-within {
   opacity: 1 !important;
   transform: none !important;
+}
+
+@media (max-width: 1023.98px) {
+  /* Keep SSR content visible and interactive blocks settled while focused. */
+  .compact-scroll-item[data-compact-active="false"],
+  .compact-scroll-item:focus-within,
+  .compact-footer-row {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {

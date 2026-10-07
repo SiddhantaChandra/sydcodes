@@ -132,6 +132,7 @@ export default function ContactMe() {
       {({ progress, animated, enableExit }) => (
         <>
           <ScrollSceneItem
+            compactPreset="heading"
             progress={progress}
             animated={animated}
             enableExit={enableExit}
@@ -148,6 +149,7 @@ export default function ContactMe() {
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-stretch">
             <ScrollSceneItem
+              compactPreset="form"
               progress={progress}
               animated={animated}
               enableExit={enableExit}

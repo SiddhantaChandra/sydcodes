@@ -3,14 +3,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import CompactScrollItem from '../components/CompactScrollItem';
 
 const ExperienceCard = ({ item, mobile = false }) => {
-  const reduceMotion = useReducedMotion();
+  const Card = mobile ? CompactScrollItem : motion.div;
   return (
-    <motion.div
-      initial={reduceMotion || !mobile ? false : { opacity: 0, scale: 0.95 }}
-      whileInView={reduceMotion || !mobile ? undefined : { opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    <Card
+      {...(mobile ? { preset: 'card' } : {
+        initial: false,
+        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+      })}
       className={`${
         mobile
           ? 'w-full min-h-[460px] p-6'
@@ -79,17 +81,18 @@ const ExperienceCard = ({ item, mobile = false }) => {
           </div>
         ))}
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
 const EducationCard = ({ items, mobile = false }) => {
-  const reduceMotion = useReducedMotion();
+  const Card = mobile ? CompactScrollItem : motion.div;
   return (
-    <motion.div
-      initial={reduceMotion || !mobile ? false : { opacity: 0, y: 30 }}
-      whileInView={reduceMotion || !mobile ? undefined : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    <Card
+      {...(mobile ? { preset: 'card' } : {
+        initial: false,
+        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+      })}
       className={`${
         mobile
           ? 'w-full'
@@ -116,7 +119,7 @@ const EducationCard = ({ items, mobile = false }) => {
           </div>
         ))}
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
@@ -273,15 +276,15 @@ const Experience = () => {
       className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 lg:h-[650vh]"
     >
       <div className="experience-static mx-auto max-w-4xl px-5 pt-20 pb-12 lg:hidden">
-        <h2 className="text-4xl font-black uppercase text-white/60 tracking-tighter leading-none mb-8">
+        <CompactScrollItem as="h2" preset="heading" className="text-4xl font-black uppercase text-white/60 tracking-tighter leading-none mb-8">
           Journey
-        </h2>
+        </CompactScrollItem>
 
         <div className="space-y-10">
           <div>
-            <h3 className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <CompactScrollItem as="h3" preset="heading" className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Experience
-            </h3>
+            </CompactScrollItem>
             <div className="space-y-6">
               {experienceItems.map((item, idx) => (
                 <ExperienceCard key={`mobile-exp-${idx}`} item={item} mobile />
@@ -291,9 +294,9 @@ const Experience = () => {
 
           <div>
             <div className="w-full h-px bg-white/10 mb-6" />
-            <h3 className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <CompactScrollItem as="h3" preset="heading" className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Education
-            </h3>
+            </CompactScrollItem>
             <EducationCard items={educationItems} mobile />
           </div>
         </div>
