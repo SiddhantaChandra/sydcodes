@@ -287,14 +287,14 @@ const ProjectCardContent = ({ project, projectIndex = 0 }) => (
 
     <div className="mb-4 flex items-start justify-between gap-3">
       <div>
-        <h3 className="text-2xl font-semibold text-primary">{project.title}</h3>
+        <h3 className="text-2xl font-bold text-primary">{project.title}</h3>
       </div>
-      <span className="rounded-full border border-accent/35 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-accent uppercase">
+      <span className="rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-[#f17c7c] uppercase">
         {project.type}
       </span>
     </div>
 
-    <p className="mb-4 max-w-xl text-base leading-relaxed text-primary/82 xl:text-sm 2xl:text-base">
+    <p className="mb-4 max-w-xl text-base leading-relaxed text-primary/95 xl:text-sm 2xl:text-base">
       {project.description}
     </p>
 
@@ -302,7 +302,7 @@ const ProjectCardContent = ({ project, projectIndex = 0 }) => (
       {project.tech.map((tech) => (
         <span
           key={`${project.title}-${tech}`}
-          className="rounded-full border border-primary/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72 xl:hidden 2xl:inline-block"
+          className="rounded-full border border-primary/20 bg-[#111111] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90 xl:hidden 2xl:inline-block"
         >
           {tech}
         </span>
@@ -342,9 +342,9 @@ const ProjectCardContent = ({ project, projectIndex = 0 }) => (
 const Projects = () => {
   const sectionRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
-  const [activeProjectIndex, setActiveProjectIndex] = useState(-1);
-  const [displayProjectIndex, setDisplayProjectIndex] = useState(-1);
-  const [isCardVisible, setIsCardVisible] = useState(false);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [displayProjectIndex, setDisplayProjectIndex] = useState(0);
+  const [isCardVisible, setIsCardVisible] = useState(true);
   const swapTimeoutRef = useRef(null);
   const enterTimeoutRef = useRef(null);
 
@@ -370,7 +370,7 @@ const Projects = () => {
       section.style.setProperty("--projects-ease", eased.toFixed(4));
 
       if (clamped < PROJECT_START_OFFSET) {
-        setActiveProjectIndex((current) => (current === -1 ? current : -1));
+        setActiveProjectIndex((current) => (current === 0 ? current : 0));
         return;
       }
 
@@ -506,8 +506,8 @@ const Projects = () => {
         minHeight: shouldReduceMotion ? "auto" : undefined,
       }}
     >
-      <div className="relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-0 xl:pb-0">
-        <div className={`mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+      <div className="section-content relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-0 xl:pb-0">
+        <div className={`projects-static mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
           </p>
@@ -519,11 +519,11 @@ const Projects = () => {
           </p>
         </div>
 
-        <div className={`space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+        <div className={`projects-static space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
           {projects.map((project, index) => (
             <motion.article
               key={`mobile-${project.title}`}
-              className="flex min-h-[24rem] flex-col rounded-2xl bg-[#1a1a1a] px-3 py-3"
+              className="project-card flex min-h-[24rem] flex-col rounded-2xl px-3 py-3"
               initial={shouldReduceMotion ? false : mobileCardMotion.initial}
               whileInView={
                 shouldReduceMotion ? undefined : mobileCardMotion.whileInView
@@ -545,7 +545,7 @@ const Projects = () => {
         >
           <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-8rem)] items-start">
             <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.1fr]">
-              <div>
+              <div tabIndex={0} aria-label="Project summary and technologies" className="max-h-[calc(100dvh-8rem)] overflow-y-auto overscroll-contain">
                 <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
                   Selected Work
                 </p>
@@ -558,7 +558,7 @@ const Projects = () => {
 
                 {shouldShowStack ? (
                   <div className="mt-6">
-                    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-primary/55 uppercase">
+                    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-primary/80 uppercase">
                       Project Stack
                     </p>
                     <div className="flex max-w-md flex-wrap gap-2.5">
@@ -566,7 +566,7 @@ const Projects = () => {
                         {visibleDesktopTech.map((tech) => (
                           <motion.span
                             key={`desktop-stack-${tech}`}
-                            className="rounded-full border border-primary/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/72"
+                            className="rounded-full border border-primary/20 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
                             initial={shouldReduceMotion ? false : techBadgeMotion.initial}
                             animate={shouldReduceMotion ? undefined : techBadgeMotion.animate}
                             exit={shouldReduceMotion ? undefined : techBadgeMotion.exit}
@@ -589,7 +589,9 @@ const Projects = () => {
                   {activeProject && isCardVisible ? (
                     <motion.article
                       key={activeProject.title}
-                      className="project-card relative z-10 flex flex-col rounded-3xl p-7 md:p-8"
+                      tabIndex={0}
+                      aria-label={`${activeProject.title} project details`}
+                      className="project-card relative z-10 flex max-h-[calc(100dvh-8rem)] flex-col overflow-y-auto overscroll-contain rounded-3xl p-7 md:p-8"
                       initial={shouldReduceMotion ? false : desktopCardMotion.initial}
                       animate={shouldReduceMotion ? undefined : desktopCardMotion.animate}
                       exit={shouldReduceMotion ? undefined : desktopCardMotion.exit}

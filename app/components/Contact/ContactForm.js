@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PaperPlaneRight, CheckCircle, WarningCircle } from "@phosphor-icons/react";
 import { Turnstile } from "@marsidev/react-turnstile";
 
@@ -13,6 +13,9 @@ const STATUS = {
 
 export default function ContactForm() {
   const turnstileRef = useRef(null);
+  const pendingSubmission = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const [verificationReady, setVerificationReady] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,7 +23,6 @@ export default function ContactForm() {
     message: "",
   });
 
-  const [token, setToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(STATUS.IDLE);
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,63 +34,103 @@ export default function ContactForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => () => {
+    const pending = pendingSubmission.current;
+    pendingSubmission.current = null;
+    clearTimeout(pending?.timeout);
+    pending?.controller?.abort();
+  }, []);
+
+  const failVerification = () => {
+    const pending = pendingSubmission.current;
+    if (!pending || pending.phase !== "verifying") return;
+    clearTimeout(pending.timeout);
+    pendingSubmission.current = null;
+    setIsSubmitting(false);
+    setStatus(STATUS.ERROR);
+    setErrorMessage("Security check could not complete. Please try again.");
+    turnstileRef.current?.reset();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isSubmitting) return;
+    if (pendingSubmission.current) return;
+
+    if (!siteKey || !verificationReady || !turnstileRef.current) {
+      setStatus(STATUS.ERROR);
+      setErrorMessage("The contact form is temporarily unavailable. Please try again or use the email link below.");
+      return;
+    }
 
     setIsSubmitting(true);
     setStatus(STATUS.IDLE);
     setErrorMessage("");
 
-    turnstileRef.current?.execute();
+    pendingSubmission.current = {
+      formData: { ...formData },
+      phase: "verifying",
+      timeout: window.setTimeout(failVerification, 30000),
+    };
+    try {
+      turnstileRef.current.execute();
+    } catch {
+      failVerification();
+    }
   };
 
-  useEffect(() => {
-    if (!token || !isSubmitting) return;
+  const sendMessage = async (token) => {
+    const pending = pendingSubmission.current;
+    if (!pending || pending.phase !== "verifying") return;
+    pending.phase = "sending";
+    clearTimeout(pending.timeout);
+    pending.controller = new AbortController();
+    pending.timeout = window.setTimeout(() => pending.controller.abort(), 20000);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...pending.formData,
+          turnstileToken: token,
+        }),
+        signal: pending.controller.signal,
+      });
 
-    const sendMessage = async () => {
-      try {
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...formData,
-            turnstileToken: token,
-          }),
-        });
+      const data = await res.json();
 
-        const data = await res.json();
-
-        if (data.success) {
-          setStatus(STATUS.SUCCESS);
-          setFormData({ name: "", email: "", message: "" });
-        } else {
-          setStatus(STATUS.ERROR);
-          setErrorMessage(data.error || "Something went wrong.");
-        }
-      } catch {
+      if (pendingSubmission.current !== pending) return;
+      if (res.ok && data.success) {
+        setStatus(STATUS.SUCCESS);
+        setFormData({ name: "", email: "", message: "" });
+      } else {
         setStatus(STATUS.ERROR);
-        setErrorMessage("Network error. Please try again.");
-      } finally {
+        setErrorMessage(data.error || "Something went wrong.");
+      }
+    } catch {
+      if (pendingSubmission.current !== pending) return;
+      setStatus(STATUS.ERROR);
+      setErrorMessage("Network error. Please try again.");
+    } finally {
+      clearTimeout(pending.timeout);
+      if (pendingSubmission.current === pending) {
+        pendingSubmission.current = null;
         setIsSubmitting(false);
-        setToken(null);
         turnstileRef.current?.reset();
       }
-    };
-
-    sendMessage();
-  }, [token, isSubmitting, formData]);
+    }
+  };
 
   return (
     <motion.form
       onSubmit={handleSubmit}
       className="relative w-full rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 md:p-8"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Contact form"
+      aria-busy={isSubmitting}
     >
       <div className="grid gap-5 md:grid-cols-2 md:gap-6">
         <div className="flex flex-col gap-2">
@@ -103,6 +145,7 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
+            disabled={isSubmitting}
             maxLength={100}
             value={formData.name}
             onChange={handleChange}
@@ -123,6 +166,7 @@ export default function ContactForm() {
             name="email"
             type="email"
             required
+            disabled={isSubmitting}
             maxLength={200}
             value={formData.email}
             onChange={handleChange}
@@ -142,6 +186,7 @@ export default function ContactForm() {
             id="message"
             name="message"
             required
+            disabled={isSubmitting}
             rows={5}
             maxLength={2000}
             value={formData.message}
@@ -157,6 +202,7 @@ export default function ContactForm() {
 
       {status === STATUS.SUCCESS && (
         <motion.div
+          role="status"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-5 flex items-center gap-2 rounded-lg bg-green-500/10 px-4 py-3 text-sm font-medium text-green-400"
@@ -168,6 +214,7 @@ export default function ContactForm() {
 
       {status === STATUS.ERROR && (
         <motion.div
+          role="alert"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-5 flex items-center gap-2 rounded-lg bg-red-500/10 px-4 py-3 text-sm font-medium text-red-400"
@@ -193,13 +240,11 @@ export default function ContactForm() {
           ref={turnstileRef}
           siteKey={siteKey}
           options={{ size: "invisible", execution: "execute" }}
-          onSuccess={(tk) => setToken(tk)}
-          onError={() => {
-            setIsSubmitting(false);
-            setStatus(STATUS.ERROR);
-            setErrorMessage("Security check failed. Please try again.");
-            turnstileRef.current?.reset();
-          }}
+          onWidgetLoad={() => setVerificationReady(true)}
+          onSuccess={sendMessage}
+          onError={failVerification}
+          onExpire={failVerification}
+          onTimeout={failVerification}
         />
       )}
     </motion.form>

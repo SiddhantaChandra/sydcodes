@@ -1,7 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-
 const expertiseGroups = [
   {
     title: "Frontend",
@@ -35,37 +31,10 @@ const expertiseGroups = [
   },
 ];
 
-const sectionMotion = {
-  initial: { opacity: 0, y: 28 },
-  whileInView: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
-  },
-  viewport: { once: true, amount: 0.16 },
-};
-
-const cardMotion = {
-  initial: { opacity: 0, y: 26 },
-  whileInView: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-  },
-  viewport: { once: true, amount: 0.18 },
-};
-
-function ExpertiseCard({ group, shouldReduceMotion }) {
+function ExpertiseCard({ group }) {
   return (
-    <motion.article
-      className="group relative flex h-full flex-col bg-transparent p-0 transition-transform duration-300"
-      initial={shouldReduceMotion ? false : cardMotion.initial}
-      whileInView={shouldReduceMotion ? undefined : cardMotion.whileInView}
-      viewport={shouldReduceMotion ? undefined : cardMotion.viewport}
-      whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-      transition={
-        shouldReduceMotion ? undefined : { duration: 0.25, ease: "easeOut" }
-      }
+    <article
+      className="relative flex h-full flex-col bg-transparent p-0"
     >
       <div className="relative z-10 flex h-full flex-col">
         <div className="mb-3 flex items-center gap-3">
@@ -97,29 +66,24 @@ function ExpertiseCard({ group, shouldReduceMotion }) {
           {group.items.map((item) => (
             <div
               key={`${group.title}-${item}`}
-              className="flex min-h-6 items-center border-b border-white/10 py-2 text-[0.8rem] text-primary/82 transition-colors duration-300 group-hover:text-primary md:min-h-8 md:py-1 md:text-[0.86rem]"
+              className="flex min-h-6 items-center border-b border-white/10 py-2 text-[0.8rem] text-primary/82 md:min-h-8 md:py-1 md:text-[0.86rem]"
             >
               <span className="block max-w-full leading-relaxed">{item}</span>
             </div>
           ))}
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
 export default function TechnicalExpertise() {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
-    <motion.section
+    <section
       id="expertise"
       className="relative w-full scroll-mt-28 bg-[#0f0f0f] lg:scroll-mt-32"
-      initial={shouldReduceMotion ? false : sectionMotion.initial}
-      whileInView={shouldReduceMotion ? undefined : sectionMotion.whileInView}
-      viewport={shouldReduceMotion ? undefined : sectionMotion.viewport}
     >
-      <div className="mx-auto max-w-4xl px-5 pt-10 pb-14 lg:max-w-6xl lg:px-6 lg:pt-24 lg:pb-8 2xl:max-w-7xl">
+      <div className="section-content mx-auto max-w-4xl px-5 pt-10 pb-14 lg:max-w-6xl lg:px-6 lg:pt-24 lg:pb-8 2xl:max-w-7xl">
         <div className="mb-5 lg:mb-6">
         <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
           Technical Expertise
@@ -139,11 +103,10 @@ export default function TechnicalExpertise() {
           <ExpertiseCard
             key={group.title}
             group={group}
-            shouldReduceMotion={shouldReduceMotion}
           />
         ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

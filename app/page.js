@@ -1,6 +1,10 @@
 import Hero from "./sections/Hero";
 import Navbar from "./components/Navbar/Navbar";
-import DeferredHomepageSection from "./components/DeferredHomepageSection";
+import Experience from "./sections/Experience";
+import Projects from "./sections/Projects";
+import TechnicalExpertise from "./sections/TechnicalExpertise";
+import ContactMe from "./sections/ContactMe";
+import Footer from "./sections/Footer";
 
 export default function Home() {
   return (
@@ -8,12 +12,12 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <DeferredHomepageSection section="experience" minHeightClass="min-h-[32rem] md:min-h-[70rem]" />
-        <DeferredHomepageSection section="projects" minHeightClass="min-h-[32rem] md:min-h-[44rem]" />
-        <DeferredHomepageSection section="expertise" minHeightClass="min-h-[20rem] md:min-h-[28rem]" />
-        <DeferredHomepageSection section="contact" minHeightClass="min-h-[24rem] md:min-h-[30rem]" />
+        <Experience />
+        <Projects />
+        <TechnicalExpertise />
+        <ContactMe />
       </main>
-      <DeferredHomepageSection section="footer" minHeightClass="min-h-[10rem]" />
+      <Footer />
     </div>
   );
 }

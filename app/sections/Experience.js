@@ -1,29 +1,28 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 
 const ExperienceCard = ({ item, mobile = false }) => {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.95 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`${
         mobile
           ? 'w-full min-h-[460px] p-6'
-          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] h-[60vh] md:h-[68vh] lg:h-[72vh] max-h-[760px] p-8 md:p-12'
-      } flex flex-col justify-between border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-3xl hover:bg-white/[0.04] hover:border-white/20 transition-colors duration-500 overflow-hidden relative group`}
+          : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] h-[min(72vh,calc(100dvh-11rem))] max-h-[760px] p-8 md:p-12'
+      } flex flex-col justify-between border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
     >
-      <div className="absolute inset-0 bg-linear-to-b from-transparent to-[#c23132]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
       <div className="flex justify-between items-start gap-4 z-10">
         <div className="min-w-0">
           <h4 className="text-2xl md:text-3xl font-bold text-[#e7d5c3] mb-2 leading-tight">
             {item.role}
           </h4>
-          <p className="text-sm md:text-base text-white/50 leading-relaxed">
+          <p className="text-sm md:text-base text-white/75 leading-relaxed">
             {item.company} • {item.period}
           </p>
         </div>
@@ -35,6 +34,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
               width={64}
               height={64}
               sizes="64px"
+              unoptimized
               loading={mobile ? 'lazy' : 'eager'}
               fetchPriority={mobile ? 'low' : 'high'}
               className="object-cover w-full h-full"
@@ -43,11 +43,10 @@ const ExperienceCard = ({ item, mobile = false }) => {
         )}
       </div>
 
-      <ul className={`mt-6 md:mt-8 space-y-4 flex-grow z-10 ${mobile ? '' : 'md:overflow-y-auto md:pr-4'} custom-scrollbar`}>
+      <ul tabIndex={mobile ? undefined : 0} aria-label={`${item.company} responsibilities`} className={`mt-6 md:mt-8 list-disc pl-5 marker:text-[#c23132] space-y-4 flex-grow min-h-0 z-10 ${mobile ? '' : 'overflow-y-auto overscroll-contain pr-4'} custom-scrollbar`}>
         {item.details.map((detail, idx) => (
-          <li key={idx} className="text-white/70 text-sm 2xl:text-lg flex items-start gap-3 leading-relaxed">
-            <span className="text-[#c23132] mt-1 shrink-0">✦</span>
-            <span>{detail}</span>
+          <li key={idx} className="text-white/90 text-sm 2xl:text-lg leading-relaxed">
+            {detail}
           </li>
         ))}
       </ul>
@@ -75,19 +74,19 @@ const ExperienceCard = ({ item, mobile = false }) => {
 };
 
 const EducationCard = ({ items, mobile = false }) => {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`${
         mobile
           ? 'w-full'
-          : 'flex-shrink-0 w-[85vw] md:w-[58vw] lg:w-[46vw] min-h-[320px] md:min-h-[68vh] lg:min-h-[72vh] max-h-[760px]'
-      } flex flex-col border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-3xl p-5 md:p-6 hover:bg-white/[0.04] hover:border-white/20 transition-colors duration-500 overflow-hidden relative group`}
+          : 'flex-shrink-0 w-[85vw] md:w-[58vw] lg:w-[46vw] h-[min(72vh,calc(100dvh-11rem))] max-h-[760px]'
+      } flex flex-col border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl p-5 md:p-6 overflow-hidden relative`}
     >
-      <div className="absolute inset-0 bg-linear-to-b from-transparent to-[#c23132]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-      <div className="z-10 flex-1 space-y-3">
+      <div tabIndex={mobile ? undefined : 0} aria-label="Education history" className={`z-10 flex-1 min-h-0 space-y-3 ${mobile ? '' : 'overflow-y-auto overscroll-contain'}`}>
         {items.map((item, idx) => (
           <div
             key={`${item.title}-${idx}`}
@@ -97,10 +96,10 @@ const EducationCard = ({ items, mobile = false }) => {
               <h5 className="text-sm md:text-lg font-semibold text-[#e7d5c3] leading-snug">
                 {item.title}
               </h5>
-              <div className="shrink-0 inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-medium text-white/50 tracking-wider whitespace-nowrap">
+              <div className="shrink-0 inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-medium text-white/75 tracking-wider whitespace-nowrap">
                 {item.period}
               </div>
-              <p className="col-span-2 text-white/65 text-sm md:text-base leading-relaxed">
+              <p className="col-span-2 text-white/85 text-sm md:text-base leading-relaxed">
                 {item.institution}
               </p>
             </div>
@@ -212,16 +211,16 @@ const Experience = () => {
     <section
       ref={targetRef}
       id="experience"
-      className="relative overflow-x-clip bg-[#000] pt-8 md:h-[400vh]"
+      className="experience-section relative scroll-mt-24 overflow-x-clip bg-[#000] pt-8 md:h-[400vh]"
     >
-      <div className="px-5 pt-20 pb-12 md:hidden">
-        <h2 className="text-4xl font-black uppercase text-white/35 tracking-tighter leading-none mb-8">
+      <div className="experience-static mx-auto max-w-4xl px-5 pt-20 pb-12 md:hidden">
+        <h2 className="text-4xl font-black uppercase text-white/60 tracking-tighter leading-none mb-8">
           Journey
         </h2>
 
         <div className="space-y-10">
           <div>
-            <h3 className="text-white/40 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Experience
             </h3>
             <div className="space-y-6">
@@ -233,7 +232,7 @@ const Experience = () => {
 
           <div>
             <div className="w-full h-px bg-white/10 mb-6" />
-            <h3 className="text-white/40 uppercase tracking-[0.3em] font-bold text-sm mb-4">
+            <h3 className="text-white/65 uppercase tracking-[0.3em] font-bold text-sm mb-4">
               Education
             </h3>
             <EducationCard items={educationItems} mobile />
@@ -243,10 +242,10 @@ const Experience = () => {
 
       <div
         ref={viewportRef}
-        className="hidden md:block sticky top-0 h-screen w-full overflow-hidden overflow-x-clip bg-[#000] md:pt-36 lg:pt-36"
+        className="experience-desktop hidden md:block sticky top-0 h-dvh w-full overflow-hidden overflow-x-clip bg-[#000] md:pt-36 lg:pt-36"
       >
         <div className="absolute top-8 md:top-12 left-6 md:left-24 z-50 flex flex-col md:flex-row items-start md:items-center gap-6 pointer-events-none pt-8">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/10 tracking-tighter leading-none">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase text-white/30 tracking-tighter leading-none">
             Journey
           </h2>
         </div>
@@ -256,7 +255,7 @@ const Experience = () => {
           style={{ x }}
           className="flex gap-8 pl-6 pr-4 md:pl-24 md:pr-10 w-max items-center"
         >
-          <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
+          <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 mx-4 w-fit [writing-mode:vertical-rl] rotate-180">
             Experience
           </h3>
 
@@ -266,7 +265,7 @@ const Experience = () => {
 
           <div className="flex items-center gap-8 md:gap-16 mx-4">
             <div className="w-[1px] h-32 bg-white/10 shrink-0" />
-            <h3 className="text-white/20 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
+            <h3 className="text-white/60 uppercase tracking-[0.3em] font-bold text-xl md:text-3xl shrink-0 w-fit [writing-mode:vertical-rl] rotate-180">
               Education
             </h3>
           </div>

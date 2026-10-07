@@ -13,6 +13,7 @@ const SmoothScroll = ({ children }) => {
       duration: 1.1,
       smoothWheel: true,
       smoothTouch: false,
+      allowNestedScroll: true,
     });
 
     window.__lenis = lenis;

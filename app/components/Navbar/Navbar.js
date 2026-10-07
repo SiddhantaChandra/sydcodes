@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import logoLarge from '@/public/logo-large-opt.webp'
@@ -15,6 +15,7 @@ import resumeIcon from '@/public/general-icons/download_resume_icon.svg'
 const Navbar = () => {
   const [active, setActive] = useState('home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef(null)
   const socialLinks = {
     linkedin: 'https://www.linkedin.com/in/siddhantachandra/',
     github: 'https://github.com/SiddhantaChandra',
@@ -23,44 +24,30 @@ const Navbar = () => {
 
   useEffect(() => {
     const ids = ['home', 'experience', 'projects', 'expertise', 'contact']
-    const sectionEntries = new Map()
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => sectionEntries.set(entry.target.id, entry))
-
-      const all = Array.from(sectionEntries.values()).filter(Boolean)
-      if (all.length === 0) return
-
-      const topThreshold = 500 // px
-      if (window.scrollY <= topThreshold) {
-        setActive('home')
-        return
+    let frame
+    const updateActive = () => {
+      frame = undefined
+      let current = 'home'
+      for (const id of ids) {
+        const section = document.getElementById(id)
+        if (section && section.getBoundingClientRect().top <= 140) current = id
       }
-
-      const visible = all.filter((e) => e.isIntersecting)
-      if (visible.length > 0) {
-        const best = visible.reduce((a, b) => (a.intersectionRatio > b.intersectionRatio ? a : b))
-        setActive(best.target.id)
-        return
-      }
-
-      const centerY = window.innerHeight / 2
-      const best = all.reduce((a, b) => {
-        const aRect = a.boundingClientRect
-        const bRect = b.boundingClientRect
-        const aCenter = (aRect.top + aRect.bottom) / 2
-        const bCenter = (bRect.top + bRect.bottom) / 2
-        return Math.abs(aCenter - centerY) < Math.abs(bCenter - centerY) ? a : b
-      })
-      setActive(best.target.id)
-    }, { root: null, threshold: Array.from({ length: 101 }, (_, i) => i / 100) })
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
+      setActive(current)
+    }
+    const scheduleUpdate = () => {
+      if (frame === undefined) frame = requestAnimationFrame(updateActive)
+    }
+    const observer = new ResizeObserver(scheduleUpdate)
+    observer.observe(document.body)
+    scheduleUpdate()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
+    return () => {
+      cancelAnimationFrame(frame)
+      observer.disconnect()
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+    }
   }, [])
 
   useEffect(() => {
@@ -73,9 +60,45 @@ const Navbar = () => {
   }, [])
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? 'hidden' : ''
+    if (!isMenuOpen) return
+    const previousOverflow = document.body.style.overflow
+    const previousFocus = document.activeElement
+    const lenis = window.__lenis
+    const wasStopped = lenis?.isStopped
+    document.body.style.overflow = 'hidden'
+    lenis?.stop()
+    // Move focus after the overlay becomes visible.
+    const focusFrame = requestAnimationFrame(() => {
+      menuRef.current?.querySelector('button')?.focus()
+    })
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setIsMenuOpen(false)
+      }
+      if (event.key !== 'Tab') return
+      const focusable = menuRef.current?.querySelectorAll('a[href], button')
+      if (!focusable?.length) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (!menuRef.current.contains(document.activeElement)) {
+        event.preventDefault()
+        first.focus()
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
-      document.body.style.overflow = ''
+      cancelAnimationFrame(focusFrame)
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      if (!wasStopped) lenis?.start()
+      previousFocus?.focus({ preventScroll: true })
     }
   }, [isMenuOpen])
 
@@ -88,7 +111,7 @@ const Navbar = () => {
   ]
 
   return (
-    <header className="fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
+    <header className="site-navbar fixed inset-x-0 top-0 flex justify-center z-30 mt-2 px-3">
       {/* Desktop Navbar */}
       <nav aria-label="Main navigation" className="w-full max-w-6xl items-center justify-between px-6 py-2 bg-[#111111]/75 rounded-full backdrop-blur-sm border border-primary/20 shadow-none hidden lg:flex 2xl:max-w-7xl">
         <Image src={logoLarge} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
@@ -144,6 +167,7 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation-dialog"
             className="grid h-10 w-10 place-items-center rounded-xl  transition-colors duration-200"
           >
             <Image
@@ -156,12 +180,20 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`fixed inset-0 z-40 bg-accent transition-all duration-300 ease-out ${isMenuOpen
+          ref={menuRef}
+          id="mobile-navigation-dialog"
+          role="dialog"
+          aria-label="Navigation menu"
+          aria-modal={isMenuOpen ? true : undefined}
+          aria-hidden={!isMenuOpen}
+          inert={!isMenuOpen}
+          data-lenis-prevent
+          className={`fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-accent transition-opacity duration-300 ease-out ${isMenuOpen
             ? 'opacity-100 visible'
             : 'opacity-0 invisible pointer-events-none'
             }`}
         >
-          <div className="flex h-full flex-col px-8 py-5">
+          <div className="flex min-h-full flex-col px-8 py-5">
             <div className="flex items-center justify-between">
               <Image src={logoShort} alt="Siddhanta Chandra logo" className="h-8 w-auto" />
               <button
@@ -176,7 +208,7 @@ const Navbar = () => {
 
             <nav
               aria-label="Mobile navigation"
-              className={`mt-16 flex flex-1 flex-col justify-center gap-4 transition-all duration-500 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+              className={`my-8 flex flex-1 shrink-0 flex-col justify-center gap-4 transition-all duration-500 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
                 }`}
             >
               {links.map((l, idx) => {
@@ -200,7 +232,7 @@ const Navbar = () => {
               })}
             </nav>
 
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-black/10 p-3">
+            <div className="flex shrink-0 items-center justify-between gap-3 rounded-2xl bg-black/10 p-3">
               <Link
                 href={socialLinks.linkedin}
                 target="_blank"

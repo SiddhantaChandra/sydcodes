@@ -47,7 +47,7 @@ export default function Footer() {
   return (
     <footer className="w-full border-t border-primary/10 bg-[#121212]">
       <motion.div
-        className="mx-auto flex max-w-4xl flex-col gap-6 px-5 py-8 lg:max-w-6xl lg:gap-8 lg:px-6 lg:py-12 2xl:max-w-7xl"
+        className="section-content mx-auto flex max-w-4xl flex-col gap-6 px-5 py-8 lg:max-w-6xl lg:gap-8 lg:px-6 lg:py-12 2xl:max-w-7xl"
         initial={shouldReduceMotion ? false : containerMotion.initial}
         whileInView={shouldReduceMotion ? undefined : containerMotion.whileInView}
         viewport={shouldReduceMotion ? undefined : containerMotion.viewport}

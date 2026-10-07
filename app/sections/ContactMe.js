@@ -147,7 +147,7 @@ export default function ContactMe() {
       whileInView={shouldReduceMotion ? undefined : sectionMotion.whileInView}
       viewport={shouldReduceMotion ? undefined : sectionMotion.viewport}
     >
-      <div className="mx-auto max-w-4xl px-5 pt-10 pb-18 lg:max-w-6xl lg:px-6 lg:pt-18 lg:pb-24 2xl:max-w-7xl">
+      <div className="section-content mx-auto max-w-4xl px-5 pt-10 pb-18 lg:max-w-6xl lg:px-6 lg:pt-18 lg:pb-24 2xl:max-w-7xl">
         <div className="mb-7 lg:mb-8">
         <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
           Contact Me
