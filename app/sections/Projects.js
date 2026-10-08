@@ -7,6 +7,10 @@ import CompactScrollItem from "../components/CompactScrollItem";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import slaysuki1 from "@/public/project-image/slaysuki/1-opt.webp";
 import slaysuki2 from "@/public/project-image/slaysuki/2-opt.webp";
+import slaysuki3 from "@/public/project-image/slaysuki/3-opt.webp";
+import slaysuki4 from "@/public/project-image/slaysuki/4-opt.webp";
+import slaysuki5 from "@/public/project-image/slaysuki/5-opt.webp";
+import slaysuki6 from "@/public/project-image/slaysuki/6-opt.webp";
 import urmi1 from "@/public/project-image/urmi-portfolio/1-opt.webp";
 import urmi2 from "@/public/project-image/urmi-portfolio/2-opt.webp";
 import urmi3 from "@/public/project-image/urmi-portfolio/3-opt.webp";
@@ -29,7 +33,7 @@ const projects = [
     ],
     tech: ["TypeScript", "Next.js", "React", "NestJS", "PostgreSQL", "Prisma ORM", "Tailwind CSS", "TanStack Query", "Redis", "BullMQ", "Cloudflare R2", "Razorpay", "Shiprocket"],
     live: "https://www.slaysuki.com/",
-    images: [slaysuki1, slaysuki2],
+    images: [slaysuki1, slaysuki2, slaysuki3, slaysuki4, slaysuki5, slaysuki6],
   },
   {
     title: "Journalist Portfolio & CMS",
