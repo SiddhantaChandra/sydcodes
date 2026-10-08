@@ -13,7 +13,7 @@ An interactive portfolio featuring a 3D avatar, responsive parallax, and a serve
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=flat-square&logo=three.js&logoColor=white)](https://threejs.org/)
 
-[Overview](#overview) · [Features](#features) · [Technical decisions](#technical-decisions) · [Tech stack](#tech-stack) · [Projects](#featured-projects) · [Setup](#getting-started) · [Credits](#credits) · [License](#license)
+[Overview](#overview) · [Features](#features) · [Technical decisions](#technical-decisions) · [Tech stack](#tech-stack) · [Setup](#getting-started) · [Credits](#credits) · [License](#license)
 
 </div>
 
@@ -33,7 +33,7 @@ An interactive portfolio featuring a 3D avatar, responsive parallax, and a serve
 
 - **Load WebGL on the client:** `Scene3dDynamic` imports the Three.js scene from `useEffect`. This keeps browser-only WebGL setup out of server rendering and delays the scene bundle until the client mounts.
 - **Defer heavy scene work:** `HeroScene` waits through two animation frames, then uses `requestIdleCallback` (with a timeout fallback) before mounting the 3D scene. This gives the initial hero content a chance to render first.
-- **Verify before sending:** The contact form obtains a Turnstile token, posts it with the validated form data to `/api/contact`, and the route checks it with Cloudflare Siteverify before creating a Gmail SMTP message. `GMAIL_USER` is both the sender and the recipient; replies go to the visitor's email. The route validates required fields, email format, and message length. It does not currently implement request rate limiting.
+- **Verify before sending:** The contact form obtains a Turnstile token, posts it with the validated form data to `/api/contact`, and the route checks it with Cloudflare Siteverify before creating a Gmail SMTP message. `GMAIL_USER` is both the sender and the recipient; replies go to the visitor's email. The route validates required fields, email format, and message length.
 
 ## Tech stack
 
