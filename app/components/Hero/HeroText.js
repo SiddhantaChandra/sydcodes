@@ -31,8 +31,7 @@ const HeroText = ({ parallaxStyle }) => {
         </span>
       </h1>
       <p className="max-w-xl lg:max-w-2xl text-base md:text-lg lg:text-xl text-white px-4 mb-2 drop-shadow-lg">
-        Fullstack Developer based in Kolkata, building robust architectures with
-        creative designs and intuitive user interfaces.
+        Full-stack developer in Kolkata who likes solid backends and interfaces with a bit of play in them.
       </p>
       <a
         href="/SiddhantaChandra_CV.pdf"
