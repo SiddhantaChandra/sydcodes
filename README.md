@@ -1,339 +1,153 @@
 <div align="center">
 
-# 🌐 sydcodes — Siddhanta Chandra Portfolio
+# sydcodes — Siddhanta Chandra Portfolio
 
-<p align="center">
-  <strong>An interactive, high-performance portfolio crafted with Next.js 16, React 19, Three.js WebGL, and Tailwind CSS v4.</strong>
-</p>
+An interactive portfolio featuring a 3D avatar, responsive parallax, and a serverless contact form.
 
-<p align="center">
-  <a href="https://www.siddhantachandra.com">
-    <img src="https://img.shields.io/badge/Live%20Demo-siddhantachandra.com-c23132?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo" />
-  </a>
-</p>
+[![Live portfolio](https://img.shields.io/badge/Live%20Portfolio-siddhantachandra.com-c23132?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.siddhantachandra.com)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19.2.3-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Three.js-WebGL-000000?style=flat-square&logo=three.js&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/Framer_Motion-12-FF0055?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion" />
-  <img src="https://img.shields.io/badge/Lenis-Smooth_Scroll-171717?style=flat-square" alt="Lenis" />
-  <img src="https://img.shields.io/badge/Cloudflare-Turnstile-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Turnstile" />
-</p>
+![Portfolio hero: Siddhanta Chandra's 3D avatar on a street scene](public/og/og-image-home.jpg)
 
-<p align="center">
-  <a href="#-overview">Overview</a> •
-  <a href="#-key-features--creative-engineering">Features</a> •
-  <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-repository-structure">Structure</a> •
-  <a href="#-featured-projects">Projects</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-environment-variables">Environment</a> •
-  <a href="#-connect">Connect</a> •
-  <a href="#-acknowledgements--credits">Credits</a>
-</p>
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=flat-square&logo=three.js&logoColor=white)](https://threejs.org/)
 
----
+[Overview](#overview) · [Features](#features) · [Technical decisions](#technical-decisions) · [Tech stack](#tech-stack) · [Projects](#featured-projects) · [Setup](#getting-started) · [Credits](#credits) · [License](#license)
 
 </div>
 
-## 📌 Overview
+## Overview
 
-**`sydcodes`** is the personal portfolio and digital playground of [Siddhanta Chandra](https://www.siddhantachandra.com), a Full-stack Developer based in Kolkata, India.
+**sydcodes** is the portfolio and digital playground of [Siddhanta Chandra](https://www.siddhantachandra.com), a full-stack developer based in Kolkata, India. It pairs a responsive Three.js avatar scene and scroll-linked motion with project showcases and a protected contact form.
 
-Built to showcase production-grade web engineering alongside creative frontend interaction, this portfolio blends real-time 3D WebGL rendering, physics-based parallax animations, and seamless serverless backend functionality while maintaining strict accessibility standards and near-instant load speeds.
+## Features
 
----
+- **Interactive 3D avatar:** Three.js loads an animated GLB character with click and <kbd>Space</kbd> jump controls. The scene adapts to desktop, tablet, and mobile viewports.
+- **Scroll and parallax motion:** Lenis and Framer Motion provide smooth scrolling, pointer parallax, and responsive project and experience layouts.
+- **Contact form:** Cloudflare Turnstile verification precedes server-side email delivery through Nodemailer and Gmail SMTP.
+- **Motion preferences:** Framer Motion's `useReducedMotion` hook is used in interactive sections to reduce motion for users who request it.
+- **Metadata:** Open Graph metadata and Person/WebSite JSON-LD support sharing and search discovery.
 
-## ✨ Key Features & Creative Engineering
+## Technical decisions
 
-### 🚶 Interactive 3D WebGL Avatar
-- **Character Simulation**: Powered by Three.js (`three`) and `GLTFLoader`, loading a custom animated 3D avatar that traverses scenic responsive street backgrounds.
-- **Dynamic Interaction Mechanics**: Responds to mouse clicks and keyboard inputs (<kbd>Space</kbd>) with real-time jump and grounded animation transitions managed by a Three.js `AnimationMixer`.
-- **Adaptive Viewport Modes**: Scene parameters (camera zoom, movement speed, road elevation) dynamically calibrate across desktop, tablet, and mobile breakpoints with `requestIdleCallback` lazy mounting.
+- **Load WebGL on the client:** `Scene3dDynamic` imports the Three.js scene from `useEffect`. This keeps browser-only WebGL setup out of server rendering and delays the scene bundle until the client mounts.
+- **Defer heavy scene work:** `HeroScene` waits through two animation frames, then uses `requestIdleCallback` (with a timeout fallback) before mounting the 3D scene. This gives the initial hero content a chance to render first.
+- **Verify before sending:** The contact form obtains a Turnstile token, posts it with the validated form data to `/api/contact`, and the route checks it with Cloudflare Siteverify before creating a Gmail SMTP message. `GMAIL_USER` is both the sender and the recipient; replies go to the visitor's email. The route validates required fields, email format, and message length. It does not currently implement request rate limiting.
 
-### 🌊 Kinetic Motion & Smooth Scrolling
-- **Lenis Smooth Scroll**: Butter-smooth inertial scrolling throughout the experience.
-- **Spring-Damped Parallax**: Multi-tier parallax driven by Framer Motion springs (`stiffness`, `damping`, `mass`) that track pointer coordinates and scroll velocity in real-time.
-- **Horizontal & Compact Scrollers**: Responsive card containers that gracefully switch between smooth horizontal track layouts on widescreen and ergonomic compact stacks on mobile.
+## Tech stack
 
-### 🛡️ Secure Contact Pipeline
-- **Turnstile Bot Mitigation**: Protected by `@marsidev/react-turnstile` with server-side validation against Cloudflare's siteverify endpoint.
-- **Serverless Dispatch**: Built on Next.js Route Handlers (`/api/contact`) sending HTML/text inquiries via **Nodemailer** over authenticated SMTP.
-
-### ♿ Accessibility & Modern Web Standards
-- **Motion Preference Awareness**: Comprehensive `useReducedMotion` hooks turn off resource-intensive animations and 3D parallax for users with motion sensitivity.
-- **Rich Semantic SEO**: Fully populated `OpenGraph` tags, dynamic `viewport` configuration, and Schema.org structured data (`Person` and `WebSite` JSON-LD graphs).
-
----
-
-## 🛠 Tech Stack
-
-| Domain | Technologies |
+| Area | Tools |
 |---|---|
-| **Core & Framework** | [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/) |
-| **Creative Coding & 3D** | [Three.js](https://threejs.org/) (WebGL, GLTFLoader, AnimationMixer, Directional & Ambient Lighting) |
-| **Styling & Design** | [Tailwind CSS v4](https://tailwindcss.com/), PostCSS, Google Fonts ([Inter](https://fonts.google.com/specimen/Inter) & [Oswald](https://fonts.google.com/specimen/Oswald)) |
-| **Animation & Physics** | [Framer Motion 12](https://motion.dev/), [Lenis](https://lenis.darkroom.engineering/) (Smooth Inertial Scrolling) |
-| **Iconography** | [Phosphor Icons](https://phosphoricons.com/) (`@phosphor-icons/react`) |
-| **Security & Email** | [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) (`@marsidev/react-turnstile`), [Nodemailer](https://nodemailer.com/) |
-| **Quality & Linting** | [ESLint 9](https://eslint.org/), Next.js ESLint Config |
+| Framework | Next.js 16 App Router, React 19 |
+| 3D and interaction | Three.js, GLTFLoader, Framer Motion 12, Lenis |
+| Styling | Tailwind CSS 4, PostCSS, Inter and Oswald |
+| Contact security and email | Cloudflare Turnstile, Nodemailer, Gmail SMTP |
+| Analytics | Vercel Web Analytics (production deployments) |
+| Deployment | Vercel |
+| Code quality | ESLint 9 |
 
----
+## Getting started
 
-## 📂 Repository Structure
+### Requirements
 
-```text
-sydcodes/
-├── app/
-│   ├── api/
-│   │   └── contact/
-│   │       └── route.js           # Turnstile verification & Nodemailer SMTP route
-│   ├── components/
-│   │   ├── Contact/
-│   │   │   └── ContactForm.js     # Form state, turnstile widget, submission status
-│   │   ├── Hero/
-│   │   │   ├── DesktopScene.js    # Desktop road scene graphics
-│   │   │   ├── HeroScene.js       # Responsive 3D scene container & viewport switch
-│   │   │   ├── HeroText.js        # Typographic hero headlines with parallax
-│   │   │   ├── MobileScene.js     # Mobile road scene graphics
-│   │   │   └── TabletScene.js     # Tablet road scene graphics
-│   │   ├── Navbar/
-│   │   │   └── Navbar.js          # Navigation with sticky state & mobile drawer
-│   │   ├── CompactScrollItem.js   # Framer Motion scroll-trigger card wrapper
-│   │   ├── Scene3d.js             # Three.js scene: GLTF model, camera, lighting, jump physics
-│   │   ├── Scene3dDynamic.js      # Dynamic SSR-safe importer for WebGL scene
-│   │   ├── ScrollScene.js         # Scroll progress container & context
-│   │   └── SmoothScroll.js        # Lenis smooth-scroll provider
-│   ├── sections/
-│   │   ├── ContactMe.js           # Contact cards, CV download, outreach form
-│   │   ├── Experience.js          # Experience timeline & education cards
-│   │   ├── Footer.js              # Footer credits & quick navigation
-│   │   ├── Hero.js                # Hero section combining 3D character & headlines
-│   │   ├── Projects.js            # Showcase projects with media sliders & tech tags
-│   │   └── TechnicalExpertise.js  # Categorized technical skills & agentic AI cards
-│   ├── globals.css                # Tailwind CSS v4 directives & theme tokens
-│   ├── layout.js                  # Root layout, JSON-LD structured data, metadata
-│   ├── page.js                    # Landing page composition
-│   ├── robots.js                  # Search crawler directives
-│   └── sitemap.js                 # Dynamic XML sitemap generator
-├── public/
-│   ├── 3d_asset/                  # 3D assets (Animated_Me.glb)
-│   ├── company-images/            # Experience company brand marks
-│   ├── icons-tech/                # Technology badges and SVGs
-│   ├── project-image/             # Showcase project screenshots (WebP)
-│   ├── scene/                     # Desktop, tablet, and mobile road background assets
-│   └── SiddhantaChandra_CV.pdf    # Downloadable curriculum vitae
-├── next.config.mjs                # Next.js build & image optimization configuration
-├── package.json                   # Project scripts and dependencies
-└── postcss.config.mjs             # PostCSS Tailwind v4 pipeline
-```
+- Node.js **20.9.0 or newer**
+- npm, pnpm, or yarn
 
----
-
-## 🚀 Featured Projects
-
-A preview of the featured works showcased within this portfolio:
-
-<table>
-  <thead>
-    <tr>
-      <th width="28%">Project</th>
-      <th width="42%">Highlights</th>
-      <th width="30%">Stack</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Slaysuki TCG</strong><br />
-        <em>E-commerce Marketplace</em><br />
-        <a href="https://www.slaysuki.com/">🔗 Live Store</a>
-      </td>
-      <td>
-        • Customer storefront with custom inventory & order CMS<br />
-        • Real-time inventory reservation & concurrency order locking<br />
-        • Razorpay payment gateway & Shiprocket shipping pipelines<br />
-        • Automated test coverage with Jest and Playwright
-      </td>
-      <td>
-        <code>TypeScript</code>, <code>Next.js</code>, <code>NestJS</code>, <code>PostgreSQL</code>, <code>Prisma</code>, <code>Redis</code>, <code>BullMQ</code>, <code>Cloudflare R2</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Journalist Portfolio & CMS</strong><br />
-        <em>Client Work & Editorial Platform</em><br />
-        <a href="https://www.urmichakraborty.com/">🔗 Live Site</a> • 
-        <a href="https://github.com/SiddhantaChandra/urmi-portfolio-website">💻 GitHub</a>
-      </td>
-      <td>
-        • Public journalism portfolio and article publishing feed<br />
-        • Custom headless CMS powered by BlockNote rich-text editor<br />
-        • Cloud-based media storage and asset optimization<br />
-        • Secure role-based publisher authentication
-      </td>
-      <td>
-        <code>Next.js</code>, <code>React</code>, <code>NestJS</code>, <code>Supabase</code>, <code>Prisma</code>, <code>Cloudflare R2</code>, <code>BlockNote</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>ZestQuiz</strong><br />
-        <em>AI Learning Platform</em><br />
-        <a href="https://zest-quiz.vercel.app/">🔗 Live App</a> • 
-        <a href="https://github.com/SiddhantaChandra/ZestQuiz">💻 GitHub</a>
-      </td>
-      <td>
-        • Automated quiz generation using the DeepSeek API<br />
-        • Interactive AI chat support with persistent context history<br />
-        • Quiz management dashboard with JWT role authorization<br />
-        • Performance metrics and user attempt tracking
-      </td>
-      <td>
-        <code>Next.js</code>, <code>NestJS</code>, <code>PostgreSQL</code>, <code>Prisma</code>, <code>DeepSeek API</code>, <code>JWT</code>, <code>Docker</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
----
-
-## 💻 Getting Started
-
-Follow the steps below to run this project locally on your machine.
-
-### Prerequisites
-
-Ensure you have the following installed:
-- **Node.js**: `v18.18.0` or higher (Node 20+ recommended)
-- **npm**, **pnpm**, or **yarn**
-
-### 1. Clone the Repository
+### Install and run
 
 ```bash
 git clone https://github.com/SiddhantaChandra/sydcodes.git
 cd sydcodes
-```
-
-### 2. Install Dependencies
-
-```bash
 npm install
-# or
-pnpm install
-# or
-yarn install
-```
-
-### 3. Configure Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```bash
-cp .env.example .env.local 2>/dev/null || touch .env.local
-```
-
-Populate the keys as described in the [Environment Variables](#-environment-variables) section below.
-
-### 4. Run Development Server
-
-```bash
+cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to explore the portfolio.
-
-### 5. Production Build & Linting
+Open [http://localhost:3000](http://localhost:3000). The 3D scene and rest of the portfolio work locally without email credentials. The contact form can be exercised with Cloudflare's always-pass test credentials shown below; real email delivery requires Gmail credentials.
 
 ```bash
-# Run code analysis
 npm run lint
-
-# Generate production build
 npm run build
-
-# Preview production build locally
 npm run start
 ```
 
----
+## Environment variables
 
-## Vercel Web Analytics
+Copy `.env.example` to `.env.local` and fill in the values:
 
-Standard page views are tracked only on Vercel production deployments
-(`VERCEL_ENV=production`), with debug logging disabled. Local development and
-preview deployments do not load the analytics script. No custom events are sent.
+| Variable | Use |
+|---|---|
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile widget site key, visible to the browser. Use Cloudflare's test key locally. |
+| `TURNSTILE_SECRET_KEY` | Server-side Siteverify secret. Use the matching Cloudflare test secret locally. |
+| `GMAIL_USER` | Gmail account used as both sender and recipient for contact submissions. |
+| `GMAIL_APP_PASSWORD` | Google App Password used by Nodemailer for SMTP authentication. |
 
-Enable **Web Analytics** in the Vercel project dashboard before the next
-deployment, then visit the live site and verify events appear in the dashboard.
-See the [Vercel setup guide](https://vercel.com/docs/analytics/quickstart).
+For local development, Cloudflare's documented test pair always passes verification:
 
-## 🔐 Environment Variables
+```dotenv
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+```
 
-The project uses the following environment variables for security and form dispatch:
+Use real Turnstile credentials in production; test keys are for development and testing only. The contact form's email send still needs a working Gmail account and App Password.
 
-| Variable | Scope | Purpose |
-|---|---|---|
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Public / Client | Cloudflare Turnstile public site key for bot verification widget |
-| `TURNSTILE_SECRET_KEY` | Server-only | Cloudflare Turnstile secret key for server-side token validation |
-| `GMAIL_USER` | Server-only | Sender and recipient Gmail account for contact submissions |
-| `GMAIL_APP_PASSWORD` | Server-only | Google App Password for authenticated Nodemailer SMTP transport |
+## Design system
 
-> [!TIP]
-> If you are testing locally without Cloudflare Turnstile or Gmail SMTP, the contact form endpoint requires valid keys to send real emails, but the frontend UI and 3D scenes will run without restriction.
+| Color | Swatch |
+|---|---|
+| Background `#1d1d1d` | ![Background color #1d1d1d](https://img.shields.io/badge/Background-%231d1d1d-1d1d1d?style=for-the-badge&labelColor=555555) |
+| Primary text `#e7d5c3` | ![Primary text color #e7d5c3](https://img.shields.io/badge/Primary_text-%23e7d5c3-e7d5c3?style=for-the-badge&labelColor=555555) |
+| Crimson `#c23132` | ![Crimson color #c23132](https://img.shields.io/badge/Crimson-%23c23132-c23132?style=for-the-badge&labelColor=555555) |
+| Coral `#f17c52` | ![Coral color #f17c52](https://img.shields.io/badge/Coral-%23f17c52-f17c52?style=for-the-badge&labelColor=555555) |
+| Sage `#78c9ba` | ![Sage color #78c9ba](https://img.shields.io/badge/Sage-%2378c9ba-78c9ba?style=for-the-badge&labelColor=555555) |
+| Ochre `#d8b16a` | ![Ochre color #d8b16a](https://img.shields.io/badge/Ochre-%23d8b16a-d8b16a?style=for-the-badge&labelColor=555555) |
 
----
+Headings use [Oswald](https://fonts.google.com/specimen/Oswald); body text uses [Inter](https://fonts.google.com/specimen/Inter).
 
-## 🎨 Design System & Visual Identity
+## Repository structure
 
-The project features a carefully curated dark aesthetic built with modern CSS custom variables:
+<details>
+<summary>Browse the main files</summary>
 
-- **Background**: `#1d1d1d` (Deep Slate Charcoal)
-- **Primary Text**: `#e7d5c3` (Warm Cream)
-- **Accent Brand Color**: `#c23132` (Crimson Carmine)
-- **Secondary Accents**:
-  - `#f17c52` (Coral Amber)
-  - `#78c9ba` (Sage Mint)
-  - `#d8b16a` (Warm Ochre)
-- **Typography**: [Oswald](https://fonts.google.com/specimen/Oswald) for bold editorial headings and [Inter](https://fonts.google.com/specimen/Inter) for clean, legible body text.
+```text
+sydcodes/
+├── app/
+│   ├── api/contact/route.js          # Turnstile verification and SMTP delivery
+│   ├── components/
+│   │   ├── Contact/ContactForm.js
+│   │   ├── Hero/                     # Responsive scenes and hero content
+│   │   ├── Scene3d.js                # Three.js model, camera, lighting, jump physics
+│   │   ├── Scene3dDynamic.js         # Client-side scene import
+│   │   └── SmoothScroll.js
+│   ├── sections/                     # Hero, experience, projects, contact, and more
+│   ├── globals.css
+│   ├── layout.js
+│   └── page.js
+├── public/
+│   ├── 3d_asset/                     # Animated character model
+│   ├── og/og-image-home.jpg
+│   ├── project-image/
+│   └── scene/                        # Desktop, tablet, and mobile backgrounds
+├── .env.example
+├── LICENSE
+└── package.json
+```
 
----
+</details>
 
-## 🤝 Connect
+## Contact
 
-<div align="center">
+**Siddhanta Chandra** · Full-stack developer · Kolkata, India
 
-**Siddhanta Chandra**  
-*Full-stack Developer • Kolkata, India*
+[Portfolio](https://www.siddhantachandra.com) · [Contact form](https://www.siddhantachandra.com/#contact) · [LinkedIn](https://www.linkedin.com/in/siddhantachandra/) · [GitHub](https://github.com/SiddhantaChandra)
 
-<p align="center">
-  <a href="https://www.siddhantachandra.com">
-    <img src="https://img.shields.io/badge/Portfolio-www.siddhantachandra.com-c23132?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Portfolio" />
-  </a>
-  <a href="https://www.linkedin.com/in/siddhantachandra/">
-    <img src="https://img.shields.io/badge/LinkedIn-siddhantachandra-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
-  </a>
-  <a href="https://github.com/SiddhantaChandra">
-    <img src="https://img.shields.io/badge/GitHub-SiddhantaChandra-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
-  </a>
-  <a href="mailto:iamsiddhanta.10@gmail.com">
-    <img src="https://img.shields.io/badge/Email-iamsiddhanta.10%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
-  </a>
-</p>
+## Credits
 
-</div>
+- 3D character model: [CUTES Part One](https://poly.pizza/bundle/CUTES-Part-One-WD91WrT0gx) by [J-Toastie](https://poly.pizza/u/J-Toastie), licensed under [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/), via [Poly Pizza](https://poly.pizza/).
 
----
+## License
 
-## 🙏 Acknowledgements & Credits
+The original code in this repository is licensed under the [MIT License](LICENSE). Third-party assets and dependencies remain under their respective licenses; in particular, the 3D character model is CC-BY 3.0 and requires attribution as listed in [Credits](#credits).
 
-- Special thanks to [J-Toastie](https://poly.pizza/u/J-Toastie) for the [3D Character Model](https://poly.pizza/m/b2hbNsaTN0) hosted on [Poly Pizza](https://poly.pizza/).
-
----
-
-<div align="center">
-  <sub>Designed & Developed by <a href="https://www.siddhantachandra.com">Siddhanta Chandra</a>. Built with Next.js 16, Three.js, and Tailwind CSS v4.</sub>
-</div>
-
+This is a personal portfolio repository and is **not accepting pull requests**. Feel free to browse and fork it under the license terms.
