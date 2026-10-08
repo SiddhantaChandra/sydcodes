@@ -42,7 +42,6 @@ const HeroText = ({ parallaxStyle }) => {
         <Image src={resumeIcon} alt="" width={16} height={16} className="h-4 w-4" />
         Download Resume
       </a>
-      <div className="mt-3 h-0.5 w-28 rounded-full bg-linear-to-r from-primary via-accent to-primary bg-size-[200%_100%]" />
     </motion.div>
   );
 };
