@@ -18,6 +18,26 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+const JUMP_HEIGHT_MULTIPLIER = 3;
+
+const boostJumpHeight = (clip, model) => {
+  if (!clip) return undefined;
+
+  const boostedClip = clip.clone();
+  const rootTrack = boostedClip.tracks.find((track) => track.name === "CORE.position");
+  const restHeight = model.getObjectByName("CORE")?.position.z;
+
+  if (rootTrack && restHeight !== undefined) {
+    // The imported rig uses local Z for height. Keep its grounded pose unchanged.
+    for (let index = 2; index < rootTrack.values.length; index += 3) {
+      const lift = Math.max(0, rootTrack.values[index] - restHeight);
+      rootTrack.values[index] = restHeight + lift * JUMP_HEIGHT_MULTIPLIER;
+    }
+  }
+
+  return boostedClip;
+};
+
 const Scene3d = ({ distance, speed, yaxis, zoom }) => {
   const mountRef = useRef(null);
   const clickHintRef = useRef(null);
@@ -221,11 +241,13 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
         if (gltf.animations && gltf.animations.length > 0) {
           mixer = new AnimationMixer(model);
           const walkClip = findClip(gltf.animations, "Armature|Walk", "walk");
-          const jumpClip = findClip(gltf.animations, "Armature|Jump", "jump");
-          const groundedClip = findClip(
-            gltf.animations,
-            "Armature|Grounded",
-            "grounded",
+          const jumpClip = boostJumpHeight(
+            findClip(gltf.animations, "Armature|Jump", "jump"),
+            model,
+          );
+          const groundedClip = boostJumpHeight(
+            findClip(gltf.animations, "Armature|Grounded", "grounded"),
+            model,
           );
 
           walkAction = walkClip ? mixer.clipAction(walkClip) : undefined;
