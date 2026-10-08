@@ -6,13 +6,13 @@ import {
   AmbientLight,
   AnimationMixer,
   Box3,
-  Clock,
   DirectionalLight,
   LoopOnce,
   LoopRepeat,
   PerspectiveCamera,
   Scene,
   SRGBColorSpace,
+  Timer,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -61,7 +61,8 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     scene.add(fillLight);
 
     const loader = new GLTFLoader();
-    const clock = new Clock();
+    const timer = new Timer();
+    timer.connect(document);
     let mixer;
     let model;
     let animationFrameId;
@@ -266,7 +267,9 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
     };
 
     const animate = () => {
-      const delta = clock.getDelta();
+      timer.update();
+      const delta = timer.getDelta();
+      const elapsed = timer.getElapsed();
       if (mixer) {
         mixer.update(delta);
       }
@@ -292,11 +295,11 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
 
           const isBehindCamera = projectedPosition.z < -1 || projectedPosition.z > 1;
           const hintLeadDelay = 2;
-          const hintCycle = Math.max(clock.elapsedTime - hintLeadDelay, 0) % 12;
+          const hintCycle = Math.max(elapsed - hintLeadDelay, 0) % 12;
           const shouldShowHint =
             isSceneVisible() &&
             !isBehindCamera &&
-            clock.elapsedTime >= hintLeadDelay &&
+            elapsed >= hintLeadDelay &&
             hintCycle < 1.4;
 
           if (shouldShowHint) {
@@ -325,6 +328,7 @@ const Scene3d = ({ distance, speed, yaxis, zoom }) => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("resize", onResize);
       cancelAnimationFrame(animationFrameId);
+      timer.dispose();
 
       if (mixer) {
         mixer.removeEventListener("finished", handleAnimationFinished);

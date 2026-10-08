@@ -251,13 +251,14 @@ const Navbar = () => {
               >
                 <Image src={githubIcon} alt="" aria-hidden="true" className="h-5 w-5" />
               </Link>
-              <Link
+              <a
                 href={socialLinks.resume}
+                download
                 className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-black border border-black/20 hover:bg-primary/90 transition-colors duration-200"
               >
                 <Image src={resumeIcon} alt="" aria-hidden="true" className="h-4 w-4" />
                 Download Resume
-              </Link>
+              </a>
             </div>
           </div>
         </div>

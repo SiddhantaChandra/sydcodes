@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -35,14 +34,14 @@ const HeroText = ({ parallaxStyle }) => {
         Fullstack Developer based in Kolkata, building robust architectures with
         creative designs and intuitive user interfaces.
       </p>
-      <Link
+      <a
         href="/SiddhantaChandra_CV.pdf"
         download
         className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-black hover:bg-primary/90 transition-colors duration-200"
       >
         <Image src={resumeIcon} alt="" width={16} height={16} className="h-4 w-4" />
         Download Resume
-      </Link>
+      </a>
       <div className="mt-3 h-0.5 w-28 rounded-full bg-linear-to-r from-primary via-accent to-primary bg-size-[200%_100%]" />
     </motion.div>
   );

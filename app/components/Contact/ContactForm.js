@@ -15,6 +15,7 @@ export default function ContactForm({ animateEntrance = true }) {
   const turnstileRef = useRef(null);
   const pendingSubmission = useRef(null);
   const reduceMotion = useReducedMotion();
+  const [verificationEnabled, setVerificationEnabled] = useState(false);
   const [verificationReady, setVerificationReady] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -57,7 +58,7 @@ export default function ContactForm({ animateEntrance = true }) {
 
     if (pendingSubmission.current) return;
 
-    if (!siteKey || !verificationReady || !turnstileRef.current) {
+    if (!siteKey) {
       setStatus(STATUS.ERROR);
       setErrorMessage("The contact form is temporarily unavailable. Please try again or use the email link below.");
       return;
@@ -72,8 +73,21 @@ export default function ContactForm({ animateEntrance = true }) {
       phase: "verifying",
       timeout: window.setTimeout(failVerification, 30000),
     };
+    // A quick submit can arrive before the lazily loaded widget is ready.
+    setVerificationEnabled(true);
+    if (!verificationReady || !turnstileRef.current) return;
     try {
       turnstileRef.current.execute();
+    } catch {
+      failVerification();
+    }
+  };
+
+  const handleWidgetLoad = () => {
+    setVerificationReady(true);
+    if (pendingSubmission.current?.phase !== "verifying") return;
+    try {
+      turnstileRef.current?.execute();
     } catch {
       failVerification();
     }
@@ -124,6 +138,7 @@ export default function ContactForm({ animateEntrance = true }) {
   return (
     <motion.form
       onSubmit={handleSubmit}
+      onFocusCapture={() => setVerificationEnabled(true)}
       className="relative w-full rounded-2xl border border-white/10 bg-[#0f0f0f] p-5 md:p-8 lg:p-5"
       initial={reduceMotion || !animateEntrance ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion || !animateEntrance ? undefined : { opacity: 1, y: 0 }}
@@ -235,12 +250,12 @@ export default function ContactForm({ animateEntrance = true }) {
         </button>
       </div>
 
-      {siteKey && (
+      {siteKey && verificationEnabled && (
         <Turnstile
           ref={turnstileRef}
           siteKey={siteKey}
           options={{ size: "invisible", execution: "execute" }}
-          onWidgetLoad={() => setVerificationReady(true)}
+          onWidgetLoad={handleWidgetLoad}
           onSuccess={sendMessage}
           onError={failVerification}
           onExpire={failVerification}
