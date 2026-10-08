@@ -106,9 +106,9 @@ const EducationCard = ({ items, mobile = false }) => {
             className={idx === items.length - 1 ? 'px-1 py-3 md:py-4' : 'px-1 py-3 md:py-4 border-b border-white/10'}
           >
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2">
-              <h5 className="text-sm md:text-lg font-semibold text-[#e7d5c3] leading-snug">
+              <h4 className="text-sm md:text-lg font-semibold text-[#e7d5c3] leading-snug">
                 {item.title}
-              </h5>
+              </h4>
               <div className="shrink-0 inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/5 text-xs font-medium text-white/75 tracking-wider whitespace-nowrap">
                 {item.period}
               </div>
