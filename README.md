@@ -260,6 +260,16 @@ npm run start
 
 ---
 
+## Vercel Web Analytics
+
+Standard page views are tracked only on Vercel production deployments
+(`VERCEL_ENV=production`), with debug logging disabled. Local development and
+preview deployments do not load the analytics script. No custom events are sent.
+
+Enable **Web Analytics** in the Vercel project dashboard before the next
+deployment, then visit the live site and verify events appear in the dashboard.
+See the [Vercel setup guide](https://vercel.com/docs/analytics/quickstart).
+
 ## 🔐 Environment Variables
 
 The project uses the following environment variables for security and form dispatch:

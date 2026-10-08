@@ -1,4 +1,5 @@
 import { Inter, Oswald } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 
@@ -169,6 +170,9 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+        {process.env.VERCEL_ENV === "production" && (
+          <Analytics debug={false} />
+        )}
       </body>
     </html>
   );
