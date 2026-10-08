@@ -1,12 +1,52 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const rateLimitBuckets = new Map();
+
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function getClientAddress(request) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  return forwardedFor?.split(",")[0]?.trim() || "unknown";
+}
+
+function checkRateLimit(address) {
+  const now = Date.now();
+  const bucket = rateLimitBuckets.get(address);
+
+  if (!bucket || now >= bucket.resetAt) {
+    rateLimitBuckets.set(address, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return { limited: false };
+  }
+
+  if (bucket.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { limited: true, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
+  }
+
+  bucket.count += 1;
+  return { limited: false };
+}
+
 export async function POST(request) {
   try {
+    const rateLimit = checkRateLimit(getClientAddress(request));
+    if (rateLimit.limited) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
+    }
+
     const { name, email, message, turnstileToken } = await request.json();
 
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
