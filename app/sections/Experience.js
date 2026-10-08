@@ -17,7 +17,7 @@ const ExperienceCard = ({ item, mobile = false }) => {
         mobile
           ? 'w-full min-h-[460px] p-6'
           : 'flex-shrink-0 w-[85vw] md:w-[68vw] lg:w-[52vw] px-8 md:px-12 pt-8 pb-6'
-      } experience-card flex flex-col justify-between border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
+      } experience-card flex flex-col justify-between bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden relative`}
     >
       <div className="experience-card-header flex shrink-0 justify-between items-start gap-4 z-10">
         <div className="min-w-0">
@@ -97,7 +97,7 @@ const EducationCard = ({ items, mobile = false }) => {
         mobile
           ? 'w-full'
           : 'flex-shrink-0 w-[85vw] md:w-[58vw] lg:w-[46vw]'
-      } education-card flex flex-col border border-white/20 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl p-5 md:p-6 overflow-hidden relative`}
+      } education-card flex flex-col bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.25)] rounded-3xl p-5 md:p-6 overflow-hidden relative`}
     >
       <div aria-label="Education history" className="education-history z-10 space-y-3">
         {items.map((item, idx) => (
