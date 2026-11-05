@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import CompactScrollItem from '../components/CompactScrollItem';
 
@@ -124,7 +124,6 @@ const EducationCard = ({ items, mobile = false }) => {
 };
 
 const Experience = () => {
-  const reduceMotion = useReducedMotion();
   const targetRef = useRef(null);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
@@ -308,9 +307,9 @@ const Experience = () => {
       >
         <motion.div
           style={{
-            x: reduceMotion ? 0 : contentX,
-            y: reduceMotion ? 0 : contentY,
-            opacity: reduceMotion ? 1 : contentOpacity,
+            x: contentX,
+            y: contentY,
+            opacity: contentOpacity,
             paddingTop: 'inherit',
             paddingBottom: 'inherit',
           }}

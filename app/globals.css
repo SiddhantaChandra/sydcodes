@@ -298,20 +298,6 @@ html.lenis body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .experience-section {
-    height: auto;
-  }
-
-  .experience-static {
-    display: block;
-  }
-
-  .experience-desktop {
-    display: none;
-  }
-}
-
 .projects-stack {
   perspective: 1100px;
   overflow: visible;
@@ -685,28 +671,5 @@ html.lenis body {
     background-position: 0% 50%;
   }
 
-  .project-card {
-    position: relative;
-    inset: auto;
-    transform: none;
-    opacity: 1;
-    filter: none;
-    background: #2b2621;
-    transition: none;
-  }
-
-  .projects-stack {
-    display: grid;
-    gap: 1rem;
-    height: auto;
-    min-height: auto;
-    perspective: none;
-  }
-
-  .projects-section {
-    min-height: auto !important;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
 }
 

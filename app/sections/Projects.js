@@ -409,7 +409,6 @@ const ProjectCardContent = ({ project, projectIndex = 0, showTech = true }) => (
 
 const Projects = () => {
   const sectionRef = useRef(null);
-  const shouldReduceMotion = useReducedMotion();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [displayProjectIndex, setDisplayProjectIndex] = useState(0);
   const [isCardVisible, setIsCardVisible] = useState(true);
@@ -421,8 +420,6 @@ const Projects = () => {
   }, []);
 
   useEffect(() => {
-    if (shouldReduceMotion) return undefined;
-
     const updateProgress = () => {
       const section = sectionRef.current;
       if (!section || window.innerWidth < 1024) return;
@@ -466,11 +463,9 @@ const Projects = () => {
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
     };
-  }, [shouldReduceMotion]);
+  }, []);
 
   useEffect(() => {
-    if (shouldReduceMotion) return undefined;
-
     if (swapTimeoutRef.current) {
       window.clearTimeout(swapTimeoutRef.current);
       swapTimeoutRef.current = null;
@@ -538,7 +533,7 @@ const Projects = () => {
         enterTimeoutRef.current = null;
       }
     };
-  }, [activeProjectIndex, displayProjectIndex, isCardVisible, shouldReduceMotion]);
+  }, [activeProjectIndex, displayProjectIndex, isCardVisible]);
 
   useEffect(() => {
     return () => {
@@ -552,14 +547,13 @@ const Projects = () => {
     };
   }, []);
 
-  const effectiveDisplayProjectIndex = shouldReduceMotion ? 0 : displayProjectIndex;
-  const activeProject = projects[effectiveDisplayProjectIndex];
-  const shouldShowStack = effectiveDisplayProjectIndex !== -1;
+  const activeProject = projects[displayProjectIndex];
+  const shouldShowStack = displayProjectIndex !== -1;
   const visibleDesktopTech = shouldShowStack
     ? [
       ...new Set(
         projects
-          .slice(0, effectiveDisplayProjectIndex + 1)
+          .slice(0, displayProjectIndex + 1)
           .flatMap((project) => project.tech),
       ),
     ]
@@ -570,12 +564,9 @@ const Projects = () => {
       ref={sectionRef}
       id="projects"
       className="projects-section relative w-full scroll-mt-28 bg-[#0a0a0a] lg:scroll-mt-28 2xl:pt-20"
-      style={{
-        minHeight: shouldReduceMotion ? "auto" : undefined,
-      }}
     >
       <div className="section-content relative mx-auto max-w-4xl px-5 pt-16 pb-16 lg:max-w-6xl lg:pt-12 xl:pt-14 2xl:max-w-7xl lg:px-6 xl:pb-0">
-        <CompactScrollItem preset="heading" className={`projects-static mb-10 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+        <CompactScrollItem preset="heading" className="projects-static mb-10 lg:hidden">
           <p className="mb-4 text-sm font-semibold tracking-[0.18em] text-accent uppercase">
             Selected Work
           </p>
@@ -587,7 +578,7 @@ const Projects = () => {
           </p>
         </CompactScrollItem>
 
-        <div className={`projects-static space-y-6 ${shouldReduceMotion ? "" : "lg:hidden"}`}>
+        <div className="projects-static space-y-6 lg:hidden">
           {projects.map((project, index) => (
             <CompactScrollItem
               as="article"
@@ -601,11 +592,9 @@ const Projects = () => {
         </div>
 
         <div
-          className={`projects-desktop-stage ${shouldReduceMotion ? "hidden" : "hidden lg:block"}`}
+          className="projects-desktop-stage hidden lg:block"
           style={{
-            minHeight: shouldReduceMotion
-              ? "auto"
-              : `${projects.length * DESKTOP_STAGE_VH_PER_PROJECT}vh`,
+            minHeight: `${projects.length * DESKTOP_STAGE_VH_PER_PROJECT}vh`,
           }}
         >
           <div className="projects-sticky sticky top-24 flex min-h-[calc(100vh-8rem)] items-start">
@@ -632,9 +621,9 @@ const Projects = () => {
                           <motion.span
                             key={`desktop-stack-${tech}`}
                             className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium tracking-wide text-primary/90"
-                            initial={shouldReduceMotion ? false : techBadgeMotion.initial}
-                            animate={shouldReduceMotion ? undefined : techBadgeMotion.animate}
-                            exit={shouldReduceMotion ? undefined : techBadgeMotion.exit}
+                            initial={techBadgeMotion.initial}
+                            animate={techBadgeMotion.animate}
+                            exit={techBadgeMotion.exit}
                             layout
                           >
                             <TechLabel tech={tech} />
@@ -657,11 +646,11 @@ const Projects = () => {
                       tabIndex={0}
                       aria-label={`${activeProject.title} project details`}
                       className="project-card relative z-10 flex max-h-[calc(100dvh-8rem)] flex-col overflow-y-auto overscroll-contain rounded-3xl"
-                      initial={shouldReduceMotion ? false : desktopCardMotion.initial}
-                      animate={shouldReduceMotion ? undefined : desktopCardMotion.animate}
-                      exit={shouldReduceMotion ? undefined : desktopCardMotion.exit}
+                      initial={desktopCardMotion.initial}
+                      animate={desktopCardMotion.animate}
+                      exit={desktopCardMotion.exit}
                     >
-                      <ProjectCardContent project={activeProject} projectIndex={effectiveDisplayProjectIndex} showTech={false} />
+                      <ProjectCardContent project={activeProject} projectIndex={displayProjectIndex} showTech={false} />
                     </motion.article>
                   ) : null}
                 </AnimatePresence>
